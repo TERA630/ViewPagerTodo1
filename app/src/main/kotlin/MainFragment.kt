@@ -14,8 +14,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 
 class MainFragment : Fragment() {
-    lateinit var model: MainViewModel
-
+    private lateinit var model: MainViewModel
     companion object {
         fun newInstance(tagString: String): MainFragment {
             val bundle = Bundle()
@@ -25,16 +24,13 @@ class MainFragment : Fragment() {
             return newFragment
         }
     }
-
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         model = ViewModelProviders.of(this.activity!!).get()
     }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, fragment_frame)
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val filterStr = this.arguments!!.getString("tagString") ?: ""
@@ -49,18 +45,14 @@ class MainFragment : Fragment() {
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
             override fun onClick(view: View, numberToCall: Int) {
                 val context = MyApplication.instance?.applicationContext
-                context?.let {
-                    val intent = Intent(it, DetailActivity::class.java)
-                    intent.putExtra("parentID", numberToCall)
-                    intent.putExtra("tagString", filterStr)
-                    Log.i("test", "parentID was $numberToCall")
-                    //　TODO (可能なら)　Transitionを作る｡
-                    startActivity(intent)
-                }
+                        ?: throw Exception("context is null at MainFragment")
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("parentID", numberToCall)
+                intent.putExtra("tagString", filterStr)
+                Log.i("test", "parentID was $numberToCall")
+                startActivity(intent)
             }
         }
         )
-        val tabIndex = this.arguments!!.getString("tagString")
-        Log.i("test", "Fragment on View Created $tabIndex")
     }
 }

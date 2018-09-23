@@ -16,9 +16,7 @@ class DetailActivity : AppCompatActivity() {
         val number = intent.extras?.getInt("parentID") ?: 0
         val tagSting = intent.extras?.getString("tagString") ?: ""
         val context = MyApplication.instance?.applicationContext
-        if (context == null) {
-            throw Exception("context is null at Detail activity")
-        }
+                ?: throw Exception("context is null at Detail activity")
         val repository = Repository()
         val itemList = repository.loadListFromPreference(context)
         val index = when (number) {
@@ -43,7 +41,7 @@ class DetailActivity : AppCompatActivity() {
             startActivity(intent, null)
         }
 
-        binding.cancelBtn.setOnClickListener {
+        binding.cancelBtn.setOnClickListener { it ->
             val context = MyApplication.instance?.applicationContext
             context?.let {
                 repository.saveListToPreference(itemList, context)

@@ -22,6 +22,7 @@ class MainViewModel : ViewModel() {
     fun initItems(_context: Context) {
         val repository = Repository()
         itemList.value = repository.loadListFromPreference(_context)
+        earnedPoints = repository.loadIntFromPreference(EARNED_POINT, _context)
         filterSpinnerStrList = fetchRecentDate(context = _context)
         currentDateStr = filterSpinnerStrList[0]
     }
@@ -50,24 +51,26 @@ class MainViewModel : ViewModel() {
     fun getItemList(): MutableList<ToDoItem> = itemList.value
             ?: listOf(ToDoItem(EMPTY_ITEM)).toMutableList()
 
+
+
+    fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
+        val rawList = getItemList()
+        val regFilterStr = Regex(filterStr)
+        val filteredList: MutableList<FilteredToDoItem> = emptyList<FilteredToDoItem>().toMutableList()
+        for (i in rawList.indices) {
+            if (rawList[i].tagString.contains(regFilterStr)) {
+                filteredList.add(FilteredToDoItem(i, rawList[i].copy()))
+            }
+        }
+        return filteredList
+    }
+
     fun getItemListCurrentWithTag(targetDate: String, filterStr: CharSequence): MutableList<FilteredToDoItem> {
         return if (filterStr == "") {
             getItemListWithDate(targetDate)
         } else {
             getItemListWithTag(filterStr.toString()).filterByDate(targetDate)
         }
-    }
-
-    fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
-        val rawList = getItemList()
-        val regFilterStr = Regex(filterStr)
-        var filteredList: MutableList<FilteredToDoItem> = emptyList<FilteredToDoItem>().toMutableList()
-        for (i in 0..rawList.lastIndex) {
-            if (rawList[i].tagString.contains(regFilterStr)) {
-                filteredList.add(FilteredToDoItem(i, rawList[i].copy()))
-            }
-        }
-        return filteredList
     }
 
     private fun getItemListWithDate(targetDate: String): MutableList<FilteredToDoItem> {
@@ -101,4 +104,20 @@ class MainViewModel : ViewModel() {
         currentDateStr = filterSpinnerStrList[position]
 
     }
+
+    fun caliculateAchievedPoints() {
+
+        val achievedList = getItemList().filter { it.isDone }
+        val notYetList = getItemList().filter { !(it.isDone) }
+        val numberOfAchieved = achievedList.size
+        Log.i("test", "number of achieved todo  was $numberOfAchieved")
+        var getReward = 0
+        for (i in achievedList.indices) {
+            getReward += achievedList[i].reward.toInt()
+        }
+        Log.i("test", "reward was $getReward")
+        this.earnedPoints = this.earnedPoints + getReward
+        this.itemList.value = notYetList.toMutableList()
+    }
+
 }

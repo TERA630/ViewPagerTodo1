@@ -8,6 +8,7 @@ import kotlinx.serialization.json.JSON
 import kotlinx.serialization.serializer
 
 const val ITEM_DATA = "toDoItems"
+const val EARNED_POINT = "earnedPoint"
 const val EMPTY_ITEM = "empty item"
 
 @Serializable
@@ -41,6 +42,18 @@ class Repository {
         return preferences?.getString(_key, EMPTY_ITEM) ?: EMPTY_ITEM
     }
 
+    fun saveIntToPreference(_key: String, _int: Int, context: Context) {
+        val preferences = context.getSharedPreferences(_key, Context.MODE_PRIVATE)
+        val preferenceEditor = preferences.edit()
+        preferenceEditor.putInt(_key, _int)
+        preferenceEditor.apply()
+    }
+
+    fun loadIntFromPreference(_key: String, context: Context): Int {
+        val preferences = context.getSharedPreferences(_key, Context.MODE_PRIVATE)
+        return preferences?.getInt(_key, 0) ?: 0
+    }
+
     fun saveListToPreference(_mList: MutableList<ToDoItem>, _context: Context) {
         val toDoSerializer = ToDoItem::class.serializer()
         val listSerializer = ArrayListSerializer(toDoSerializer)
@@ -65,14 +78,15 @@ class Repository {
         }
     }
 
-    fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
+    private fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
         val res = _context.resources
         val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
         val defaultItemStartDate = res.getStringArray(R.array.default_todoItem_startDate)
         val defaultItemTag = res.getStringArray(R.array.default_todoItem_tag)
-        val toDoList = List(defaultItemTitle.size, { index -> ToDoItem(title = defaultItemTitle[index], hasStartLine = true, startLine = defaultItemStartDate[index], tagString = defaultItemTag[index]) })
+        val toDoList = List(defaultItemTitle.size) { index -> ToDoItem(title = defaultItemTitle[index], hasStartLine = true, startLine = defaultItemStartDate[index], tagString = defaultItemTag[index]) }
         return toDoList.toMutableList()
     }
+
 }
 
 fun MutableList<FilteredToDoItem>.swap(oneIndex: Int, otherIndex: Int) {

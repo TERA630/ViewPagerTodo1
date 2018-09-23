@@ -7,7 +7,6 @@ class MyApplication : Application() {
         super.onCreate()
         instance = this
     }
-
     companion object {
         var instance: MyApplication? = null
             private set

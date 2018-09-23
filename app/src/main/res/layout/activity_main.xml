@@ -9,6 +9,7 @@
     android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
     tools:actionBarNavMode="standard"
+    android:focusable="true"
     tools:openDrawer="start">
 
     <include layout="@layout/app_bar_main" />
