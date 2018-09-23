@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".DetailFragment"
+    tools:ignore="ContentDescription">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.yoshi.viewpagertodo1.ToDoItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:id="@+id/doneChkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:checked="@={item.done}"
+            android:nextFocusDown="@+id/titleTxt"
+            android:nextFocusForward="@+id/titleTxt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/titleTxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:inputType="text|textPersonName"
+            android:nextFocusDown="@+id/tagTxt"
+            android:text="@={item.title}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toStartOf="@+id/applyBtn"
+            app:layout_constraintStart_toEndOf="@+id/doneChkBox"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/enterNewItem" />
+
+        <ImageButton
+            android:id="@+id/applyBtn"
+            android:layout_width="@dimen/imgBtn_size"
+            android:layout_height="47dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@android:drawable/ic_media_play"
+            app:layout_constraintEnd_toStartOf="@+id/cancelBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@android:drawable/ic_media_play" />
+
+        <ImageButton
+            android:id="@+id/cancelBtn"
+            android:layout_width="@dimen/imgBtn_size"
+            android:layout_height="@dimen/imgBtn_size"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/applyBtn"
+            tools:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:entries="@array/period_array"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleTxt" />
+
+        <ToggleButton
+            android:id="@+id/isRoutineSw"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cancelBtn" />
+
+        <EditText
+            android:id="@+id/tagTxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="enter TAG"
+            android:inputType="text"
+            android:nextFocusDown="@+id/titleTxt"
+            android:singleLine="true"
+            android:text="@={item.tagString}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner"
+            tools:text="home" />
+
+        <TextView
+            android:id="@+id/startDateTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@={item.startLine}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tagTxt"
+            tools:text="@string/undefinedDate" />
+
+        <ImageButton
+            android:id="@+id/startCal"
+            android:layout_width="@dimen/imgBtn_size"
+            android:layout_height="@dimen/imgBtn_size"
+            android:src="@android:drawable/ic_menu_day"
+            app:layout_constraintStart_toEndOf="@+id/startDateTxt"
+            app:layout_constraintTop_toBottomOf="@+id/tagTxt"
+            tools:layout_editor_absoluteX="280dp"
+            tools:layout_editor_absoluteY="125dp" />
+
+        <ToggleButton
+            android:id="@+id/hasStartSw"
+            android:layout_width="@dimen/imgBtn_size"
+            android:layout_height="@dimen/imgBtn_size"
+            android:checked="false"
+            app:layout_constraintStart_toEndOf="@+id/startCal"
+            app:layout_constraintTop_toBottomOf="@+id/tagTxt" />
+
+        <TextView
+            android:id="@+id/deadDateTxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:text="@={item.deadLine}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startDateTxt"
+            tools:text="@string/undefinedDate" />
+
+        <ImageButton
+            android:id="@+id/deadCal"
+            android:layout_width="@dimen/imgBtn_size"
+            android:layout_height="@dimen/imgBtn_size"
+            android:src="@android:drawable/ic_menu_day"
+            app:layout_constraintStart_toEndOf="@+id/deadDateTxt"
+            app:layout_constraintTop_toBottomOf="@+id/startCal" />
+
+        <ToggleButton
+            android:id="@+id/hasDeadSw"
+            android:layout_width="48dp"
+            android:layout_height="@dimen/imgBtn_size"
+            android:layout_marginEnd="8dp"
+            android:switchMinWidth="@android:dimen/app_icon_size"
+            app:layout_constraintStart_toEndOf="@+id/deadCal"
+            app:layout_constraintTop_toBottomOf="@+id/hasStartSw"
+            tools:layout_editor_absoluteY="173dp" />
+
+        <RatingBar
+            android:id="@+id/rewardRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:numStars="6"
+            android:stepSize="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deadDateTxt" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,83 @@
+<resources>
+    <string name="action_settings">Settings</string>
+    <string name="achievement">達成数</string>
+    <string name="app_name">ViewPagerToDo</string>
+    <string name="apply">決定</string>
+    <string name="cancel">元に戻す</string>
+    <string name="newItem">新しいアイテム</string>
+    <string name="filterCondition">表示条件</string>
+    <string name="undefinedDate">----/--/--</string>
+
+    <string name="enterNewItem">新しいアイテムを入力</string>
+    <string name="getPoint">完了クリアし達成確認</string>
+    <string name="filterDo">フィルター適応</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string-array name="period_array">
+        <item>毎日</item>
+        <item>隔日</item>
+        <item>3日毎</item>
+        <item>4日毎</item>
+        <item>5日毎</item>
+        <item>6日毎</item>
+        <item>7日毎</item>
+    </string-array>
+    <string-array name="date_array">
+        <item>本日</item>
+        <item>明日</item>
+        <item>2日後</item>
+        <item>3日後</item>
+        <item>今週中</item>
+        <item>今月中</item>
+        <item>期限なし</item>
+    </string-array>
+    <integer-array name="dateFilter_array">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>7</item>
+        <item>30</item>
+    </integer-array>
+    <string-array name="default_todoItem_title">
+        <item>Stretch Core of Body</item>
+        <item>B型肝炎の抗体まとめ</item>
+        <item>抗癌剤まとめ</item>
+        <item>段ボール出し</item>
+        <item>ライト付け</item>
+        <item>スルガ銀行に連絡</item>
+        <item>ひげそり処分</item>
+        <item>平面図送付</item>
+        <item>本棚整理</item>
+    </string-array>
+    <string-array name="default_todoItem_startDate">
+        <item>2018/8/10</item>
+        <item>2018/8/11</item>
+        <item>2018/8/11</item>
+        <item>2018/8/12</item>
+        <item>2018/8/13</item>
+        <item>2018/8/14</item>
+        <item>2018/8/11</item>
+        <item>2018/8/12</item>
+        <item>2018/8/9</item>
+    </string-array>
+    <string-array name="default_todoItem_tag">
+        <item>運動</item>
+        <item>STUDY</item>
+        <item>STUDY</item>
+        <item>整理</item>
+        <item>整理</item>
+        <item>SUBMIT</item>
+        <item>整理</item>
+        <item>home</item>
+        <item>Program</item>
+    </string-array>
+    <string-array name="menu_items">
+        <item>make item default</item>
+        <item>save current item</item>
+    </string-array>
+</resources>
