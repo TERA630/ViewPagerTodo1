@@ -15,6 +15,8 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
+    private lateinit var mAdapter: MainRecyclerAdaptor
+
     companion object {
         fun newInstance(tagString: String): MainFragment {
             val bundle = Bundle()
@@ -39,9 +41,8 @@ class MainFragment : Fragment() {
         } else {
             model.getItemListWithTag(filterStr)
         }
-        val mAdapter = MainRecyclerAdaptor(list, model)
+        mAdapter = MainRecyclerAdaptor(list, model)
         recycler_view.adapter = mAdapter
-
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
             override fun onClick(view: View, numberToCall: Int) {
                 val context = MyApplication.instance?.applicationContext
@@ -54,5 +55,23 @@ class MainFragment : Fragment() {
             }
         }
         )
+    }
+
+    override fun onStart() {
+        model.itemList.observe(this, Observer {
+            Log.i("test", "${this.javaClass}@${this.hashCode()} listened the change")
+            if (mAdapter != null) {
+                val filterStr = this.arguments!!.getString("tagString") ?: ""
+                val list = if (filterStr == "all") {
+                    model.getItemListWithTag("")
+                } else {
+                    model.getItemListWithTag(filterStr)
+                }
+                mAdapter.setListOfAdapter(list)
+                mAdapter.notifyDataSetChanged()
+            } else {
+                Log.w("test", "mAdapter was null")
+            }
+        })
     }
 }
