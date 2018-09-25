@@ -105,7 +105,7 @@ class MainViewModel : ViewModel() {
 
     }
 
-    fun caliculateAchievedPoints() {
+    fun calculateAchievedPoints() {
 
         val achievedList = getItemList().filter { it.isDone }
         val notYetList = getItemList().filter { !(it.isDone) }

@@ -25,7 +25,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //
         achievePoint.setText("達成：${model.earnedPoints}")
-
+        getAchieve.setOnClickListener {
+            model.calculateAchievedPoints()
+            achievePoint.setText("達成：${model.earnedPoints}")
+            val repository = Repository()
+            repository.saveIntToPreference(EARNED_POINT, model.earnedPoints, this@MainActivity.baseContext)
+        }
         // Pager Adapter setup
         val pagerAdapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         val viewPager = main_viewpager as ViewPager

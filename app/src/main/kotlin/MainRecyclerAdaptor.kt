@@ -25,6 +25,7 @@ class MainRecyclerAdaptor(private val mList: MutableList<FilteredToDoItem>, priv
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val ivh = holder as ItemViewHolder
         ivh.itemView.itemTitle.text = mList[position].item.title
+        ivh.itemView.
         ivh.itemView.editBtn.setOnClickListener { v: View ->
             listener.onClick(v, mList[position].unFilter)
         }

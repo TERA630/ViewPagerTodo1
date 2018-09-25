@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/achievement" />
             <Button
+                android:id = "@+id/getAchieve"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/getPoint" />
