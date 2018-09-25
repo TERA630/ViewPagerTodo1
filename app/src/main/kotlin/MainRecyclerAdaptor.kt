@@ -25,12 +25,14 @@ class MainRecyclerAdaptor(private val mList: MutableList<FilteredToDoItem>, priv
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val ivh = holder as ItemViewHolder
         ivh.itemView.itemTitle.text = mList[position].item.title
-        ivh.itemView.
+        ivh.itemView.itemTitle.isChecked = mList[position].item.isDone
+        ivh.itemView.itemTitle.setOnCheckedChangeListener { v, boolean ->
+            model.getItemList()[mList[position].unFilter].isDone = boolean
+        }
         ivh.itemView.editBtn.setOnClickListener { v: View ->
             listener.onClick(v, mList[position].unFilter)
         }
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
         return ItemViewHolder(rowView)

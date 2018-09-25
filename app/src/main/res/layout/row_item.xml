@@ -9,12 +9,7 @@
     <data>
 
         <import type="com.example.yoshi.viewpagertodo1.FilteredToDoItem" />
-
         <import type="java.util.List" />
-
-        <variable
-            name="handler"
-            type="com.example.yoshi.viewpagertodo1.MainViewModel" />
 
         <variable
             name="itemNumber"
