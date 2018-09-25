@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 
 
 class MainViewModel : ViewModel() {
-    private val itemList = MutableLiveData<MutableList<ToDoItem>>()
+    val itemList = MutableLiveData<MutableList<ToDoItem>>()
     var tagFilters = mutableListOf("all", "STUDY", "PROGRAM", "submit", "整理", "運動")
     var earnedPoints: Int = 0
     lateinit var filterSpinnerStrList: MutableList<String>

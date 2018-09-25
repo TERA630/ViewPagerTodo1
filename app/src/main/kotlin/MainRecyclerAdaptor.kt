@@ -43,6 +43,10 @@ class MainRecyclerAdaptor(private val mList: MutableList<FilteredToDoItem>, priv
     interface OnItemClickListener {
         fun onClick(view: View, numberToCall: Int)
     }
+    fun setListOfAdapter(list : MutableList<FilteredToDoItem>){
+
+
+    }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener

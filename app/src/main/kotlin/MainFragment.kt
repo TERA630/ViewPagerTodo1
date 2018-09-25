@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
 import kotlinx.android.synthetic.main.fragment_main.*
-
+import androidx.lifecycle.Observer
 
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
@@ -58,6 +58,7 @@ class MainFragment : Fragment() {
     }
 
     override fun onStart() {
+        super.onStart()
         model.itemList.observe(this, Observer {
             Log.i("test", "${this.javaClass}@${this.hashCode()} listened the change")
             if (mAdapter != null) {
