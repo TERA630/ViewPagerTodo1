@@ -15,7 +15,7 @@ import androidx.lifecycle.Observer
 
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
-    private lateinit var mAdapter: MainRecyclerAdaptor
+    var mAdapter: MainRecyclerAdaptor? = null
 
     companion object {
         fun newInstance(tagString: String): MainFragment {
