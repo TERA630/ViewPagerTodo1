@@ -232,6 +232,5 @@
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-process:2.0.0-rc01@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.collection:collection:1.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.navigation:navigation-fragment:1.0.0-alpha05@aar" level="project" />
-    <orderEntry type="library" name="Gradle: android-android-28" level="project" />
   </component>
 </module>

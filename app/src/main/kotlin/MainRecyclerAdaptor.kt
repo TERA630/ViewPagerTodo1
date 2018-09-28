@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.row_item.view.*
 
-class MainRecyclerAdaptor(private val mList: MutableList<FilteredToDoItem>, private val model: MainViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, private val model: MainViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var listener: OnItemClickListener
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         if (mList.isEmpty()) {
