@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         getAchieve.setOnClickListener {
             model.calculateAchievedPoints()
             achievePoint.setText("達成：${model.earnedPoints}")
+
             val repository = Repository()
             repository.saveIntToPreference(EARNED_POINT, model.earnedPoints, this@MainActivity.baseContext)
         }

@@ -27,6 +27,9 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
         ivh.itemView.itemTitle.text = mList[position].item.title
         ivh.itemView.itemTitle.isChecked = mList[position].item.isDone
         ivh.itemView.itemTitle.setOnCheckedChangeListener { v, boolean ->
+            Log.i("test","check changed..")
+            v.isChecked = boolean
+            mList[position].item.isDone = boolean
             model.getItemList()[mList[position].unFilter].isDone = boolean
         }
         ivh.itemView.editBtn.setOnClickListener { v: View ->

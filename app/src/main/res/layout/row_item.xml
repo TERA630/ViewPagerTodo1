@@ -8,14 +8,12 @@
 
     <data>
 
-        <import type="com.example.yoshi.viewpagertodo1.FilteredToDoItem" />
-        <import type="java.util.List" />
+        <import type="com.example.yoshi.viewpagertodo1.ToDoItem" />
 
-        <variable
-            name="itemNumber"
-            type="Integer" />
+        <variable name="item"
+            type="ToDoItem" />
+
     </data>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,7 +24,7 @@
             android:id="@+id/itemTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:checked="@={item.Done}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="To Do Items" />

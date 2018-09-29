@@ -102,7 +102,6 @@ class MainViewModel : ViewModel() {
     fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         Log.i("test", "spinner ${position}selected")
         currentDateStr = filterSpinnerStrList[position]
-
     }
 
     fun calculateAchievedPoints() {
