@@ -8,10 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
 import kotlinx.android.synthetic.main.fragment_main.*
-import androidx.lifecycle.Observer
 
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
@@ -51,6 +51,8 @@ class MainFragment : Fragment() {
                 intent.putExtra("parentID", numberToCall)
                 intent.putExtra("tagString", filterStr)
                 Log.i("test", "parentID was $numberToCall")
+                val repository = Repository()
+                repository.saveListToPreference(model.getItemList(), context)
                 startActivity(intent)
             }
         }

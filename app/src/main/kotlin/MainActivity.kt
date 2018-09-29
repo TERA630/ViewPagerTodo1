@@ -1,6 +1,7 @@
 package com.example.yoshi.viewpagertodo1
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -14,22 +15,24 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private lateinit var model: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        val model = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        model = ViewModelProviders.of(this).get(MainViewModel::class.java)
         model.initItems(this)
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
 
         //
-        achievePoint.setText("達成：${model.earnedPoints}")
+        achievePoint.text = "達成：${model.earnedPoints}"
         getAchieve.setOnClickListener {
             model.calculateAchievedPoints()
-            achievePoint.setText("達成：${model.earnedPoints}")
+            achievePoint.text = "達成：${model.earnedPoints}"
 
             val repository = Repository()
+            repository.saveListToPreference(model.getItemList(), this.baseContext)
             repository.saveIntToPreference(EARNED_POINT, model.earnedPoints, this@MainActivity.baseContext)
         }
         // Pager Adapter setup
@@ -69,7 +72,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_camera -> {
-                // Handle the camera action
+                val repository = Repository()
+                val list = repository.makeDefaultList(this@MainActivity.baseContext)
+                model.itemList.value = list
+                Log.i("test", "Make default list by menu.")
             }
             R.id.nav_gallery -> {
 

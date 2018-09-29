@@ -78,7 +78,7 @@ class Repository {
         }
     }
 
-    private fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
+    fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
         val res = _context.resources
         val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
         val defaultItemStartDate = res.getStringArray(R.array.default_todoItem_startDate)
