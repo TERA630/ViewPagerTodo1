@@ -37,10 +37,11 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val filterStr = this.arguments!!.getString("tagString") ?: ""
         val list = if (filterStr == "all") {
-            model.getItemListWithTag("")
+            model.getAllItemList()
         } else {
             model.getItemListWithTag(filterStr)
         }
+
         mAdapter = MainRecyclerAdaptor(list, model)
         recycler_view.adapter = mAdapter
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
@@ -66,7 +67,7 @@ class MainFragment : Fragment() {
             if (mAdapter != null) {
                 val filterStr = this.arguments!!.getString("tagString") ?: ""
                 val list = if (filterStr == "all") {
-                    model.getItemListWithTag("")
+                    model.getAllItemList()
                 } else {
                     model.getItemListWithTag(filterStr)
                 }

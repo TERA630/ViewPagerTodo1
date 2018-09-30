@@ -51,8 +51,10 @@ class MainViewModel : ViewModel() {
     fun getItemList(): MutableList<ToDoItem> = itemList.value
             ?: listOf(ToDoItem(EMPTY_ITEM)).toMutableList()
 
-
-
+    fun getAllItemList(): MutableList<FilteredToDoItem> {
+        val rawList = getItemList()
+        return MutableList(rawList.size) { index -> FilteredToDoItem(index, rawList[index].copy()) }
+    }
     fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
         val rawList = getItemList()
         val regFilterStr = Regex(filterStr)
