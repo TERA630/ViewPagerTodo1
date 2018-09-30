@@ -57,7 +57,7 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
     }
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val mBinding = RowItemBinding.bind(itemView)!!
+        val mBinding = RowItemBinding.bind(itemView)
     }
 
     interface OnItemClickListener {

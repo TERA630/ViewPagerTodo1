@@ -14,6 +14,7 @@ class MainPagerAdapter(fragmentManager: FragmentManager, val model: MainViewMode
         val filter = model.tagFilters[position]
         return MainFragment.newInstance(filter)
     }
+
     override fun getCount(): Int = model.tagFilters.size
     override fun getPageTitle(position: Int): CharSequence? {
         return model.tagFilters[position]
