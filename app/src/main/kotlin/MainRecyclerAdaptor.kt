@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
 import kotlinx.android.synthetic.main.row_item.view.*
 
 class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, private val model: MainViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -12,7 +13,8 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         if (mList.isEmpty()) {
             Log.i("test", "Filtered list was empty ")
-            val alteredItem = FilteredToDoItem(model.getItemList().size, ToDoItem("new Item", 1.0f, false, false, true, model.currentDateStr, false, model.filterSpinnerStrList[1]))
+            val alteredItem = FilteredToDoItem(model.getItemList().size, ToDoItem("new Item",
+                    1.0f, false, false, true, model.currentDateStr, false, model.filterSpinnerStrList[1]))
             mList.add(alteredItem)
         }
         super.onAttachedToRecyclerView(recyclerView)
@@ -24,12 +26,14 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val ivh = holder as ItemViewHolder
-        ivh.itemView.itemTitle.text = mList[position].item.title
-        ivh.itemView.itemTitle.isChecked = mList[position].item.isDone
+//        ivh.itemView.itemTitle.text = mList[position].item.title
+        ivh.mBinding.item = mList[position].item
+//        ivh.itemView.itemTitle.isChecked = mList[position].item.isDone
         ivh.itemView.itemTitle.setOnCheckedChangeListener { v, boolean ->
             Log.i("test","check changed..")
-            v.isChecked = boolean
+            //   v.isChecked = boolean
             mList[position].item.isDone = boolean
+            notifyItemChanged(position)
             model.getItemList()[mList[position].unFilter].isDone = boolean
         }
         ivh.itemView.editBtn.setOnClickListener { v: View ->
@@ -38,10 +42,13 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
+
         return ItemViewHolder(rowView)
     }
 
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val mBinding = RowItemBinding.bind(itemView)
+    }
 
     interface OnItemClickListener {
         fun onClick(view: View, numberToCall: Int)
