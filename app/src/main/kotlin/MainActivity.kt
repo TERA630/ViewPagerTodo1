@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val repository = Repository()
                 val list = repository.makeDefaultList(this@MainActivity.baseContext)
                 model.itemList.value = list
+                repository.saveListToPreference(list, this@MainActivity.baseContext)
                 Log.i("test", "Make default list by menu.")
             }
             R.id.nav_gallery -> {

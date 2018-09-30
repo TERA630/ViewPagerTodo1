@@ -45,13 +45,13 @@
     </integer-array>
     <string-array name="default_todoItem_title">
         <item>Stretch Core of Body</item>
-        <item>B型肝炎の抗体まとめ</item>
-        <item>抗癌剤まとめ</item>
-        <item>段ボール出し</item>
-        <item>ライト付け</item>
-        <item>スルガ銀行に連絡</item>
-        <item>ひげそり処分</item>
-        <item>平面図送付</item>
+        <item>Henoch-Schonlein紫斑病まとめ</item>
+        <item>CartinoidからNETへ</item>
+        <item>ゴミまとめ</item>
+        <item>GPS検討</item>
+        <item>確定申告書類整理</item>
+        <item>確定申告送付</item>
+        <item>整理</item>
         <item>本棚整理</item>
     </string-array>
     <string-array name="default_todoItem_startDate">
