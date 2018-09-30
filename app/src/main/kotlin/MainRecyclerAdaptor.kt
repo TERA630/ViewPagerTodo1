@@ -40,11 +40,10 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
         } else { stringBuilder.append(mList[position].item.isDone.toString())}
 
         ivh.mBinding.periodViewer.text = stringBuilder.toString()
-//      ivh.itemView.itemTitle.isChecked = mList[position].item.isDone
-        ivh.itemView.itemTitle.setOnCheckedChangeListener { v, boolean ->
+ //     ivh.itemView.itemTitle.isChecked = mList[position].item.isDone
+        ivh.mBinding.itemTitle.setOnCheckedChangeListener { v, boolean ->
             Log.i("test","$itemTitle check changed.to $boolean.")
-//          v.isChecked = boolean
-         mList[position].item.isDone = boolean
+            mList[position].item.isDone = boolean
             notifyItemChanged(position)
             model.getItemList()[mList[position].unFilter].isDone = boolean
         }

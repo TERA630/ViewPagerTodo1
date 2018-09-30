@@ -40,14 +40,14 @@ class MainFragment : Fragment() {
         val filterStr = mTag
         main_fab.setOnClickListener { v->
 
-            val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra("parentID", -1)
-            intent.putExtra("tagString", filterStr)
-            Log.i("test", "newItem made")
-            val context = this.context
-            context?.let {  model.saveItemListToPreference(context)} ?:
-                    throw Exception("context is null at MainFragment")
-            startActivity(intent)
+        val intent = Intent(context, DetailActivity::class.java)
+        intent.putExtra("parentID", -1)
+        intent.putExtra("tagString", filterStr)
+        Log.i("test", "newItem made")
+        val context = this@MainFragment.context
+                ?: throw Exception("context is null at MainFragment")
+          model.saveItemListToPreference(context)
+        startActivity(intent)
         }
         val list = if (filterStr == "all") {
             model.getItemListWithTag("")
@@ -58,8 +58,8 @@ class MainFragment : Fragment() {
         recycler_view.adapter = mAdapter
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
             override fun onClick(view: View, numberToCall: Int) {
-                val context = MyApplication.instance?.applicationContext
-                        ?: throw Exception("context is null at MainFragment")
+                    val context = this@MainFragment.context
+                            ?: throw Exception("context is null at MainFragment")
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("parentID", numberToCall)
                 intent.putExtra("tagString", filterStr)
@@ -75,7 +75,7 @@ class MainFragment : Fragment() {
         super.onStart()
         model.itemList.observe(this, Observer {
             Log.i("test", "${this.javaClass}@${this.hashCode()} listened the change")
-            if (mAdapter != null) {
+
                 val filterStr = this.arguments!!.getString("tagString") ?: ""
                 val list = if (filterStr == "all") {
                     model.getItemListWithTag("")
@@ -84,9 +84,6 @@ class MainFragment : Fragment() {
                 }
                 mAdapter.setListOfAdapter(list)
                 mAdapter.notifyDataSetChanged()
-            } else {
-                Log.w("test", "mAdapter was null")
-            }
         })
     }
 }

@@ -29,9 +29,7 @@ class DetailActivity() : AppCompatActivity(), Parcelable {
         val repository = Repository()
         val itemList = repository.loadListFromPreference(context)
         val index = when (number) {
-                    in 0..itemList.lastIndex -> {
-                number
-            }
+                    in 0..itemList.lastIndex -> { number }
             else -> {
                 val newItem = ToDoItem(title = "新しいアイテム", tagString = tagSting, reward = 1.0f, startLine = getToday())
                 itemList.add(newItem)
@@ -39,7 +37,7 @@ class DetailActivity() : AppCompatActivity(), Parcelable {
                 itemList.lastIndex
             }
         }
-        binding.item = itemList[number]
+        binding.item = itemList[index]
 
         binding.applyBtn.setOnClickListener {
             val intent = Intent(context, MainActivity::class.java)
