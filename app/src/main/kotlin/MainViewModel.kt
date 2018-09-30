@@ -17,21 +17,15 @@ class MainViewModel : ViewModel() {
     var earnedPoints: Int = 0
     lateinit var filterSpinnerStrList: MutableList<String>
     var currentDateStr = "2018/8/26"
+    lateinit var mRepository: Repository
 
 
     fun initItems(_context: Context) {
-        val repository = Repository()
-        itemList.value = repository.loadListFromPreference(_context)
-        earnedPoints = repository.loadIntFromPreference(EARNED_POINT, _context)
+        mRepository = Repository()
+        itemList.value = mRepository.loadListFromPreference(_context)
+        earnedPoints = mRepository.loadIntFromPreference(EARNED_POINT, _context)
         filterSpinnerStrList = fetchRecentDate(context = _context)
         currentDateStr = filterSpinnerStrList[0]
-    }
-
-    fun appendItem(newItem: ToDoItem) {
-        val size = getItemList().size
-        val mList = getItemList()
-        mList.add(size, newItem)
-        itemList.value = mList
     }
 
     fun deleteItem(index: Int) {
@@ -39,7 +33,6 @@ class MainViewModel : ViewModel() {
         mList.removeAt(index)
         itemList.value = mList
     }
-
     fun swapItem(fromPosition: Int, toPosition: Int) {
         val list = getItemList()
         val str = list[toPosition]
@@ -47,10 +40,8 @@ class MainViewModel : ViewModel() {
         list[fromPosition] = str
         itemList.value = list
     }
-
     fun getItemList(): MutableList<ToDoItem> = itemList.value
             ?: listOf(ToDoItem(EMPTY_ITEM)).toMutableList()
-
 
     fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
         val rawList = getItemList()
@@ -81,6 +72,12 @@ class MainViewModel : ViewModel() {
             }
         }
         return result
+    }
+    fun saveItemListToPreference(_context: Context){
+        try{ mRepository.saveListToPreference(this.getItemList(),_context)}
+        catch (e:Exception ){
+            Log.e("test","error occur at saveItemListToPreference")
+        }
     }
 
     fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean {

@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
     lateinit var mAdapter: MainRecyclerAdaptor
+    lateinit var mTag:String
 
     companion object {
         fun newInstance(tagString: String): MainFragment {
@@ -29,13 +30,25 @@ class MainFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         model = ViewModelProviders.of(this.activity!!).get()
+        mTag = this.arguments!!.getString("tagString") ?: "all"
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, fragment_frame)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val filterStr = this.arguments!!.getString("tagString") ?: ""
+        val filterStr = mTag
+        main_fab.setOnClickListener { v->
+
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("parentID", -1)
+            intent.putExtra("tagString", filterStr)
+            Log.i("test", "newItem made")
+            val context = this.context
+            context?.let {  model.saveItemListToPreference(context)} ?:
+                    throw Exception("context is null at MainFragment")
+            startActivity(intent)
+        }
         val list = if (filterStr == "all") {
             model.getItemListWithTag("")
         } else {
@@ -51,12 +64,11 @@ class MainFragment : Fragment() {
                 intent.putExtra("parentID", numberToCall)
                 intent.putExtra("tagString", filterStr)
                 Log.i("test", "parentID was $numberToCall")
-                val repository = Repository()
-                repository.saveListToPreference(model.getItemList(), context)
+                model.saveItemListToPreference(context)
                 startActivity(intent)
             }
-        }
-        )
+        })
+
     }
 
     override fun onStart() {

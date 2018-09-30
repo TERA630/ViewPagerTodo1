@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.yoshi.viewpagertodo1.R.id.itemTitle
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
 import kotlinx.android.synthetic.main.row_item.view.*
 
@@ -36,13 +37,14 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
         })
         if (mList[position].item.hasDeadLine) {
             stringBuilder.append(mList[position].item.deadLine)
-        }
+        } else { stringBuilder.append(mList[position].item.isDone.toString())}
+
         ivh.mBinding.periodViewer.text = stringBuilder.toString()
-//        ivh.itemView.itemTitle.isChecked = mList[position].item.isDone
+//      ivh.itemView.itemTitle.isChecked = mList[position].item.isDone
         ivh.itemView.itemTitle.setOnCheckedChangeListener { v, boolean ->
-            Log.i("test","check changed..")
-            //   v.isChecked = boolean
-            mList[position].item.isDone = boolean
+            Log.i("test","$itemTitle check changed.to $boolean.")
+//          v.isChecked = boolean
+         mList[position].item.isDone = boolean
             notifyItemChanged(position)
             model.getItemList()[mList[position].unFilter].isDone = boolean
         }
@@ -52,7 +54,6 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
-
         return ItemViewHolder(rowView)
     }
 

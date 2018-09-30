@@ -30,10 +30,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         getAchieve.setOnClickListener {
             model.calculateAchievedPoints()
             achievePoint.text = "達成：${model.earnedPoints}"
-
-            val repository = Repository()
-            repository.saveListToPreference(model.getItemList(), this.baseContext)
-            repository.saveIntToPreference(EARNED_POINT, model.earnedPoints, this@MainActivity.baseContext)
+            model.saveItemListToPreference(_context = this.baseContext)
         }
         // Pager Adapter setup
         val pagerAdapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
@@ -47,7 +44,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
     }
+
+    override fun onPause() {
+        super.onPause()
+        model.saveItemListToPreference(this.baseContext)
+    }
     override fun onBackPressed() {
+        model.saveItemListToPreference(this.baseContext)
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
@@ -79,7 +82,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.i("test", "Make default list by menu.")
             }
             R.id.nav_gallery -> {
-
+                model.saveItemListToPreference(this@MainActivity.baseContext)
             }
             R.id.nav_slideshow -> {
 
