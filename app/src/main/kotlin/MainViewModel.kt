@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
     val itemList = MutableLiveData<MutableList<ToDoItem>>()
-    var tagFilters = mutableListOf("all", "STUDY", "PROGRAM", "submit", "整理", "運動")
     var earnedPoints: Int = 0
     lateinit var filterSpinnerStrList: MutableList<String>
+    lateinit var tagList: MutableList<String>
     var currentDateStr = "2018/8/26"
     lateinit var mRepository: Repository
 
@@ -24,6 +24,7 @@ class MainViewModel : ViewModel() {
         mRepository = Repository()
         itemList.value = mRepository.loadListFromPreference(_context)
         earnedPoints = mRepository.loadIntFromPreference(EARNED_POINT, _context)
+        tagList = mRepository.getTagListFromItemList(getItemList())
         filterSpinnerStrList = fetchRecentDate(context = _context)
         currentDateStr = filterSpinnerStrList[0]
     }
@@ -84,7 +85,7 @@ class MainViewModel : ViewModel() {
         Log.i("test", "onEditorActionDone Call")
         return when (actionId) {
             EditorInfo.IME_ACTION_DONE, EditorInfo.IME_ACTION_NONE, EditorInfo.IME_ACTION_NEXT, EditorInfo.IME_NULL -> {
-                tagFilters[0] = edit.text.toString()
+                tagList[0] = edit.text.toString()
                 val keyboardUtils = KeyboardUtils()
                 keyboardUtils.hide(edit.context, edit)
                 true
@@ -113,6 +114,7 @@ class MainViewModel : ViewModel() {
         Log.i("test", "reward was $getReward")
         this.earnedPoints = this.earnedPoints + getReward
         this.itemList.value = notYetList.toMutableList()
+        this.tagList = mRepository.getTagListFromItemList(getItemList())
     }
 
 }

@@ -37,7 +37,7 @@
                     android:id="@+id/achievePoint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="48dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/achievement"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
@@ -54,6 +54,7 @@
                     app:layout_constraintStart_toEndOf="@+id/achievePoint"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/main_tab"
                 android:layout_width="match_parent"
@@ -61,7 +62,8 @@
                 android:layout_gravity="bottom"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:tabGravity="center"
-                app:tabIndicatorColor="@color/colorPrimary" />
+                app:tabIndicatorColor="@color/colorPrimary"
+                app:tabMode="scrollable" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

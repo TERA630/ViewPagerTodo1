@@ -44,37 +44,33 @@
         <item>30</item>
     </integer-array>
     <string-array name="default_todoItem_title">
-        <item>Stretch Core of Body</item>
+        <item>個人番号カード登録証記入</item>
         <item>Henoch-Schonlein紫斑病まとめ</item>
         <item>CartinoidからNETへ</item>
-        <item>ゴミまとめ</item>
-        <item>GPS検討</item>
-        <item>確定申告書類整理</item>
-        <item>確定申告送付</item>
-        <item>整理</item>
+        <item>名駅南の鍵送付</item>
+        <item>前半期の不動産まとめ</item>
+        <item>急性腹症､慢性腹痛まとめ</item>
+        <item>ユニクロ服整理</item>
+        <item></item>
         <item>本棚整理</item>
     </string-array>
     <string-array name="default_todoItem_startDate">
-        <item>2018/8/10</item>
-        <item>2018/8/11</item>
+        <item>2018/10/3</item>
+        <item>2018/9/30</item>
         <item>2018/8/11</item>
         <item>2018/8/12</item>
         <item>2018/8/13</item>
         <item>2018/8/14</item>
         <item>2018/8/11</item>
-        <item>2018/8/12</item>
-        <item>2018/8/9</item>
     </string-array>
     <string-array name="default_todoItem_tag">
-        <item>運動</item>
+        <item>書類記入</item>
         <item>STUDY</item>
         <item>STUDY</item>
+        <item>送付</item>
+        <item>財務</item>
+        <item>勉強</item>
         <item>整理</item>
-        <item>整理</item>
-        <item>SUBMIT</item>
-        <item>整理</item>
-        <item>home</item>
-        <item>Program</item>
     </string-array>
     <string-array name="menu_items">
         <item>make item default</item>

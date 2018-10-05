@@ -11,12 +11,12 @@ import androidx.fragment.app.FragmentPagerAdapter
 class MainPagerAdapter(fragmentManager: FragmentManager, val model: MainViewModel) : FragmentPagerAdapter(fragmentManager) {
 
     override fun getItem(position: Int): Fragment {
-        val filter = model.tagFilters[position]
+        val filter = model.tagList[position]
         return MainFragment.newInstance(filter)
     }
 
-    override fun getCount(): Int = model.tagFilters.size
+    override fun getCount(): Int = model.tagList.size
     override fun getPageTitle(position: Int): CharSequence? {
-        return model.tagFilters[position]
+        return model.tagList[position]
     }
 }

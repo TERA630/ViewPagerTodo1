@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.yoshi.viewpagertodo1.R.id.itemTitle
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
 import kotlinx.android.synthetic.main.row_item.view.*
 
@@ -37,17 +36,18 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
         })
         if (mList[position].item.hasDeadLine) {
             stringBuilder.append(mList[position].item.deadLine)
-        } else { stringBuilder.append(mList[position].item.isDone.toString())}
+        }
 
         ivh.mBinding.periodViewer.text = stringBuilder.toString()
- //     ivh.itemView.itemTitle.isChecked = mList[position].item.isDone
         ivh.mBinding.itemTitle.setOnCheckedChangeListener { v, boolean ->
-            Log.i("test","$itemTitle check changed.to $boolean.")
             mList[position].item.isDone = boolean
             notifyItemChanged(position)
             model.getItemList()[mList[position].unFilter].isDone = boolean
         }
         ivh.itemView.editBtn.setOnClickListener { v: View ->
+            listener.onClick(v, mList[position].unFilter)
+        }
+        ivh.itemView.delBtn.setOnClickListener { v: View ->
             listener.onClick(v, mList[position].unFilter)
         }
     }

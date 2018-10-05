@@ -23,7 +23,6 @@ data class ToDoItem constructor(
         var deadLine: String = "----/--/--",
         var tagString: String = "home"
 )
-
 class FilteredToDoItem constructor(
         var unFilter: Int = 0,
         var item: ToDoItem = ToDoItem()
@@ -86,6 +85,14 @@ class Repository {
         val toDoList = List(defaultItemTitle.size) { index -> ToDoItem(title = defaultItemTitle[index],reward = 1.0f,
                 isDone = false, hasStartLine = true, startLine = defaultItemStartDate[index], hasDeadLine = false, tagString = defaultItemTag[index]) }
         return toDoList.toMutableList()
+    }
+
+    fun getTagListFromItemList(_list: MutableList<ToDoItem>): MutableList<String> {
+
+        val rawTagList: List<String> = List(_list.size) { index -> _list[index].tagString }
+        val result = rawTagList.distinct()
+        // * ToDo 複数のタグをもつアイテムの処理
+        return result.toMutableList()
     }
 }
 

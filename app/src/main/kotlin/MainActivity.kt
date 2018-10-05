@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         getAchieve.setOnClickListener {
             model.calculateAchievedPoints()
             achievePoint.text = "達成：${model.earnedPoints}"
-            model.saveItemListToPreference(_context = this.baseContext)
         }
         // Pager Adapter setup
         val pagerAdapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
@@ -43,6 +42,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
+
+        val kUtils = KeyboardUtils()
+        kUtils.hide(this)
     }
 
     override fun onPause() {

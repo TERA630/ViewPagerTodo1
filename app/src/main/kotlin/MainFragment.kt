@@ -46,7 +46,7 @@ class MainFragment : Fragment() {
         Log.i("test", "newItem made")
         val context = this@MainFragment.context
                 ?: throw Exception("context is null at MainFragment")
-          model.saveItemListToPreference(context)
+            model.saveItemListToPreference(context)
         startActivity(intent)
         }
         val list = if (filterStr == "all") {
@@ -58,15 +58,25 @@ class MainFragment : Fragment() {
         recycler_view.adapter = mAdapter
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
             override fun onClick(view: View, numberToCall: Int) {
-                    val context = this@MainFragment.context
-                            ?: throw Exception("context is null at MainFragment")
-                val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra("parentID", numberToCall)
-                intent.putExtra("tagString", filterStr)
-                Log.i("test", "parentID was $numberToCall")
-                model.saveItemListToPreference(context)
-                startActivity(intent)
+                when (view.id) {
+                    R.id.editBtn -> {
+                        val context = this@MainFragment.context
+                                ?: throw Exception("context is null at MainFragment")
+                        val intent = Intent(context, DetailActivity::class.java)
+                        intent.putExtra("parentID", numberToCall)
+                        intent.putExtra("tagString", filterStr)
+                        Log.i("test", "parentID was $numberToCall")
+                        model.saveItemListToPreference(context)
+                        startActivity(intent)
+                    }
+                    R.id.delBtn -> {
+                        model.deleteItem(numberToCall)
+                        Log.i("test", "$numberToCall was deleted")
+                    }
+                }
             }
+
+
         })
 
     }
