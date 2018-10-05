@@ -82,7 +82,8 @@ class Repository {
         val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
         val defaultItemStartDate = res.getStringArray(R.array.default_todoItem_startDate)
         val defaultItemTag = res.getStringArray(R.array.default_todoItem_tag)
-        val toDoList = List(defaultItemTitle.size) { index -> ToDoItem(title = defaultItemTitle[index],reward = 1.0f,
+        val toDoList = List(defaultItemTitle.size - 1) { index ->
+            ToDoItem(title = defaultItemTitle[index], reward = 1.0f,
                 isDone = false, hasStartLine = true, startLine = defaultItemStartDate[index], hasDeadLine = false, tagString = defaultItemTag[index]) }
         return toDoList.toMutableList()
     }

@@ -6,12 +6,12 @@ import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import android.widget.CompoundButton
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
 @BindingAdapter("android:checked", "android:text", requireAll = true)
-fun CompoundButton.setSpannableText(doneChecked: Boolean, _text: String) {
+fun CheckBox.setSpannableText(doneChecked: Boolean, _text: String) {
     if (doneChecked) {
         val spannableSir = SpannableString(_text)
         spannableSir.setSpan(StrikethroughSpan(), 0, spannableSir.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

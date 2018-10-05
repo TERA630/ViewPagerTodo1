@@ -38,8 +38,7 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val filterStr = mTag
-        main_fab.setOnClickListener { v->
-
+        main_fab.setOnClickListener { _ ->
         val intent = Intent(context, DetailActivity::class.java)
         intent.putExtra("parentID", -1)
         intent.putExtra("tagString", filterStr)
@@ -56,6 +55,7 @@ class MainFragment : Fragment() {
         }
         mAdapter = MainRecyclerAdaptor(list, model)
         recycler_view.adapter = mAdapter
+        recycler_view.setHasFixedSize(true)
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
             override fun onClick(view: View, numberToCall: Int) {
                 when (view.id) {

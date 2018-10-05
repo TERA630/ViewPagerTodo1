@@ -51,10 +51,10 @@
         <item>前半期の不動産まとめ</item>
         <item>急性腹症､慢性腹痛まとめ</item>
         <item>ユニクロ服整理</item>
-        <item></item>
         <item>本棚整理</item>
     </string-array>
     <string-array name="default_todoItem_startDate">
+        <item>2018/10/3</item>
         <item>2018/10/3</item>
         <item>2018/9/30</item>
         <item>2018/8/11</item>
