@@ -7,10 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
@@ -55,7 +58,8 @@ class MainFragment : Fragment() {
         }
         mAdapter = MainRecyclerAdaptor(list, model)
         recycler_view.adapter = mAdapter
-        recycler_view.setHasFixedSize(true)
+        runAnimatnion(recycler_view)
+
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
             override fun onClick(view: View, numberToCall: Int) {
                 when (view.id) {
@@ -95,5 +99,13 @@ class MainFragment : Fragment() {
                 mAdapter.setListOfAdapter(list)
                 mAdapter.notifyDataSetChanged()
         })
+    }
+
+    private fun runAnimatnion(recyclerView: RecyclerView) {
+        val controller: LayoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_falldown)
+        recyclerView.layoutAnimation = controller
+        recyclerView.adapter?.let { it.notifyDataSetChanged() }
+                ?: throw Exception("error in animation giving adaptor")
+        recyclerView.scheduleLayoutAnimation()
     }
 }

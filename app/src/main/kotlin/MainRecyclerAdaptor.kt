@@ -29,7 +29,6 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
     
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val ivh = holder as ItemViewHolder
-//        ivh.itemView.itemTitle.text = mList[position].item.title
         ivh.mBinding.item = mList[position].item
         ivh.mBinding.periodViewer.text
         val stringBuilder = StringBuilder(if (mList[position].item.hasStartLine) {

@@ -48,7 +48,7 @@ dependencies {
     // android architecture
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+ //   implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
 
 

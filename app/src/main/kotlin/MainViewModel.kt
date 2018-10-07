@@ -13,20 +13,20 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
     val itemList = MutableLiveData<MutableList<ToDoItem>>()
-    var earnedPoints: Int = 0
-    lateinit var filterSpinnerStrList: MutableList<String>
+    var archievement: Int = 0
+    lateinit var dateList: MutableList<String>
     lateinit var tagList: MutableList<String>
-    var currentDateStr = "2018/8/26"
+    var currentDate = "2018/8/26"
     lateinit var mRepository: Repository
 
 
     fun initItems(_context: Context) {
         mRepository = Repository()
         itemList.value = mRepository.loadListFromPreference(_context)
-        earnedPoints = mRepository.loadIntFromPreference(EARNED_POINT, _context)
+        archievement = mRepository.loadIntFromPreference(EARNED_POINT, _context)
         tagList = mRepository.getTagListFromItemList(getItemList())
-        filterSpinnerStrList = fetchRecentDate(context = _context)
-        currentDateStr = filterSpinnerStrList[0]
+        dateList = fetchRecentDate(context = _context)
+        currentDate = dateList[0]
     }
 
     fun deleteItem(index: Int) {
@@ -85,7 +85,6 @@ class MainViewModel : ViewModel() {
         Log.i("test", "onEditorActionDone Call")
         return when (actionId) {
             EditorInfo.IME_ACTION_DONE, EditorInfo.IME_ACTION_NONE, EditorInfo.IME_ACTION_NEXT, EditorInfo.IME_NULL -> {
-                tagList[0] = edit.text.toString()
                 val keyboardUtils = KeyboardUtils()
                 keyboardUtils.hide(edit.context, edit)
                 true
@@ -98,7 +97,7 @@ class MainViewModel : ViewModel() {
 
     fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         Log.i("test", "spinner ${position}selected")
-        currentDateStr = filterSpinnerStrList[position]
+        currentDate = dateList[position]
     }
 
     fun calculateAchievedPoints() {
@@ -112,7 +111,7 @@ class MainViewModel : ViewModel() {
             getReward += achievedList[i].reward.toInt()
         }
         Log.i("test", "reward was $getReward")
-        this.earnedPoints = this.earnedPoints + getReward
+        this.archievement = this.archievement + getReward
         this.itemList.value = notYetList.toMutableList()
         this.tagList = mRepository.getTagListFromItemList(getItemList())
     }

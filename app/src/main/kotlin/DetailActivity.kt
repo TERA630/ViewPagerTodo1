@@ -92,5 +92,6 @@ class DetailActivity() : AppCompatActivity(), Parcelable {
             return arrayOfNulls(size)
         }
     }
+
 }
 
