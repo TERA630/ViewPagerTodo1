@@ -58,7 +58,7 @@ class MainFragment : Fragment() {
         }
         mAdapter = MainRecyclerAdaptor(list, model)
         recycler_view.adapter = mAdapter
-        runAnimatnion(recycler_view)
+        runAnimation(recycler_view)
 
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
             override fun onClick(view: View, numberToCall: Int) {
@@ -101,7 +101,7 @@ class MainFragment : Fragment() {
         })
     }
 
-    private fun runAnimatnion(recyclerView: RecyclerView) {
+    private fun runAnimation(recyclerView: RecyclerView) {
         val controller: LayoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_falldown)
         recyclerView.layoutAnimation = controller
         recyclerView.adapter?.let { it.notifyDataSetChanged() }
