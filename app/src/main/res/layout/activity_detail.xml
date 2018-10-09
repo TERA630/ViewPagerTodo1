@@ -23,8 +23,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:checked="@={item.done}"
-            android:nextFocusDown="@+id/titleTxt"
-            android:nextFocusForward="@+id/titleTxt"
+            android:nextFocusDown="@id/titleTxt"
+            android:nextFocusForward="@id/titleTxt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,45 +35,35 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:inputType="text|textPersonName"
-            android:nextFocusDown="@+id/tagTxt"
+            android:nextFocusDown="@id/tagTxt"
             android:text="@={item.title}"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintEnd_toStartOf="@+id/applyBtn"
-            app:layout_constraintStart_toEndOf="@+id/doneChkBox"
+            app:layout_constraintEnd_toStartOf="@id/applyBtn"
+            app:layout_constraintStart_toEndOf="@id/doneChkBox"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/enterNewItem" />
 
         <ImageButton
             android:id="@+id/applyBtn"
             android:layout_width="@dimen/imgBtn_size"
-            android:layout_height="47dp"
+            android:layout_height="48dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:src="@android:drawable/ic_media_play"
-            app:layout_constraintEnd_toStartOf="@+id/cancelBtn"
+            app:layout_constraintBaseline_toBaselineOf="@id/cancelBtn"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cancelBtn"
             tools:src="@android:drawable/ic_media_play" />
 
         <ImageButton
             android:id="@+id/cancelBtn"
             android:layout_width="@dimen/imgBtn_size"
             android:layout_height="@dimen/imgBtn_size"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/applyBtn"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@android:drawable/ic_menu_close_clear_cancel" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:entries="@array/period_array"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleTxt" />
 
         <ToggleButton
             android:id="@+id/isRoutineSw"
@@ -81,24 +71,25 @@
             android:layout_height="32dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cancelBtn" />
+            app:layout_constraintTop_toBottomOf="@id/cancelBtn" />
 
         <EditText
             android:id="@+id/tagTxt"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="enter TAG"
             android:inputType="text"
-            android:nextFocusDown="@+id/titleTxt"
+            android:nextFocusDown="@id/titleTxt"
             android:singleLine="true"
             android:text="@={item.tagString}"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner"
+            app:layout_constraintTop_toBottomOf="@id/isRoutineSw"
             tools:text="home" />
 
         <TextView
@@ -109,8 +100,10 @@
             android:text="@={item.startLine}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:visibility="visible"
+            android:background="@drawable/square_bound"
+            android:enabled="@{item.hasStartLine}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tagTxt"
+            app:layout_constraintTop_toBottomOf="@id/tagTxt"
             tools:text="@string/undefinedDate" />
 
         <ImageButton
@@ -118,8 +111,8 @@
             android:layout_width="@dimen/imgBtn_size"
             android:layout_height="@dimen/imgBtn_size"
             android:src="@android:drawable/ic_menu_day"
-            app:layout_constraintStart_toEndOf="@+id/startDateTxt"
-            app:layout_constraintTop_toBottomOf="@+id/tagTxt"
+            app:layout_constraintStart_toEndOf="@id/startDateTxt"
+            app:layout_constraintTop_toBottomOf="@id/tagTxt"
             tools:layout_editor_absoluteX="280dp"
             tools:layout_editor_absoluteY="125dp" />
 
@@ -128,8 +121,8 @@
             android:layout_width="@dimen/imgBtn_size"
             android:layout_height="@dimen/imgBtn_size"
             android:checked="false"
-            app:layout_constraintStart_toEndOf="@+id/startCal"
-            app:layout_constraintTop_toBottomOf="@+id/tagTxt" />
+            app:layout_constraintStart_toEndOf="@id/startCal"
+            app:layout_constraintTop_toBottomOf="@id/tagTxt" />
 
         <TextView
             android:id="@+id/deadDateTxt"
@@ -140,7 +133,7 @@
             android:text="@={item.deadLine}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/startDateTxt"
+            app:layout_constraintTop_toBottomOf="@id/startDateTxt"
             tools:text="@string/undefinedDate" />
 
         <ImageButton
@@ -148,8 +141,8 @@
             android:layout_width="@dimen/imgBtn_size"
             android:layout_height="@dimen/imgBtn_size"
             android:src="@android:drawable/ic_menu_day"
-            app:layout_constraintStart_toEndOf="@+id/deadDateTxt"
-            app:layout_constraintTop_toBottomOf="@+id/startCal" />
+            app:layout_constraintStart_toEndOf="@id/deadDateTxt"
+            app:layout_constraintTop_toBottomOf="@id/startCal" />
 
         <ToggleButton
             android:id="@+id/hasDeadSw"
@@ -157,8 +150,8 @@
             android:layout_height="@dimen/imgBtn_size"
             android:layout_marginEnd="8dp"
             android:switchMinWidth="@android:dimen/app_icon_size"
-            app:layout_constraintStart_toEndOf="@+id/deadCal"
-            app:layout_constraintTop_toBottomOf="@+id/hasStartSw"
+            app:layout_constraintStart_toEndOf="@id/deadCal"
+            app:layout_constraintTop_toBottomOf="@id/hasStartSw"
             tools:layout_editor_absoluteY="173dp" />
 
         <RatingBar
@@ -172,6 +165,6 @@
             android:stepSize="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/deadDateTxt" />
+            app:layout_constraintTop_toBottomOf="@id/deadDateTxt" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

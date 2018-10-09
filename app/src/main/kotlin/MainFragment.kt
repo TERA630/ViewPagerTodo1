@@ -41,7 +41,7 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val filterStr = mTag
-        main_fab.setOnClickListener { _ ->
+        main_fab.setOnClickListener {
         val intent = Intent(context, DetailActivity::class.java)
         intent.putExtra("parentID", -1)
         intent.putExtra("tagString", filterStr)
@@ -84,7 +84,6 @@ class MainFragment : Fragment() {
         })
 
     }
-
     override fun onStart() {
         super.onStart()
         model.itemList.observe(this, Observer {

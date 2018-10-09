@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
 
         //
+        toolbar.title = ""
         achievePoint.text = "達成：${model.archievement}"
         getAchieve.setOnClickListener {
             model.calculateAchievedPoints()

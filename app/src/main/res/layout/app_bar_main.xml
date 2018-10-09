@@ -24,7 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                android:text="@string/getPoint"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -42,17 +41,31 @@
                     android:text="@string/achievement"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/getAchieve"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/getPoint"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/achievePoint"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/achievePoint"
+                    app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="?attr/colorBackgroundFloating"
+                    app:layout_constraintTop_toBottomOf="@+id/achievePoint"
+                    tools:layout_editor_absoluteX="28dp"
+                    tools:text="〆切のあるもののみ表示" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.tabs.TabLayout
