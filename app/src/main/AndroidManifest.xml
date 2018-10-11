@@ -3,7 +3,6 @@
     package="com.example.yoshi.viewpagertodo1">
 
     <application
-        android:name="com.example.yoshi.viewpagertodo1.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

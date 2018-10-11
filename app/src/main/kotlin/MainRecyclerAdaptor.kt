@@ -41,7 +41,7 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
         }
 
         ivh.mBinding.periodViewer.text = stringBuilder.toString()
-        ivh.mBinding.itemTitle.setOnCheckedChangeListener { v, boolean ->
+        ivh.mBinding.itemTitle.setOnCheckedChangeListener { _, boolean ->
             mList[position].item.isDone = boolean
             notifyItemChanged(position)
             model.getItemList()[mList[position].unFilter].isDone = boolean

@@ -84,7 +84,8 @@ class Repository {
         val defaultItemTag = res.getStringArray(R.array.default_todoItem_tag)
         val toDoList = List(defaultItemTitle.size - 1) { index ->
             ToDoItem(title = defaultItemTitle[index], reward = 1.0f,
-                isDone = false, hasStartLine = true, startLine = defaultItemStartDate[index], hasDeadLine = false, tagString = defaultItemTag[index]) }
+                    isDone = false, hasStartLine = true, startLine = defaultItemStartDate[index], hasDeadLine = false, tagString = defaultItemTag[index])
+        }
         return toDoList.toMutableList()
     }
 
@@ -113,3 +114,37 @@ fun MutableList<FilteredToDoItem>.filterByDate(dateStr: String): MutableList<Fil
     }
     return list
 }
+
+/*
+fun saveListToTextFile(_list:MutableList<ToDoItem>) {
+    val src = File("text.txt").absoluteFile
+
+    for (index in _list.indices) {
+        val sb = StringBuilder(_list[index].title)
+        sb.append(",", _list[index].tagString, ",")
+        if (_list[index].hasStartLine) {
+            sb.append(_list[index].startLine, "～")
+        } else {
+            sb.append("～")
+        }
+        if (_list[index].hasDeadLine) {
+            sb.append(_list[index].deadLine)
+        }
+        sb.append(_list[index].reward)
+    }
+}
+}*/
+/*    fun loadListFromTextFile():MutableList<ToDoItem>{
+        val textFile = File("items.text").absoluteFile
+        textFile.bufferedReader().use() {
+            val rawLine = textFile.readLines().filter(String::isNullOrEmpty)
+            val item = emptyList<ToDoItem>().toMutableList()
+            for(i in rawLine.indices){
+            val decodedElement =  rawLine[i].split(",")
+            item.add( ToDoItem(decodedElement[0],decodedElement[1],))
+            }
+        }
+        return
+    }
+
+}*/

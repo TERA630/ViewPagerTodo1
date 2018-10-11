@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:autofillHints="@string/enterNewItem"
             android:inputType="text|textPersonName"
             android:nextFocusDown="@id/tagTxt"
             android:text="@={item.title}"
@@ -80,15 +81,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:hint="enter TAG"
             android:inputType="text"
             android:nextFocusDown="@id/titleTxt"
             android:singleLine="true"
             android:text="@={item.tagString}"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/isRoutineSw"
             tools:text="home" />
 
@@ -163,6 +162,7 @@
             android:layout_marginEnd="8dp"
             android:numStars="6"
             android:stepSize="1"
+            android:rating="@{item.reward}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/deadDateTxt" />

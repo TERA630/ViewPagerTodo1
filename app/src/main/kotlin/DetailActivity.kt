@@ -4,8 +4,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.Log
 import android.widget.DatePicker
 import android.widget.TextView
@@ -13,10 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.yoshi.viewpagertodo1.databinding.ActivityDetailBinding
 
-class DetailActivity() : AppCompatActivity(), Parcelable {
-
-    constructor(parcel: Parcel) : this() {
-    }
+class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,23 +68,6 @@ class DetailActivity() : AppCompatActivity(), Parcelable {
     class DataSetListener(private val _textView: TextView) : DatePickerDialog.OnDateSetListener {
         override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
             _textView.text = "$year/${month + 1}/$dayOfMonth"
-        }
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<DetailActivity> {
-        override fun createFromParcel(parcel: Parcel): DetailActivity {
-            return DetailActivity(parcel)
-        }
-
-        override fun newArray(size: Int): Array<DetailActivity?> {
-            return arrayOfNulls(size)
         }
     }
 
