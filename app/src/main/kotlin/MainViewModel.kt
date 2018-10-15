@@ -3,9 +3,7 @@ package com.example.yoshi.viewpagertodo1
 import android.content.Context
 import android.util.Log
 import android.view.KeyEvent
-import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -95,10 +93,10 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+/*    fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         Log.i("test", "spinner ${position}selected")
         currentDate = dateList[position]
-    }
+    }*/
 
     fun calculateAchievedPoints() {
 

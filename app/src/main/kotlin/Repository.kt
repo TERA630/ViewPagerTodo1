@@ -114,13 +114,13 @@ fun MutableList<FilteredToDoItem>.filterByDate(dateStr: String): MutableList<Fil
     }
     return list
 }
-
 /*
 fun saveListToTextFile(_list:MutableList<ToDoItem>) {
-    val src = File("text.txt").absoluteFile
+
+    var sb  = StringBuilder()
 
     for (index in _list.indices) {
-        val sb = StringBuilder(_list[index].title)
+        sb = StringBuilder(_list[index].title)
         sb.append(",", _list[index].tagString, ",")
         if (_list[index].hasStartLine) {
             sb.append(_list[index].startLine, "～")
@@ -131,9 +131,13 @@ fun saveListToTextFile(_list:MutableList<ToDoItem>) {
             sb.append(_list[index].deadLine)
         }
         sb.append(_list[index].reward)
+        sb.append("cr")
     }
-}
+    val text = sb.toString()
+    val src = File("text.txt").absoluteFile
+    src.writeText(sb)
 }*/
+
 /*    fun loadListFromTextFile():MutableList<ToDoItem>{
         val textFile = File("items.text").absoluteFile
         textFile.bufferedReader().use() {

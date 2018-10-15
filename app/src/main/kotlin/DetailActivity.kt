@@ -26,7 +26,7 @@ class DetailActivity : AppCompatActivity() {
         val index = when (number) {
                     in 0..itemList.lastIndex -> { number }
             else -> {
-                val newItem = ToDoItem(title = "新しいアイテム", tagString = tagSting, reward = 1.0f, startLine = getToday())
+                val newItem = ToDoItem(title = "", tagString = tagSting, reward = 1.0f, startLine = getToday())
                 itemList.add(newItem)
                 Log.i("test", "Item number ${itemList.size} was added: ")
                 itemList.lastIndex
@@ -34,6 +34,12 @@ class DetailActivity : AppCompatActivity() {
         }
         binding.item = itemList[index]
 
+        /*
+        if(itemList[index].hasStartLine){binding.startDateTxt.backgr} else {}
+        if(itemList[index].hasDeadLine){} else {}
+        */
+
+        // Set Event handler
         binding.applyBtn.setOnClickListener {
             val intent = Intent(context, MainActivity::class.java)
             repository.saveListToPreference(itemList, context)

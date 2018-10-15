@@ -1,5 +1,6 @@
 package com.example.yoshi.viewpagertodo1
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -46,6 +47,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val kUtils = KeyboardUtils()
         kUtils.hide(this)
+
+        // fab setup
+        mainActivity_fab.setOnClickListener { view ->
+            val shownPageNumber = viewPager.currentItem
+            val shownTagText = model.tagList[shownPageNumber]
+            Log.i("test", "now page is $shownPageNumber,and tag is $shownTagText")
+            val intent = Intent(this@MainActivity.baseContext, DetailActivity::class.java)
+            intent.putExtra("parentID", -1)
+            intent.putExtra("tagString", shownTagText)
+            model.saveItemListToPreference(this@MainActivity.baseContext)
+            startActivity(intent)
+        }
     }
 
     override fun onPause() {

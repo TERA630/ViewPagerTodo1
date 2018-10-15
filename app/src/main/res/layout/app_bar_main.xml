@@ -22,10 +22,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="parallax" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayoutCompat"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|start">
 
                 <TextView
                     android:id="@+id/achievePoint"
@@ -35,8 +37,8 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/achievement"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
@@ -49,8 +51,8 @@
                     android:text="@string/getPoint"
                     app:layout_constraintBaseline_toBaselineOf="@+id/achievePoint"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/achievePoint"
                     app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/achievePoint"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -71,7 +73,20 @@
         android:id="@+id/main_viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
         android:background="@android:color/white"
         android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/mainActivity_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="80dp"
+        android:src="@android:drawable/btn_plus"
+        app:layout_anchor="@+id/main_viewpager"
+        app:layout_anchorGravity="bottom"
+        tools:src="@android:drawable/ic_input_add" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

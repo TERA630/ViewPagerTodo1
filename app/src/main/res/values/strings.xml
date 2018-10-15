@@ -10,7 +10,6 @@
 
     <string name="enterNewItem">新しいアイテムを入力</string>
     <string name="getPoint">完了クリアし達成確認</string>
-    <string name="filterDo">フィルター適応</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
