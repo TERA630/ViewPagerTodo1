@@ -41,16 +41,6 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val filterStr = mTag
-        main_fab.setOnClickListener {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra("parentID", -1)
-        intent.putExtra("tagString", filterStr)
-        Log.i("test", "newItem made")
-        val context = this@MainFragment.context
-                ?: throw Exception("context is null at MainFragment")
-            model.saveItemListToPreference(context)
-        startActivity(intent)
-        }
         val list = if (filterStr == "all") {
             model.getItemListWithTag("")
         } else {

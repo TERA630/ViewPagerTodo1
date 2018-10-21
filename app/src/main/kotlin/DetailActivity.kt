@@ -33,11 +33,21 @@ class DetailActivity : AppCompatActivity() {
             }
         }
         binding.item = itemList[index]
+        val dr = context.getDrawable(R.drawable.elevating_square)
+        binding.startDateTxt.background = dr
 
-        /*
-        if(itemList[index].hasStartLine){binding.startDateTxt.backgr} else {}
-        if(itemList[index].hasDeadLine){} else {}
-        */
+        binding.startDateTxt.setOnClickListener { v ->
+            if (itemList[index].hasStartLine) {
+                itemList[index].hasStartLine = false
+                val backGround = getDrawable(R.drawable.depressing_square)
+                v.background = backGround
+            } else {
+                itemList[index].hasStartLine = true
+                val backGround = getDrawable(R.drawable.elevating_square)
+                v.background = backGround
+            }
+        }
+
 
         // Set Event handler
         binding.applyBtn.setOnClickListener {
