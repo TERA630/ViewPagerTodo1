@@ -1,11 +1,14 @@
 package com.example.yoshi.viewpagertodo1
 
 import android.content.Context
+import android.content.Context.MODE_APPEND
+import android.content.Context.MODE_PRIVATE
 import android.util.Log
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.internal.ArrayListSerializer
 import kotlinx.serialization.json.JSON
 import kotlinx.serialization.serializer
+import java.io.*
 
 const val ITEM_DATA = "toDoItems"
 const val EARNED_POINT = "earnedPoint"
@@ -114,12 +117,17 @@ fun MutableList<FilteredToDoItem>.filterByDate(dateStr: String): MutableList<Fil
     }
     return list
 }
-/*
-fun saveListToTextFile(_list:MutableList<ToDoItem>) {
 
-    var sb  = StringBuilder()
+fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
 
-    for (index in _list.indices) {
+
+    try {
+        val fileOut = context.openFileOutput("toDoItems.txt", MODE_PRIVATE + MODE_APPEND)
+        val osw = OutputStreamWriter(fileOut, "UTF-8")
+        val bw = BufferedWriter(osw)
+        var sb = StringBuilder()
+
+        for (index in _list.indices) {
         sb = StringBuilder(_list[index].title)
         sb.append(",", _list[index].tagString, ",")
         if (_list[index].hasStartLine) {
@@ -130,25 +138,33 @@ fun saveListToTextFile(_list:MutableList<ToDoItem>) {
         if (_list[index].hasDeadLine) {
             sb.append(_list[index].deadLine)
         }
+            sb.append(",")
         sb.append(_list[index].reward)
-        sb.append("cr")
-    }
-    val text = sb.toString()
-    val src = File("text.txt").absoluteFile
-    src.writeText(sb)
-}*/
-
-/*    fun loadListFromTextFile():MutableList<ToDoItem>{
-        val textFile = File("items.text").absoluteFile
-        textFile.bufferedReader().use() {
-            val rawLine = textFile.readLines().filter(String::isNullOrEmpty)
-            val item = emptyList<ToDoItem>().toMutableList()
-            for(i in rawLine.indices){
-            val decodedElement =  rawLine[i].split(",")
-            item.add( ToDoItem(decodedElement[0],decodedElement[1],))
-            }
+            bw.write(sb.toString())
+            bw.newLine()
         }
-        return
+        bw.close()
+    } catch (e: FileNotFoundException) {
+        e.printStackTrace()
+    } catch (e: IOException) {
+        e.printStackTrace()
     }
+}
 
-}*/
+fun loadListFromTextFile(context: Context): MutableList<ToDoItem> {
+
+    val result = MutableList<ToDoItem>(size = 10) { ToDoItem() }
+    return try {
+        val fileIn = context.openFileInput("toDoItems.txt")
+        val isr = InputStreamReader(fileIn)
+        val br = BufferedReader(isr)
+        
+        result
+    } catch (e: FileNotFoundException) {
+        Log.w("test", "File not found")
+        result
+    } catch (e: IOException) {
+        throw e
+    }
+    result
+}
