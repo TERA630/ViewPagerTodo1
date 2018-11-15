@@ -17,7 +17,6 @@ class MainViewModel : ViewModel() {
     var currentDate = "2018/8/26"
     lateinit var mRepository: Repository
 
-
     fun initItems(_context: Context) {
         mRepository = Repository()
         itemList.value = mRepository.loadListFromPreference(_context)
@@ -98,10 +97,10 @@ class MainViewModel : ViewModel() {
         currentDate = dateList[position]
     }*/
 
-    fun calculateAchievedPoints() {
+    fun calculateAchievedPoints(_context: Context) {
 
         val achievedList = getItemList().filter { it.isDone }
-        val notYetList = getItemList().filter { !(it.isDone) }
+        val notYetList = getItemList().filterNot { it.isDone }
         val numberOfAchieved = achievedList.size
         Log.i("test", "number of achieved todo  was $numberOfAchieved")
         var getReward = 0
@@ -110,6 +109,7 @@ class MainViewModel : ViewModel() {
         }
         Log.i("test", "reward was $getReward")
         this.archievement = this.archievement + getReward
+        mRepository.saveIntToPreference(EARNED_POINT, this.archievement, context = _context)
         this.itemList.value = notYetList.toMutableList()
         this.tagList = mRepository.getTagListFromItemList(getItemList())
     }

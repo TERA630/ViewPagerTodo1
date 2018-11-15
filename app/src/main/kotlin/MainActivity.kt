@@ -1,5 +1,4 @@
 package com.example.yoshi.viewpagertodo1
-
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,29 +14,26 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var model: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
         model = ViewModelProviders.of(this).get(MainViewModel::class.java)
         model.initItems(this)
-        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
 
-        //
         toolbar_layout.title = " "
         achievePoint.text = "達成：${model.archievement}"
-        getAchieve.setOnClickListener {
-            model.calculateAchievedPoints()
-            achievePoint.text = "達成：${model.archievement}"
-        }
+        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
+
         // Pager Adapter setup
         val pagerAdapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         val viewPager = main_viewpager as ViewPager
         viewPager.adapter = pagerAdapter
         (main_tab as TabLayout).setupWithViewPager(viewPager)
+        // TODO　Detailから戻るときに現在のTABに戻りたい｡
 
         // Drawer setup
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -48,7 +44,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val kUtils = KeyboardUtils()
         kUtils.hide(this)
 
-        // fab setup
+        // set event handlers
+
+        getAchieve.setOnClickListener {
+            model.calculateAchievedPoints(baseContext)
+            achievePoint.text = "達成：${model.archievement}"
+        }
+
         mainActivity_fab.setOnClickListener { view ->
             val shownPageNumber = viewPager.currentItem
             val shownTagText = model.tagList[shownPageNumber]
@@ -98,13 +100,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 repository.saveListToPreference(list, this@MainActivity.baseContext)
                 Log.i("test", "Make default list by menu.")
             }
-            R.id.nav_gallery -> {
-                model.saveItemListToPreference(this@MainActivity.baseContext)
+            R.id.save_to_text -> {
+                //             model.saveItemListToPreference(this@MainActivity.baseContext)
+                val repository = Repository()
+                val context = this@MainActivity.applicationContext
+                repository.saveListToTextFile(context, model.getItemList())
             }
-            R.id.nav_slideshow -> {
-
+            R.id.load_from_text -> {
+                val repository = Repository()
+                val context = this@MainActivity.applicationContext
+                val list = repository.loadListFromTextFile(context)
+                model.itemList.value = list
+            }
+            R.id.load_from_sdcard -> {
+                val repository = Repository()
+                val context = this@MainActivity.applicationContext
             }
             R.id.nav_manage -> {
+                model.saveItemListToPreference(this@MainActivity.baseContext)
 
             }
             R.id.nav_share -> {

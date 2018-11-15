@@ -74,7 +74,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cancelBtn" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/tagTxt"
             android:layout_width="0dp"
             android:layout_height="36dp"
@@ -83,19 +83,22 @@
             android:layout_marginEnd="8dp"
             android:inputType="text"
             android:nextFocusDown="@id/titleTxt"
+            android:completionHint="enter tag"
+            android:completionThreshold="2"
             android:singleLine="true"
             android:text="@={item.tagString}"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/isRoutineSw"
-            tools:text="home" />
+            tools:text="tags" />
 
         <TextView
             android:id="@+id/startDateTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:background="@{item.hasStartLine ? @drawable/elevating_square : @drawable/depressing_square}"
             android:paddingEnd="4dp"
             android:text="@={item.startLine}"
@@ -113,14 +116,6 @@
             app:layout_constraintTop_toBottomOf="@id/tagTxt"
             tools:layout_editor_absoluteX="280dp"
             tools:layout_editor_absoluteY="125dp" />
-
-        <ToggleButton
-            android:id="@+id/hasStartSw"
-            android:layout_width="@dimen/imgBtn_size"
-            android:layout_height="@dimen/imgBtn_size"
-            android:checked="@={item.hasStartLine}"
-            app:layout_constraintStart_toEndOf="@id/startCal"
-            app:layout_constraintTop_toBottomOf="@id/tagTxt" />
 
         <TextView
             android:id="@+id/deadDateTxt"
@@ -143,17 +138,6 @@
             app:layout_constraintStart_toEndOf="@id/deadDateTxt"
             app:layout_constraintTop_toBottomOf="@id/startCal" />
 
-        <ToggleButton
-            android:id="@+id/hasDeadSw"
-            android:layout_width="48dp"
-            android:layout_height="@dimen/imgBtn_size"
-            android:layout_marginEnd="8dp"
-            android:checked="@={item.hasDeadLine}"
-            android:switchMinWidth="@android:dimen/app_icon_size"
-            app:layout_constraintStart_toEndOf="@id/deadCal"
-            app:layout_constraintTop_toBottomOf="@id/hasStartSw"
-            tools:layout_editor_absoluteY="173dp" />
-
         <RatingBar
             android:id="@+id/rewardRate"
             android:layout_width="wrap_content"
@@ -163,7 +147,6 @@
             android:layout_marginEnd="8dp"
             android:numStars="6"
             android:stepSize="1"
-            android:rating="@={item.reward}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/deadDateTxt" />

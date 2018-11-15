@@ -5,6 +5,7 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
+        this.title = " "
         binding.setLifecycleOwner(this@DetailActivity)
 
         val number = intent.extras?.getInt("parentID") ?: 0
@@ -26,16 +28,21 @@ class DetailActivity : AppCompatActivity() {
         val index = when (number) {
                     in 0..itemList.lastIndex -> { number }
             else -> {
-                val newItem = ToDoItem(title = "", tagString = tagSting, reward = 1.0f, startLine = getToday())
+                val newItem = ToDoItem(title = "", tagString = tagSting, reward = 1, startLine = getToday())
                 itemList.add(newItem)
                 Log.i("test", "Item number ${itemList.size} was added: ")
                 itemList.lastIndex
             }
         }
         binding.item = itemList[index]
-        val dr = context.getDrawable(R.drawable.elevating_square)
-        binding.startDateTxt.background = dr
+        binding.rewardRate.rating = itemList[index].reward.toFloat()
 
+        //    val dr = context.getDrawable(R.drawable.elevating_square)
+        //    binding.startDateTxt.background = dr
+        val autoCompleteAdaptor = ArrayAdapter<String>(this, R.layout.autocompletet_tag, repository.getTagListFromItemList(itemList))
+        binding.tagTxt.setAdapter(autoCompleteAdaptor)
+
+        // Set Event handler
         binding.startDateTxt.setOnClickListener { v ->
             if (itemList[index].hasStartLine) {
                 itemList[index].hasStartLine = false
@@ -47,16 +54,23 @@ class DetailActivity : AppCompatActivity() {
                 v.background = backGround
             }
         }
-
-
-        // Set Event handler
+        binding.deadDateTxt.setOnClickListener { v ->
+            if (itemList[index].hasDeadLine) {
+                itemList[index].hasDeadLine = false
+                val backGround = getDrawable(R.drawable.depressing_square)
+                v.background = backGround
+            } else {
+                itemList[index].hasDeadLine = true
+                val backGround = getDrawable(R.drawable.elevating_square)
+                v.background = backGround
+            }
+        }
         binding.applyBtn.setOnClickListener {
             val intent = Intent(context, MainActivity::class.java)
             repository.saveListToPreference(itemList, context)
             Log.i("test", "item save and detail to Main")
             startActivity(intent, null)
         }
-
         binding.cancelBtn.setOnClickListener {
                 val intent = Intent(context, MainActivity::class.java)
                 Log.i("test", "detail to Main")
@@ -77,7 +91,6 @@ class DetailActivity : AppCompatActivity() {
             val deadDatePicker = DatePickerDialog(context, deadDataSetListener, year, monthOfYear, dayOfMonth)
             deadDatePicker.show()
         }
-
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top)
     }
 

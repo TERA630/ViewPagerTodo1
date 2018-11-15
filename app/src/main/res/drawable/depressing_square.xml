@@ -3,9 +3,9 @@
 
     <item>
         <layer-list>
-            <item android:end="3dp">
+            <item>
                 <shape>
-                    <solid android:color="#aaaaaa" />
+                    <solid android:color="#e4d2d8" />
                     <corners android:radius="4dp" />
                 </shape>
             </item>

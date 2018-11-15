@@ -89,7 +89,6 @@ class MainFragment : Fragment() {
                 mAdapter.notifyDataSetChanged()
         })
     }
-
     private fun runAnimation(recyclerView: RecyclerView) {
         val controller: LayoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_falldown)
         recyclerView.layoutAnimation = controller
