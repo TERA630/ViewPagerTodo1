@@ -1,18 +1,26 @@
 package com.example.yoshi.viewpagertodo1
+
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
+import android.os.storage.StorageManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+
+const val REQUEST_CODE_READ = 1
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -94,26 +102,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_camera -> {
                 val repository = Repository()
-                val list = repository.makeDefaultList(this@MainActivity.baseContext)
+                val list = makeDefaultList(this@MainActivity.baseContext)
                 model.itemList.value = list
-                model.tagList = repository.getTagListFromItemList(model.getItemList())
+                model.tagList = getTagListFromItemList(model.getItemList())
                 repository.saveListToPreference(list, this@MainActivity.baseContext)
                 Log.i("test", "Make default list by menu.")
             }
             R.id.save_to_text -> {
                 //             model.saveItemListToPreference(this@MainActivity.baseContext)
-                val repository = Repository()
                 val context = this@MainActivity.applicationContext
-                repository.saveListToTextFile(context, model.getItemList())
+                saveListToTextFile(context, model.getItemList())
             }
             R.id.load_from_text -> {
-                val repository = Repository()
                 val context = this@MainActivity.applicationContext
-                val list = repository.loadListFromTextFile(context)
+                val list = loadListFromTextFile(context)
                 model.itemList.value = list
             }
             R.id.load_from_sdcard -> {
-                val repository = Repository()
+                startStorageAccess(this.baseContext, REQUEST_CODE_READ)
                 val context = this@MainActivity.applicationContext
             }
             R.id.nav_manage -> {
@@ -127,8 +133,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
         }
-
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun startStorageAccess(_context: Context, requestCode: Int) {
+        val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
+        val sv = sm.primaryStorageVolume
+        val intent = sv.createAccessIntent(Environment.DIRECTORY_DOWNLOADS)
+        startActivityForResult(intent, requestCode)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return
+        }
+        val uri = data?.data
+        if (uri == null) {
+            Log.w("test", "Activity result work not fine")
+            return
+        } else {
+            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            val pickedDir = DocumentFile.fromTreeUri(this.baseContext, uri)
+            pickedDir?.let { loadListFromTextFileAtSdcard(this.baseContext, pickedDir) }
+        }
     }
 }

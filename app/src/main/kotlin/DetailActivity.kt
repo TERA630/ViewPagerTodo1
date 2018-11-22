@@ -39,7 +39,7 @@ class DetailActivity : AppCompatActivity() {
 
         //    val dr = context.getDrawable(R.drawable.elevating_square)
         //    binding.startDateTxt.background = dr
-        val autoCompleteAdaptor = ArrayAdapter<String>(this, R.layout.autocompletet_tag, repository.getTagListFromItemList(itemList))
+        val autoCompleteAdaptor = ArrayAdapter<String>(this, R.layout.autocompletet_tag, getTagListFromItemList(itemList))
         binding.tagTxt.setAdapter(autoCompleteAdaptor)
 
         // Set Event handler

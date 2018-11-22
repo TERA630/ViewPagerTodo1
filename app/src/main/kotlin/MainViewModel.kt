@@ -20,8 +20,8 @@ class MainViewModel : ViewModel() {
     fun initItems(_context: Context) {
         mRepository = Repository()
         itemList.value = mRepository.loadListFromPreference(_context)
-        archievement = mRepository.loadIntFromPreference(EARNED_POINT, _context)
-        tagList = mRepository.getTagListFromItemList(getItemList())
+        archievement = mRepository.loadIntFromPreference(REWARD, _context)
+        tagList = getTagListFromItemList(getItemList())
         dateList = fetchRecentDate(context = _context)
         currentDate = dateList[0]
     }
@@ -109,9 +109,9 @@ class MainViewModel : ViewModel() {
         }
         Log.i("test", "reward was $getReward")
         this.archievement = this.archievement + getReward
-        mRepository.saveIntToPreference(EARNED_POINT, this.archievement, context = _context)
+        mRepository.saveIntToPreference(REWARD, this.archievement, _context = _context)
         this.itemList.value = notYetList.toMutableList()
-        this.tagList = mRepository.getTagListFromItemList(getItemList())
+        this.tagList = getTagListFromItemList(getItemList())
     }
 
 }

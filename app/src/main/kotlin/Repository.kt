@@ -1,19 +1,14 @@
 package com.example.yoshi.viewpagertodo1
 
 import android.content.Context
-import android.content.Context.MODE_APPEND
-import android.content.Context.MODE_PRIVATE
-import android.os.Environment
 import android.util.Log
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.internal.ArrayListSerializer
 import kotlinx.serialization.json.JSON
 import kotlinx.serialization.serializer
-import java.io.*
-
 
 const val ITEM_DATA = "toDoItems"
-const val EARNED_POINT = "earnedPoint"
+const val REWARD = "reward"
 const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
 
@@ -35,27 +30,27 @@ class FilteredToDoItem constructor(
 )
 
 class Repository {
-    private fun saveStringToPreference(_key: String, _string: String, context: Context) {
-        val preferences = context.getSharedPreferences(_key, Context.MODE_PRIVATE)
-        val preferenceEditor = preferences.edit()
+    private fun saveStringToPreference(_key: String, _string: String, _context: Context) {
+        val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
         preferenceEditor.putString(_key, _string)
         preferenceEditor.apply()
     }
-    private fun loadStringFromPreference(_key: String, context: Context): String {
-        val preferences = context.getSharedPreferences(_key, Context.MODE_PRIVATE)
+
+    private fun loadStringFromPreference(_key: String, _context: Context): String {
+        val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
         return preferences?.getString(_key, EMPTY_ITEM) ?: EMPTY_ITEM
     }
-    fun saveIntToPreference(_key: String, _int: Int, context: Context) {
-        val preferences = context.getSharedPreferences(_key, Context.MODE_PRIVATE)
-        val preferenceEditor = preferences.edit()
+
+    fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
+        val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
         preferenceEditor.putInt(_key, _int)
         preferenceEditor.apply()
     }
-    fun loadIntFromPreference(_key: String, context: Context): Int {
-        val preferences = context.getSharedPreferences(_key, Context.MODE_PRIVATE)
+
+    fun loadIntFromPreference(_key: String, _context: Context): Int {
+        val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
         return preferences?.getInt(_key, 0) ?: 0
     }
-
     // ToDoItem with preference
     fun saveListToPreference(_mList: MutableList<ToDoItem>, _context: Context) {
         val toDoSerializer = ToDoItem::class.serializer()
@@ -78,6 +73,7 @@ class Repository {
             }
         }
     }
+}
 
     // manage ItemList
     fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
@@ -96,117 +92,25 @@ class Repository {
         val result = rawTagList.distinct()
         return result.toMutableList()
     }
-
-    // ToDoItem with textFile data/data/...
-    fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
-        try {
-            val fileOut = context.openFileOutput(TODO_TEXT_FILE, MODE_PRIVATE and MODE_APPEND)
-            val osw = OutputStreamWriter(fileOut, "UTF-8")
-            val bw = BufferedWriter(osw)
-            var sb = StringBuilder()
-            for (index in _list.indices) {
-                bw.write(makeToDoItemToOneLineText(_list[index]))
-                bw.newLine()
-            }
-            bw.close()
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun loadListFromTextFile(context: Context): MutableList<ToDoItem> {
-
-        val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
-        val allLine = readAllLineOfTextFile(context)
-
-        var result = mutableListOf<ToDoItem>()
-        for (i in allLine.indices) {
-            var line = allLine[i]
-            titleAndTagMatcher.matchEntire(line)
-                    ?.destructured
-                    ?.let { (titleStr, tag, subProperty) ->
-                        val newItem = subPropertyExtractFromText(subProperty, ToDoItem(title = titleStr, tagString = tag))
-                        result.add(newItem)
-                    }
-        }
-        return result
-    }
-
-    fun loadListFromTextFileAtSdcard(_context: Context): MutableList<ToDoItem> {
-        val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
-        val result: MutableList<ToDoItem> = mutableListOf()
-        val directory = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath) // Download path
-
-        if (isDirectoryFileContain(directory.listFiles())) {
-            val filePath = StringBuilder(directory.absolutePath)
-                    .append(TODO_TEXT_FILE).toString()
-            val isr = InputStreamReader(_context.openFileInput(filePath))
-            val br = BufferedReader(isr)
-            val AllLine = br.readLines()
-            for (i in AllLine.indices) {
-                var line = AllLine[i]
-                titleAndTagMatcher.matchEntire(line)
-                        ?.destructured
-                        ?.let { (titleStr, tag, subProperty) ->
-                            val newItem = subPropertyExtractFromText(subProperty, ToDoItem(title = titleStr, tagString = tag))
-                            result.add(newItem)
-                        }
-            }
-            return result
-        } else {
-            throw java.lang.Exception(FileNotFoundException())
-        }
-
-
-    }
-
-    fun isDirectoryFileContain(_fileList: Array<File>): Boolean {
-        var foundFlag = false
-        for (index in _fileList.indices) {
-            if (_fileList[index].name == TODO_TEXT_FILE) {
-                foundFlag = true
-            }
-        }
-        return foundFlag
-    }
-
     fun subPropertyExtractFromText(_text: String, _toDoItem: ToDoItem): ToDoItem {
 
-        val startDateMatch = Regex("/d{4}///d{1,2}///d{1,2}～ ").find(_text)
+        val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text)
         if (startDateMatch != null) {
             _toDoItem.hasStartLine = true
-            _toDoItem.startLine = (Regex("/d{4}///d{1,2}///d{1,2}").find(startDateMatch.value))?.value ?: "1970/01/01"
+            _toDoItem.startLine = (Regex("[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(startDateMatch.value))?.value ?: "1970/01/01"
         }
-        val deadDateMatch = Regex(" ～/d{4}///d{1,2}//d{1,2} ").find(_text)
+        val deadDateMatch = Regex(" ～[0-9]{4}/[0-9]{1,2}/[0-9]{1,2} ").find(_text)
         if (deadDateMatch != null) {
             _toDoItem.hasDeadLine = true
-            _toDoItem.deadLine = (Regex(" /d{4}///d{1,2}///d{1,2}").find(deadDateMatch.value))?.value ?: "1970/01/01"
+            _toDoItem.deadLine = (Regex(" [0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(deadDateMatch.value))?.value ?: "1970/01/01"
         }
-        val rewardMatch = Regex(",reward:/d").find(_text)
+        val rewardMatch = Regex(",reward:[0-9]").find(_text)
         if (rewardMatch != null) {
-            _toDoItem.reward = (Regex("/d").find(rewardMatch.value))?.value?.toInt() ?: 1
+            _toDoItem.reward = (Regex("[0-9]").find(rewardMatch.value))?.value?.toInt() ?: 1
         }
         return _toDoItem
     }
 
-    fun readAllLineOfTextFile(context: Context): List<String> {
-        return try {
-            val fileIn = context.openFileInput(TODO_TEXT_FILE)
-            val isr = InputStreamReader(fileIn)
-            val br = BufferedReader(isr)
-            val result = br.readLines()
-            br.close()
-            result
-        } catch (e: FileNotFoundException) {
-            Log.w("test", "File not found")
-            emptyList()
-        } catch (e: IOException) {
-            Log.w("test", "File IO Exception occur")
-            emptyList()
-        }
-    }
 
 // ToDoItem[] から1行のテキストへ
 
@@ -242,4 +146,5 @@ class Repository {
         }
         return list
     }
+
 
