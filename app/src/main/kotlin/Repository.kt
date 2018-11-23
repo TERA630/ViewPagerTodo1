@@ -11,6 +11,7 @@ const val ITEM_DATA = "toDoItems"
 const val REWARD = "reward"
 const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
+const val REQUEST_CODE_READ = 1
 
 @Serializable
 data class ToDoItem constructor(
@@ -129,14 +130,7 @@ class Repository {
         return sb.toString()
     }
 
-    // MutableList
-    fun MutableList<FilteredToDoItem>.swap(oneIndex: Int, otherIndex: Int) {
-        val temp = this[otherIndex]
-        this[otherIndex] = this[oneIndex]
-        this[oneIndex] = temp
-    }
-
-    fun MutableList<FilteredToDoItem>.filterByDate(dateStr: String): MutableList<FilteredToDoItem> {
+fun MutableList<FilteredToDoItem>.filterByDate(dateStr: String): MutableList<FilteredToDoItem> {
         val list = emptyList<FilteredToDoItem>().toMutableList()
 
         for (i in this.indices) {

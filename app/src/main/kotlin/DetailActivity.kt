@@ -14,6 +14,8 @@ import com.example.yoshi.viewpagertodo1.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
 
+    var mComingPage: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
@@ -22,6 +24,7 @@ class DetailActivity : AppCompatActivity() {
 
         val number = intent.extras?.getInt("parentID") ?: 0
         val tagSting = intent.extras?.getString("tagString") ?: ""
+        mComingPage = intent.extras?.getInt("comingPage") ?: 0
         val context = this@DetailActivity
         val repository = Repository()
         val itemList = repository.loadListFromPreference(context)
@@ -66,14 +69,14 @@ class DetailActivity : AppCompatActivity() {
             }
         }
         binding.applyBtn.setOnClickListener {
-            val intent = Intent(context, MainActivity::class.java)
             repository.saveListToPreference(itemList, context)
-            Log.i("test", "item save and detail to Main")
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("returnPage", this.mComingPage) // TODO new Item , exiting Item
             startActivity(intent, null)
         }
         binding.cancelBtn.setOnClickListener {
                 val intent = Intent(context, MainActivity::class.java)
-                Log.i("test", "detail to Main")
+            intent.putExtra("returnPage", this.mComingPage) // TODO new Item , exiting Item
                 startActivity(intent, null)
         }
         val calendar = Calendar.getInstance()

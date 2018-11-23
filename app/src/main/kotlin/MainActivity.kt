@@ -20,7 +20,6 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
-const val REQUEST_CODE_READ = 1
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -37,11 +36,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
 
         // Pager Adapter setup
+        val startPage = intent.getIntExtra("returnPage", 0) // Detailから戻るときはComingPageへ 違えば0で
         val pagerAdapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         val viewPager = main_viewpager as ViewPager
         viewPager.adapter = pagerAdapter
         (main_tab as TabLayout).setupWithViewPager(viewPager)
-        // TODO　Detailから戻るときに現在のTABに戻りたい｡
+        viewPager.setCurrentItem(startPage, true)
 
         // Drawer setup
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -59,13 +59,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             achievePoint.text = "達成：${model.archievement}"
         }
 
-        mainActivity_fab.setOnClickListener { view ->
+        mainActivity_fab.setOnClickListener {
             val shownPageNumber = viewPager.currentItem
             val shownTagText = model.tagList[shownPageNumber]
             Log.i("test", "now page is $shownPageNumber,and tag is $shownTagText")
             val intent = Intent(this@MainActivity.baseContext, DetailActivity::class.java)
             intent.putExtra("parentID", -1)
             intent.putExtra("tagString", shownTagText)
+            intent.putExtra("comingPage", viewPager.currentItem)
             model.saveItemListToPreference(this@MainActivity.baseContext)
             startActivity(intent)
         }
@@ -119,8 +120,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 model.itemList.value = list
             }
             R.id.load_from_sdcard -> {
-                startStorageAccess(this.baseContext, REQUEST_CODE_READ)
-                val context = this@MainActivity.applicationContext
+                startStorageAccess(REQUEST_CODE_READ)
             }
             R.id.nav_manage -> {
                 model.saveItemListToPreference(this@MainActivity.baseContext)
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    fun startStorageAccess(_context: Context, requestCode: Int) {
+    private fun startStorageAccess(requestCode: Int) {
         val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
         val sv = sm.primaryStorageVolume
         val intent = sv.createAccessIntent(Environment.DIRECTORY_DOWNLOADS)
@@ -146,6 +146,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.i("test", "onActivity result coming..")
         if (resultCode == Activity.RESULT_CANCELED) {
             return
         }
@@ -156,7 +157,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             val pickedDir = DocumentFile.fromTreeUri(this.baseContext, uri)
-            pickedDir?.let { loadListFromTextFileAtSdcard(this.baseContext, pickedDir) }
+            pickedDir?.let {
+                model.itemList.value = loadListFromTextFileAtSdcard(this.baseContext, pickedDir)
+            }
         }
     }
 }

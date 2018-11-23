@@ -8,7 +8,7 @@ import java.io.*
 fun loadListFromTextFile(context: Context): MutableList<ToDoItem> {
     val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
     val allLine = readAllLineOfTextFile(context)
-    var result = mutableListOf<ToDoItem>()
+    val result = mutableListOf<ToDoItem>()
     for (i in allLine.indices) {
         var line = allLine[i]
         titleAndTagMatcher.matchEntire(line)
@@ -33,7 +33,7 @@ fun loadListFromTextFileAtSdcard(_context: Context, _documentDir: DocumentFile):
             val allLine = br.readLines()
             br.close()
             for (i in allLine.indices) {
-                var line = allLine[i]
+                val line = allLine[i]
             titleAndTagMatcher.matchEntire(line)
                     ?.destructured
                     ?.let { (titleStr, tag, subProperty) ->

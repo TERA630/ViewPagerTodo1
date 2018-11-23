@@ -31,13 +31,7 @@ class MainViewModel : ViewModel() {
         mList.removeAt(index)
         itemList.value = mList
     }
-    fun swapItem(fromPosition: Int, toPosition: Int) {
-        val list = getItemList()
-        val str = list[toPosition]
-        list[toPosition] = list[fromPosition]
-        list[fromPosition] = str
-        itemList.value = list
-    }
+
     fun getItemList(): MutableList<ToDoItem> = itemList.value
             ?: listOf(ToDoItem(EMPTY_ITEM)).toMutableList()
 
@@ -105,7 +99,7 @@ class MainViewModel : ViewModel() {
         Log.i("test", "number of achieved todo  was $numberOfAchieved")
         var getReward = 0
         for (i in achievedList.indices) {
-            getReward += achievedList[i].reward.toInt()
+            getReward += achievedList[i].reward
         }
         Log.i("test", "reward was $getReward")
         this.archievement = this.archievement + getReward
