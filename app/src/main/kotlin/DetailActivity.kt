@@ -40,8 +40,6 @@ class DetailActivity : AppCompatActivity() {
         binding.item = itemList[index]
         binding.rewardRate.rating = itemList[index].reward.toFloat()
 
-        //    val dr = context.getDrawable(R.drawable.elevating_square)
-        //    binding.startDateTxt.background = dr
         val autoCompleteAdaptor = ArrayAdapter<String>(this, R.layout.autocompletet_tag, getTagListFromItemList(itemList))
         binding.tagTxt.setAdapter(autoCompleteAdaptor)
 
@@ -49,7 +47,7 @@ class DetailActivity : AppCompatActivity() {
         binding.startDateTxt.setOnClickListener { v ->
             if (itemList[index].hasStartLine) {
                 itemList[index].hasStartLine = false
-                val backGround = getDrawable(R.drawable.depressing_square)
+                val backGround = getDrawable(R.drawable.frame_depress)
                 v.background = backGround
             } else {
                 itemList[index].hasStartLine = true
@@ -60,11 +58,11 @@ class DetailActivity : AppCompatActivity() {
         binding.deadDateTxt.setOnClickListener { v ->
             if (itemList[index].hasDeadLine) {
                 itemList[index].hasDeadLine = false
-                val backGround = getDrawable(R.drawable.depressing_square)
+                val backGround = getDrawable(R.drawable.frame_depress)
                 v.background = backGround
             } else {
                 itemList[index].hasDeadLine = true
-                val backGround = getDrawable(R.drawable.elevating_square)
+                val backGround = getDrawable(R.drawable.frame_elevate)
                 v.background = backGround
             }
         }
