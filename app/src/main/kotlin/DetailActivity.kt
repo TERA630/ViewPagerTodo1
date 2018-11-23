@@ -53,7 +53,7 @@ class DetailActivity : AppCompatActivity() {
                 v.background = backGround
             } else {
                 itemList[index].hasStartLine = true
-                val backGround = getDrawable(R.drawable.elevating_square)
+                val backGround = getDrawable(R.drawable.frame_elevate)
                 v.background = backGround
             }
         }

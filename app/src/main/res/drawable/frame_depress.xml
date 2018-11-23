@@ -7,9 +7,9 @@
     <path
         android:pathData="M0 0,V100,M0 0,H100"
         android:strokeWidth="2"
-        android:strokeColor="@color/highlight" />
+        android:strokeColor="@color/shadow" />
     <path
         android:pathData="M100 0,V32,M0 32,H100"
         android:strokeWidth="2"
-        android:strokeColor="@color/shadow" />
+        android:strokeColor="@color/highlight" />
 </vector>

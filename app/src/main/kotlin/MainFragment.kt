@@ -77,8 +77,6 @@ class MainFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         model.itemList.observe(this, Observer {
-            Log.i("test", "${this.javaClass}@${this.hashCode()} listened the change")
-
                 val filterStr = this.arguments!!.getString("tagString") ?: ""
                 val list = if (filterStr == "all") {
                     model.getItemListWithTag("")
