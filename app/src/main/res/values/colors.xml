@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="linen">#faf0e6</color>
-    <color name="highlight">#eeeeee</color>
+    <color name="highlight">#fbf3ea</color>
     <color name="shadow">#777777</color>
+    <color name="lowLight">#eaeaea</color>
 
 </resources>

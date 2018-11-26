@@ -5,11 +5,14 @@
     android:viewportWidth="128"
     android:viewportHeight="32">
     <path
-        android:pathData="M128 1,H-127,V32"
+        android:pathData="M128 1,H-126,V32"
         android:strokeWidth="3"
         android:strokeColor="@color/shadow" />
     <path
         android:pathData="M127 0,V31,H-126"
         android:strokeWidth="3"
         android:strokeColor="@color/highlight" />
+    <path
+        android:fillColor="@color/lowLight"
+        android:pathData="M2 2,H125,V30,H-124,Z" />
 </vector>
