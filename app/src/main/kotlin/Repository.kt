@@ -76,6 +76,20 @@ class Repository {
     }
 }
 
+fun convertTextLineIntoItems(_lines: List<String>): MutableList<ToDoItem> {
+    val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
+    val result = mutableListOf<ToDoItem>()
+    var line: String
+    for (i in _lines.indices) {
+        line = _lines[i]
+        titleAndTagMatcher.matchEntire(line)
+                ?.destructured
+                ?.let { (titleStr, tag, subProperty) ->
+                    result.add(subPropertyExtractFromText(subProperty, ToDoItem(title = titleStr, tagString = tag)))
+                }
+    }
+    return result
+}
     // manage ItemList
     fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
         val res = _context.resources
@@ -115,7 +129,7 @@ class Repository {
 
 // ToDoItem[] から1行のテキストへ
 
-    fun makeToDoItemToOneLineText(toDoItem: ToDoItem): String {
+fun makeItemsToOneLineText(toDoItem: ToDoItem): String {
         val sb = StringBuilder(toDoItem.title)
                 .append(",", toDoItem.tagString, ",")
         if (toDoItem.hasStartLine) {

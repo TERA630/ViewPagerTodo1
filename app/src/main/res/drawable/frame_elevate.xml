@@ -5,11 +5,11 @@
     android:viewportWidth="100"
     android:viewportHeight="32">
     <path
-        android:pathData="M0 0,V100,M0 0,H100"
-        android:strokeWidth="2"
+        android:pathData="M100 1,H-99,V32"
+        android:strokeWidth="3"
         android:strokeColor="@color/highlight" />
     <path
-        android:pathData="M100 0,V32,M0 32,H100"
-        android:strokeWidth="2"
+        android:pathData="M100 0,V31,H-100"
+        android:strokeWidth="3"
         android:strokeColor="@color/shadow" />
 </vector>

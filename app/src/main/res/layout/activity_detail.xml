@@ -95,12 +95,13 @@
 
         <TextView
             android:id="@+id/startDateTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="128dp"
+            android:layout_height="32dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:background="@{item.hasDeadLine ? @drawable/frame_elevate : @drawable/frame_depress}"
             android:paddingEnd="4dp"
+            android:paddingStart="4dp"
             android:text="@={item.startLine}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintStart_toStartOf="parent"
@@ -119,8 +120,8 @@
 
         <TextView
             android:id="@+id/deadDateTxt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="128dp"
+            android:layout_height="32dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:background="@{item.hasDeadLine ? @drawable/frame_elevate : @drawable/frame_depress}"

@@ -5,53 +5,24 @@ import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import java.io.*
 
-fun loadListFromTextFile(context: Context): MutableList<ToDoItem> {
-    val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
-    val allLine = readAllLineOfTextFile(context)
-    val result = mutableListOf<ToDoItem>()
-    for (i in allLine.indices) {
-        var line = allLine[i]
-        titleAndTagMatcher.matchEntire(line)
-                ?.destructured
-                ?.let { (titleStr, tag, subProperty) ->
-                    val newItem = subPropertyExtractFromText(subProperty, ToDoItem(title = titleStr, tagString = tag))
-                    result.add(newItem)
-                }
-    }
-    return result
+fun loadListFromTextFile(_context: Context): MutableList<ToDoItem> {
+    val allLine = inputStreamToLines(_context.openFileInput(TODO_TEXT_FILE))
+    return convertTextLineIntoItems(_lines = allLine)
 }
-
 fun loadListFromTextFileAtSdcard(_context: Context, _documentDir: DocumentFile): MutableList<ToDoItem> {
-    val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
-    val result: MutableList<ToDoItem> = mutableListOf()
-
-    try {
-        val file = _documentDir.findFile(TODO_TEXT_FILE)
+    val file = _documentDir.findFile(TODO_TEXT_FILE)
         file?.let {
-            val ins = InputStreamReader(_context.contentResolver.openInputStream(file.uri))
-            val br = BufferedReader(ins)
-            val allLine = br.readLines()
-            br.close()
-            for (i in allLine.indices) {
-                val line = allLine[i]
-            titleAndTagMatcher.matchEntire(line)
-                    ?.destructured
-                    ?.let { (titleStr, tag, subProperty) ->
-                        val newItem = subPropertyExtractFromText(subProperty, ToDoItem(title = titleStr, tagString = tag))
-                        result.add(newItem)
-                    }
-            }
-            return result
-        } ?: throw Exception(FileNotFoundException("$TODO_TEXT_FILE was not found"))
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-    return result
+            val inputStream = _context.contentResolver.openInputStream(file.uri)
+            inputStream?.let {
+                val lines = inputStreamToLines(inputStream)
+                return convertTextLineIntoItems(lines)
+            } ?: throw IOException("$TODO_TEXT_FILE inputStream could not established")
+        } ?: throw FileNotFoundException("$TODO_TEXT_FILE was not found")
 }
 
-fun readAllLineOfTextFile(_context: Context): List<String> {
+fun inputStreamToLines(_inputStream: java.io.InputStream): List<String> {
     return try {
-        val isr = InputStreamReader(_context.openFileInput(TODO_TEXT_FILE))
+        val isr = InputStreamReader(_inputStream)
         val br = BufferedReader(isr)
         val result = br.readLines()
         br.close()
@@ -64,20 +35,21 @@ fun readAllLineOfTextFile(_context: Context): List<String> {
         emptyList()
     }
 }
-
 fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
     try {
         val fileOut = context.openFileOutput(TODO_TEXT_FILE, Context.MODE_PRIVATE and Context.MODE_APPEND)
         val osw = OutputStreamWriter(fileOut, "UTF-8")
         val bw = BufferedWriter(osw)
         for (index in _list.indices) {
-            bw.write(makeToDoItemToOneLineText(_list[index]))
+            bw.write(makeItemsToOneLineText(_list[index]))
             bw.newLine()
         }
         bw.close()
     } catch (e: FileNotFoundException) {
+        Log.e("test", "File not found at saveListToTextFile")
         e.printStackTrace()
     } catch (e: IOException) {
+        Log.e("test", "IOException occur at saveListToTextFile")
         e.printStackTrace()
     }
 }
