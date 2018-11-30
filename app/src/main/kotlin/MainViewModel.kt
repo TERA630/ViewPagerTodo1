@@ -16,12 +16,16 @@ class MainViewModel : ViewModel() {
     lateinit var tagList: MutableList<String>
     var currentDate = "2018/8/26"
     lateinit var mRepository: Repository
+    var isOnlyFirstItemShown: Boolean = true
 
     fun initItems(_context: Context) {
         mRepository = Repository()
         itemList.value = mRepository.loadListFromPreference(_context)
-        archievement = mRepository.loadIntFromPreference(REWARD, _context)
+
+
         tagList = getTagListFromItemList(getItemList())
+        archievement = mRepository.loadIntFromPreference(REWARD, _context)
+
         dateList = fetchRecentDate(context = _context)
         currentDate = dateList[0]
     }
@@ -101,7 +105,6 @@ class MainViewModel : ViewModel() {
         for (i in achievedList.indices) {
             getReward += achievedList[i].reward
         }
-        Log.i("test", "reward was $getReward")
         this.archievement = this.archievement + getReward
         mRepository.saveIntToPreference(REWARD, this.archievement, _context = _context)
         this.itemList.value = notYetList.toMutableList()

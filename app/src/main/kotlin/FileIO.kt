@@ -7,7 +7,7 @@ import java.io.*
 
 fun loadListFromTextFile(_context: Context): MutableList<ToDoItem> {
     val allLine = inputStreamToLines(_context.openFileInput(TODO_TEXT_FILE))
-    return convertTextLineIntoItems(_lines = allLine)
+    return convertTextListToItems(_lines = allLine)
 }
 fun loadListFromTextFileAtSdcard(_context: Context, _documentDir: DocumentFile): MutableList<ToDoItem> {
     val file = _documentDir.findFile(TODO_TEXT_FILE)
@@ -15,7 +15,7 @@ fun loadListFromTextFileAtSdcard(_context: Context, _documentDir: DocumentFile):
             val inputStream = _context.contentResolver.openInputStream(file.uri)
             inputStream?.let {
                 val lines = inputStreamToLines(inputStream)
-                return convertTextLineIntoItems(lines)
+                return convertTextListToItems(lines)
             } ?: throw IOException("$TODO_TEXT_FILE inputStream could not established")
         } ?: throw FileNotFoundException("$TODO_TEXT_FILE was not found")
 }
@@ -41,7 +41,7 @@ fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
         val osw = OutputStreamWriter(fileOut, "UTF-8")
         val bw = BufferedWriter(osw)
         for (index in _list.indices) {
-            bw.write(makeItemsToOneLineText(_list[index]))
+            bw.write(makeItemToOneLineText(_list[index]))
             bw.newLine()
         }
         bw.close()

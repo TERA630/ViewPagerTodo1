@@ -16,6 +16,9 @@ import androidx.lifecycle.get
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 
+// Viewmodelに依存
+//
+
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
     lateinit var mAdapter: MainRecyclerAdaptor
@@ -69,8 +72,6 @@ class MainFragment : Fragment() {
                     }
                 }
             }
-
-
         })
 
     }

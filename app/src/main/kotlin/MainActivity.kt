@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.initItems(this)
 
         toolbar_layout.title = " "
-        achievePoint.text = "達成：${model.archievement}"
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
 
         // Pager Adapter setup
@@ -54,11 +53,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // set event handlers
 
-        getAchieve.setOnClickListener {
-            model.calculateAchievedPoints(baseContext)
-            achievePoint.text = "達成：${model.archievement}"
+        showOnlyFistItemOrNot.setOnCheckedChangeListener { _, isChecked ->
+            model.isOnlyFirstItemShown = isChecked
         }
-
         mainActivity_fab.setOnClickListener {
             val shownPageNumber = viewPager.currentItem
             val shownTagText = model.tagList[shownPageNumber]
@@ -95,6 +92,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_settings -> return true
+            R.id.clearDone_and_getReward -> {
+                model.calculateAchievedPoints(baseContext)
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }

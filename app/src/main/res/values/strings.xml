@@ -15,6 +15,7 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="showOnlyFirstItem">最初に行うアクションのみ表示</string>
 
     <string-array name="period_array">
         <item>一回</item>
@@ -44,32 +45,21 @@
         <item>30</item>
     </integer-array>
     <string-array name="default_todoItem_title">
-        <item>個人番号カード登録証記入</item>
-        <item>Henoch-Schonlein紫斑病まとめ</item>
-        <item>CartinoidからNETへ</item>
-        <item>名駅南の鍵送付</item>
-        <item>前半期の不動産まとめ</item>
-        <item>急性腹症､慢性腹痛まとめ</item>
-        <item>ユニクロ服整理</item>
-        <item>本棚整理</item>
-    </string-array>
-    <string-array name="default_todoItem_startDate">
-        <item>2018/10/3</item>
-        <item>2018/10/3</item>
-        <item>2018/9/30</item>
-        <item>2018/8/11</item>
-        <item>2018/8/12</item>
-        <item>2018/8/13</item>
-        <item>2018/8/14</item>
-        <item>2018/8/11</item>
+        <item>個人番号カード登録証写真撮影</item>
+        <item>不動産収支まとめ</item>
+        <item>子供部屋のコンテナ注文</item>
+        <item>子供部屋の引出注文</item>
+        <item>財務書類まとめ</item>
+        <item>ロジェフレア関連入出金</item>
+        <item>ズボン整理</item>
     </string-array>
     <string-array name="default_todoItem_tag">
-        <item>書類記入</item>
-        <item>STUDY</item>
-        <item>STUDY</item>
-        <item>送付</item>
+        <item>書類</item>
         <item>財務</item>
-        <item>勉強</item>
+        <item>整理</item>
+        <item>整理</item>
+        <item>財務</item>
+        <item>財務</item>
         <item>整理</item>
     </string-array>
     <string-array name="menu_items">
