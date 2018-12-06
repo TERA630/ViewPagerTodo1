@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 // Viewmodelに依存
@@ -36,7 +37,7 @@ class MainFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         model = ViewModelProviders.of(this.activity!!).get()
-        mTag = this.arguments!!.getString("tagString") ?: "all"
+        mTag = this.arguments!!.getString("tagString") ?: model.tagList[0]
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, fragment_frame)
@@ -62,13 +63,12 @@ class MainFragment : Fragment() {
                         val intent = Intent(context, DetailActivity::class.java)
                         intent.putExtra("parentID", numberToCall)
                         intent.putExtra("tagString", filterStr)
-                        Log.i("test", "parentID was $numberToCall")
-                        model.saveItemListToPreference(context)
+                        intent.putExtra("comingPage", main_viewpager.currentItem)
+                        model.saveItem(context)
                         startActivity(intent)
                     }
                     R.id.delBtn -> {
                         model.deleteItem(numberToCall)
-                        Log.i("test", "$numberToCall was deleted")
                     }
                 }
             }

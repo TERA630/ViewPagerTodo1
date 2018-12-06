@@ -20,8 +20,6 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
-
-
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var model: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,17 +62,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             intent.putExtra("parentID", -1)
             intent.putExtra("tagString", shownTagText)
             intent.putExtra("comingPage", viewPager.currentItem)
-            model.saveItemListToPreference(this@MainActivity.baseContext)
+            model.saveItem(this@MainActivity.applicationContext)
             startActivity(intent)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        model.saveItemListToPreference(this.baseContext)
+        model.saveItem(this.applicationContext)
     }
     override fun onBackPressed() {
-        model.saveItemListToPreference(this.baseContext)
+        model.saveItem(this.applicationContext)
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
@@ -96,42 +94,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 model.calculateAchievedPoints(baseContext)
                 return true
             }
+            R.id.action_saveItem -> {
+                model.saveItem(this@MainActivity.applicationContext)
+            }
+            R.id.action_loadItem -> {
+                model.loadItem(this@MainActivity.applicationContext)
+            }
+            R.id.action_loadItem_FromSdCard -> {
+                startStorageAccess(REQUEST_CODE_READ)
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
-                val repository = Repository()
-                val list = makeDefaultList(this@MainActivity.baseContext)
-                model.itemList.value = list
-                model.tagList = getTagListFromItemList(model.getItemList())
-                repository.saveListToPreference(list, this@MainActivity.baseContext)
-                Log.i("test", "Make default list by menu.")
-            }
             R.id.save_to_text -> {
-                //             model.saveItemListToPreference(this@MainActivity.baseContext)
-                val context = this@MainActivity.applicationContext
-                saveListToTextFile(context, model.getItemList())
+                model.saveItem(this@MainActivity.applicationContext)
             }
             R.id.load_from_text -> {
-                val context = this@MainActivity.applicationContext
-                val list = loadListFromTextFile(context)
-                model.itemList.value = list
+                model.loadItem(this@MainActivity.applicationContext)
             }
             R.id.load_from_sdcard -> {
                 startStorageAccess(REQUEST_CODE_READ)
-            }
-            R.id.nav_manage -> {
-                model.saveItemListToPreference(this@MainActivity.baseContext)
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -147,7 +132,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.i("test", "onActivity result coming..")
         if (resultCode == Activity.RESULT_CANCELED) {
             return
         }

@@ -8,26 +8,23 @@ import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-
 class MainViewModel : ViewModel() {
-    val itemList = MutableLiveData<MutableList<ToDoItem>>()
+    private var rawItemList = MutableList(1) { ToDoItem() }
+    val itemList = MutableLiveData<MutableList<FilteredToDoItem>>()
     var archievement: Int = 0
-    lateinit var dateList: MutableList<String>
     lateinit var tagList: MutableList<String>
-    var currentDate = "2018/8/26"
-    lateinit var mRepository: Repository
+    private lateinit var mRepository: Repository
     var isOnlyFirstItemShown: Boolean = true
 
     fun initItems(_context: Context) {
-        mRepository = Repository()
-        itemList.value = mRepository.loadListFromPreference(_context)
-
+        loadItem(_context)
+        if ((rawItemList.size == 0)) {
+            rawItemList = makeDefaultList(_context)
+        }
+        itemList.value = pickItemsToShow(rawItemList)
 
         tagList = getTagListFromItemList(getItemList())
         archievement = mRepository.loadIntFromPreference(REWARD, _context)
-
-        dateList = fetchRecentDate(context = _context)
-        currentDate = dateList[0]
     }
 
     fun deleteItem(index: Int) {
@@ -36,46 +33,23 @@ class MainViewModel : ViewModel() {
         itemList.value = mList
     }
 
-    fun getItemList(): MutableList<ToDoItem> = itemList.value
-            ?: listOf(ToDoItem(EMPTY_ITEM)).toMutableList()
+    fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
+            ?: mutableListOf(FilteredToDoItem(1, ToDoItem("Enter Item")))
+
+    fun getItemListUnfilter(): MutableList<ToDoItem> {
+        return MutableList(getItemList().size) { index -> getItemList()[index].item.copy() }
+    }
 
     fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
-        val rawList = getItemList()
-        val regFilterStr = Regex(filterStr)
-        val filteredList: MutableList<FilteredToDoItem> = emptyList<FilteredToDoItem>().toMutableList()
-        for (i in rawList.indices) {
-            if (rawList[i].tagString.contains(regFilterStr)) {
-                filteredList.add(FilteredToDoItem(i, rawList[i].copy()))
-            }
-        }
-        return filteredList
+        val filteredList = getItemList().filter { it.item.tagString.contains(filterStr) }
+        return filteredList.toMutableList()
     }
 
-    fun getItemListCurrentWithTag(targetDate: String, filterStr: CharSequence): MutableList<FilteredToDoItem> {
-        return if (filterStr == "") {
-            getItemListWithDate(targetDate)
-        } else {
-            getItemListWithTag(filterStr.toString()).filterByDate(targetDate)
-        }
+    private fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<String> {
+        val rawTagList: List<String> = List(_list.size) { index -> _list[index].item.tagString }
+        val result = rawTagList.distinct()
+        return result.toMutableList()
     }
-
-    private fun getItemListWithDate(targetDate: String): MutableList<FilteredToDoItem> {
-        val rawList = getItemList()
-        val result: MutableList<FilteredToDoItem> = emptyList<FilteredToDoItem>().toMutableList()
-        for (i in 0..rawList.lastIndex) {
-            if (isBefore(itemDate = rawList[i].startLine, baseDateStr = targetDate)) {
-                result.add(FilteredToDoItem(i, rawList[i].copy()))
-            }
-        }
-        return result
-    }
-    fun saveItemListToPreference(_context: Context){
-        try{ mRepository.saveListToPreference(this.getItemList(),_context)}
-        catch (e:Exception ){
-            Log.e("test","error occur at saveItemListToPreference")
-        }
-    }
-
     fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean {
         Log.i("test", "onEditorActionDone Call")
         return when (actionId) {
@@ -90,25 +64,44 @@ class MainViewModel : ViewModel() {
         }
     }
 
-/*    fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        Log.i("test", "spinner ${position}selected")
-        currentDate = dateList[position]
-    }*/
-
     fun calculateAchievedPoints(_context: Context) {
 
-        val achievedList = getItemList().filter { it.isDone }
-        val notYetList = getItemList().filterNot { it.isDone }
+        val achievedList = getItemList().filter { it.item.isDone }
+        val notYetList = getItemList().filterNot { it.item.isDone }
         val numberOfAchieved = achievedList.size
         Log.i("test", "number of achieved todo  was $numberOfAchieved")
         var getReward = 0
         for (i in achievedList.indices) {
-            getReward += achievedList[i].reward
+            getReward += achievedList[i].item.reward
         }
         this.archievement = this.archievement + getReward
         mRepository.saveIntToPreference(REWARD, this.archievement, _context = _context)
         this.itemList.value = notYetList.toMutableList()
         this.tagList = getTagListFromItemList(getItemList())
+    }
+
+    fun loadItem(_context: Context) {
+        rawItemList = loadListFromTextFile(_context)
+    }
+
+    private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
+        val list = emptyList<FilteredToDoItem>().toMutableList()
+        if (isOnlyFirstItemShown) {
+            for (i in rawList.indices) {
+                if (rawList[i].preceding != "nothing") {
+                    list.add(FilteredToDoItem(i, rawList[i].copy()))
+                }
+            }
+        } else {
+            for (i in rawList.indices) {
+                list.add(FilteredToDoItem(i, rawList[i].copy()))
+            }
+        }
+        return list
+    }
+
+    fun saveItem(_context: Context) {
+        saveListToTextFile(_context, getItemListUnfilter())
     }
 
 }

@@ -1,11 +1,6 @@
 package com.example.yoshi.viewpagertodo1
 
 import android.content.Context
-import android.util.Log
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.internal.ArrayListSerializer
-import kotlinx.serialization.json.JSON
-import kotlinx.serialization.serializer
 
 const val ITEM_DATA = "toDoItems"
 const val REWARD = "reward"
@@ -13,7 +8,6 @@ const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
 const val REQUEST_CODE_READ = 1
 
-@Serializable
 data class ToDoItem constructor(
         var title: String = "thing to do",
         var tagString: String = "home",
@@ -25,9 +19,7 @@ data class ToDoItem constructor(
         var hasStartLine: Boolean = true,
         var startLine: String = "----/--/--",
         var hasDeadLine: Boolean = false,
-        var deadLine: String = "----/--/--",
-
-
+        var deadLine: String = "----/--/--"
         )
 class FilteredToDoItem constructor(
         var unFilter: Int = 0,
@@ -52,28 +44,6 @@ class Repository {
     fun loadIntFromPreference(_key: String, _context: Context): Int {
         val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
         return preferences?.getInt(_key, 0) ?: 0
-    }
-    // ToDoItem with preference
-    fun saveListToPreference(_mList: MutableList<ToDoItem>, _context: Context) {
-        val toDoSerializer = ToDoItem::class.serializer()
-        val listSerializer = ArrayListSerializer(toDoSerializer)
-        val serializedStringList = JSON.unquoted.stringify(listSerializer, _mList.toList())
-        saveStringToPreference(ITEM_DATA, serializedStringList, _context)
-    }
-    fun loadListFromPreference(_context: Context): MutableList<ToDoItem> {
-        val jsonString = loadStringFromPreference(ITEM_DATA, _context)
-        return if (jsonString == EMPTY_ITEM) {
-            makeDefaultList(_context)
-        } else {
-            return try {
-                val toDoSerializer = ToDoItem::class.serializer()
-                val listSerializer = ArrayListSerializer(toDoSerializer)
-                JSON.unquoted.parse(listSerializer, jsonString).toMutableList()
-            } catch (e: Exception) {
-                Log.e("test", "${e.message} with ${e.cause}")
-                makeDefaultList(_context)
-            }
-        }
     }
 }
 
@@ -100,11 +70,7 @@ fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
         }
         return toDoList.toMutableList()
     }
-    fun getTagListFromItemList(_list: MutableList<ToDoItem>): MutableList<String> {
-        val rawTagList: List<String> = List(_list.size) { index -> _list[index].tagString }
-        val result = rawTagList.distinct()
-        return result.toMutableList()
-    }
+
 
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
 
@@ -152,15 +118,4 @@ fun makeItemToOneLineText(toDoItem: ToDoItem): String {
         }
         sb.append(",reward:", toDoItem.reward)
         return sb.toString()
-    }
-
-fun MutableList<FilteredToDoItem>.filterByDate(dateStr: String): MutableList<FilteredToDoItem> {
-        val list = emptyList<FilteredToDoItem>().toMutableList()
-
-        for (i in this.indices) {
-            if ((this[i].item.hasStartLine) && isBefore(dateStr, this[i].item.startLine)) {
-                list.add(FilteredToDoItem(i, this[i].item.copy()))
-            }
-        }
-        return list
-    }
+}

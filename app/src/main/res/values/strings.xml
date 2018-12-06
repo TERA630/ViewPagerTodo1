@@ -16,6 +16,9 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="showOnlyFirstItem">最初に行うアクションのみ表示</string>
+    <string name="saveItem">現在のアイテムを保存</string>
+    <string name="loadItem">アイテムの読込み</string>
+    <string name="loadItem_FromSdCard">アイテムをSDカードから読込み</string>
 
     <string-array name="period_array">
         <item>一回</item>

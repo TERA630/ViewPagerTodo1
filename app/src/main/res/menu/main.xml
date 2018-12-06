@@ -9,4 +9,14 @@
     <item
         android:id="@+id/clearDone_and_getReward"
         android:title="@string/getPoint" />
+    <item
+        android:id="@+id/action_saveItem"
+        android:title="@string/saveItem" />
+    <item
+        android:id="@+id/action_loadItem"
+        android:title="@string/loadItem" />
+    <item
+        android:id="@+id/action_loadItem_FromSdCard"
+        android:title="@string/loadItem_FromSdCard" />
+
 </menu>
