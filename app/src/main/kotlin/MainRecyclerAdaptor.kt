@@ -13,7 +13,6 @@ private val ITEM_CALLBACK = object : DiffUtil.ItemCallback<FilteredToDoItem>() {
     override fun areItemsTheSame(oldItem: FilteredToDoItem, newItem: FilteredToDoItem): Boolean {
         return (oldItem.unFilter == newItem.unFilter)
     }
-
     override fun areContentsTheSame(oldItem: FilteredToDoItem, newItem: FilteredToDoItem): Boolean {
         return (oldItem.item.title == newItem.item.title) && (oldItem.item.tagString == newItem.item.tagString) &&
                 (oldItem.item.hasStartLine == newItem.item.hasStartLine) && (oldItem.item.hasDeadLine == newItem.item.hasDeadLine) &&
@@ -22,29 +21,21 @@ private val ITEM_CALLBACK = object : DiffUtil.ItemCallback<FilteredToDoItem>() {
     }
 }
 
-class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, private val model: MainViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainRecyclerAdaptor(
+        private var mList: MutableList<FilteredToDoItem>,
+        private val model: MainViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var listener: OnItemClickListener
 
-    override fun getItemCount(): Int = mList.size
-    
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val ivh = holder as ItemViewHolder
         ivh.mBinding.item = mList[position].item
-        ivh.mBinding.periodViewer.text
-        val stringBuilder = StringBuilder(if (mList[position].item.hasStartLine) {
-            mList[position].item.startLine + "～"
-        } else {
-            "～"
-        })
-        if (mList[position].item.hasDeadLine) {
-            stringBuilder.append(mList[position].item.deadLine)
-        }
+        ivh.mBinding.periodViewer.text = buildPeriodTextFromItem(mList[position].item)
 
-        ivh.mBinding.periodViewer.text = stringBuilder.toString()
         ivh.mBinding.itemTitle.setOnCheckedChangeListener { _, boolean ->
             mList[position].item.isDone = boolean
+            val indexOfRawList = mList[position].unFilter
+            model.getItemList()[indexOfRawList].item.isDone = boolean
             notifyItemChanged(position)
-            model.getItemList()[mList[position].unFilter].isDone = boolean
         }
         ivh.itemView.editBtn.setOnClickListener { v: View ->
             listener.onClick(v, mList[position].unFilter)
@@ -54,22 +45,20 @@ class MainRecyclerAdaptor(private var mList: MutableList<FilteredToDoItem>, priv
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
         return ItemViewHolder(rowView)
     }
 
+    override fun getItemCount(): Int = mList.size
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mBinding = RowItemBinding.bind(itemView)
     }
-
     interface OnItemClickListener {
         fun onClick(view: View, numberToCall: Int)
     }
     fun setListOfAdapter(list : MutableList<FilteredToDoItem>){
         this.mList = list
     }
-
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
     }

@@ -1,12 +1,16 @@
 package com.example.yoshi.viewpagertodo1
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.net.URI
 
 class MainViewModel : ViewModel() {
     private var rawItemList = MutableList(1) { ToDoItem() }
@@ -45,11 +49,7 @@ class MainViewModel : ViewModel() {
         return filteredList.toMutableList()
     }
 
-    private fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<String> {
-        val rawTagList: List<String> = List(_list.size) { index -> _list[index].item.tagString }
-        val result = rawTagList.distinct()
-        return result.toMutableList()
-    }
+
     fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean {
         Log.i("test", "onEditorActionDone Call")
         return when (actionId) {
@@ -84,6 +84,15 @@ class MainViewModel : ViewModel() {
         rawItemList = loadListFromTextFile(_context)
     }
 
+    fun loadItemsFromSdCard(_context: Context, uri: Uri) {
+
+        _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        val pickedDir = DocumentFile.fromTreeUri(_context, uri)
+        pickedDir?.let {
+            rawItemList = loadListFromTextFileAtSdcard(_context, pickedDir)
+            itemList.value = pickItemsToShow(rawItemList)
+        }
+    }
     private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
         val list = emptyList<FilteredToDoItem>().toMutableList()
         if (isOnlyFirstItemShown) {
@@ -99,9 +108,7 @@ class MainViewModel : ViewModel() {
         }
         return list
     }
-
     fun saveItem(_context: Context) {
         saveListToTextFile(_context, getItemListUnfilter())
     }
-
 }

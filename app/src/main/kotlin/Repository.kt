@@ -47,6 +47,16 @@ class Repository {
     }
 }
 
+fun buildPeriodTextFromItem(item: ToDoItem): String {
+    val stringBuilder = if (item.hasStartLine) {
+        StringBuilder(item.startLine + "～")
+    } else {
+        StringBuilder("～")
+    }
+    if (item.hasDeadLine) stringBuilder.append(item.deadLine)
+    return stringBuilder.toString()
+}
+
 fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
     val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
     val result = mutableListOf<ToDoItem>()
@@ -71,6 +81,11 @@ fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
         return toDoList.toMutableList()
     }
 
+fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<String> {
+    val rawTagList: List<String> = List(_list.size) { index -> _list[index].item.tagString }
+    val result = rawTagList.distinct()
+    return result.toMutableList()
+}
 
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
 

@@ -96,12 +96,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.action_saveItem -> {
                 model.saveItem(this@MainActivity.applicationContext)
+                return true
             }
             R.id.action_loadItem -> {
                 model.loadItem(this@MainActivity.applicationContext)
+                return true
             }
             R.id.action_loadItem_FromSdCard -> {
                 startStorageAccess(REQUEST_CODE_READ)
+                return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -132,19 +135,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_CANCELED) {
-            return
-        }
-        val uri = data?.data
-        if (uri == null) {
-            Log.w("test", "Activity result work not fine")
-            return
-        } else {
-            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            val pickedDir = DocumentFile.fromTreeUri(this.baseContext, uri)
-            pickedDir?.let {
-                model.itemList.value = loadListFromTextFileAtSdcard(this.baseContext, pickedDir)
-            }
-        }
+        if (resultCode == Activity.RESULT_CANCELED) return
+        data?.let {
+            val uri = data.data
+            uri?.let {
+                model.loadItemsFromSdCard(this@MainActivity.baseContext, uri)
+            } ?: Log.w("test", "uri in data of intent was null at onActivityResult..")
+        } ?: Log.w("test", "data of intent was null at onActivityResult..")
     }
 }

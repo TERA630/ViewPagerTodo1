@@ -26,7 +26,6 @@ class DetailActivity : AppCompatActivity() {
         val tagSting = intent.extras?.getString("tagString") ?: ""
         mComingPage = intent.extras?.getInt("comingPage") ?: 0
         val context = this@DetailActivity
-        val repository = Repository()
         val itemList = loadListFromTextFile(context)
         val itemToEdit = if (number in 0..itemList.lastIndex) {
             itemList[number]
@@ -38,7 +37,8 @@ class DetailActivity : AppCompatActivity() {
         binding.item = itemToEdit
         binding.rewardRate.rating = itemToEdit.reward.toFloat()
 
-        val autoCompleteAdaptor = ArrayAdapter<String>(this, R.layout.autocompletet_tag, getTagListFromItemList(itemList))
+        val listToGetTag = MutableList(itemList.size) { index -> FilteredToDoItem(index, itemList[index].copy()) }
+        val autoCompleteAdaptor = ArrayAdapter<String>(this, R.layout.autocompletet_tag, getTagListFromItemList(listToGetTag))
         binding.tagTxt.setAdapter(autoCompleteAdaptor)
 
         // Set Event handler
