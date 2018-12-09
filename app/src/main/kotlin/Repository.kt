@@ -8,6 +8,7 @@ const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
 const val REQUEST_CODE_READ = 1
 
+
 data class ToDoItem constructor(
         var title: String = "thing to do",
         var tagString: String = "home",
@@ -60,7 +61,6 @@ fun buildPeriodTextFromItem(item: ToDoItem): String {
 fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
     val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
     val result = mutableListOf<ToDoItem>()
-    var line: String
     for (i in _lines.indices) {
         titleAndTagMatcher.matchEntire(_lines[i])
                 ?.destructured
@@ -71,15 +71,16 @@ fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
     return result
 }
     // manage ItemList
-    fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
-        val res = _context.resources
-        val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
-        val defaultItemTag = res.getStringArray(R.array.default_todoItem_tag)
-        val toDoList = List(defaultItemTitle.size - 1) { index ->
-            ToDoItem(title = defaultItemTitle[index], tagString = defaultItemTag[index])
-        }
-        return toDoList.toMutableList()
+
+fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
+    val res = _context.resources
+    val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
+    val defaultItemTag = res.getStringArray(R.array.default_todoItem_tag)
+    val toDoList = List(defaultItemTitle.size - 1) { index ->
+        ToDoItem(title = defaultItemTitle[index], tagString = defaultItemTag[index])
     }
+    return toDoList.toMutableList()
+}
 
 fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<String> {
     val rawTagList: List<String> = List(_list.size) { index -> _list[index].item.tagString }
@@ -88,7 +89,6 @@ fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<St
 }
 
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
-
     val precedingMatch = Regex(",preceding:(.+)").find(_text) // preceding は　preceding: .... の形式
     precedingMatch?.let { _toDoItem.preceding = it.value }
     val succeedingMatch = Regex(",succeeding:(.+)").find(_text) // preceding は　succeeding: .... の形式
@@ -110,27 +110,18 @@ fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
         }
         return _toDoItem
     }
-
-
 // ToDoItem[] から1行のテキストへ
-
 fun makeItemToOneLineText(toDoItem: ToDoItem): String {
-        val sb = StringBuilder(toDoItem.title)
-                .append(",", toDoItem.tagString, ",")
+    val sb = StringBuilder(toDoItem.title)
+            .append(",", toDoItem.tagString, ",")
     if ((toDoItem.preceding != "nothing") and (toDoItem.preceding != "")) {
         sb.append("preceding:", toDoItem.preceding, ",")
     }
     if ((toDoItem.succeeding != "nothing") and (toDoItem.succeeding != "")) {
         sb.append("succeeding:", toDoItem.succeeding, ",")
     }
-        if (toDoItem.hasStartLine) {
-            sb.append(toDoItem.startLine, "～")
-        } else {
-            sb.append("～")
-        }
-        if (toDoItem.hasDeadLine) {
-            sb.append(toDoItem.deadLine)
-        }
-        sb.append(",reward:", toDoItem.reward)
-        return sb.toString()
+    val periodText = buildPeriodTextFromItem(toDoItem)
+    sb.append(periodText)
+    sb.append(",reward:", toDoItem.reward)
+    return sb.toString()
 }

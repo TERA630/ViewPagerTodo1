@@ -33,7 +33,7 @@
 
         <EditText
             android:id="@+id/titleTxt"
-            android:layout_width="206dp"
+            android:layout_width="244dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
@@ -81,13 +81,6 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="64dp" />
 
-        <ToggleButton
-            android:id="@+id/isRoutineSw"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            tools:layout_editor_absoluteX="296dp"
-            tools:layout_editor_absoluteY="175dp" />
-
         <AutoCompleteTextView
             android:id="@+id/tagTxt"
             android:layout_width="0dp"
@@ -114,23 +107,27 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="before"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
+            app:layout_constraintEnd_toStartOf="@+id/precedingTxt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tagTxt"
             tools:text="after" />
 
         <EditText
             android:id="@+id/precedingTxt"
-            android:layout_width="0dp"
+            android:layout_width="128dp"
             android:layout_height="0dp"
-
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:inputType="textAutoComplete"
             android:text="@={item.preceding}"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
+            app:layout_constraintEnd_toStartOf="@+id/succeedingLabel"
             app:layout_constraintStart_toEndOf="@+id/precedingLabel"
             app:layout_constraintTop_toBottomOf="@+id/tagTxt" />
 
@@ -140,19 +137,22 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:text="before"
+            app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintStart_toEndOf="@+id/precedingTxt"
             app:layout_constraintTop_toBottomOf="@id/tagTxt"
             tools:text="before" />
 
         <EditText
             android:id="@+id/succeedingTxt"
-            android:layout_width="0dp"
+            android:layout_width="128dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:inputType="textAutoComplete"
             android:text="@={item.succeeding}"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintEnd_toEndOf="parent"
@@ -164,38 +164,38 @@
             android:layout_width="128dp"
             android:layout_height="32dp"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="88dp"
+            android:layout_marginTop="8dp"
             android:background="@{item.hasDeadLine ? @drawable/frame_elevate : @drawable/frame_depress}"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
             android:text="@={item.startLine}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/precedingLabel"
+            app:layout_constraintTop_toTopOf="@+id/guideline3"
             tools:text="@string/undefinedDate" />
 
-        <ImageButton
+        <!--        <ImageButton
             android:id="@+id/startCal"
             android:layout_width="@dimen/imgBtn_size"
             android:layout_height="@dimen/imgBtn_size"
             android:src="@android:drawable/ic_menu_day"
             tools:layout_editor_absoluteX="168dp"
-            tools:layout_editor_absoluteY="159dp" />
+            tools:layout_editor_absoluteY="159dp" />-->
 
         <TextView
             android:id="@+id/deadDateTxt"
             android:layout_width="128dp"
             android:layout_height="32dp"
-            android:layout_marginStart="28dp"
+            android:layout_marginStart="76dp"
             android:layout_marginTop="8dp"
             android:background="@{item.hasDeadLine ? @drawable/frame_elevate : @drawable/frame_depress}"
             android:text="@={item.deadLine}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/startDateTxt"
+            app:layout_constraintStart_toEndOf="@+id/startDateTxt"
+            app:layout_constraintTop_toTopOf="@+id/guideline3"
             tools:text="@string/undefinedDate" />
 
-        <ImageButton
+        <!--        <ImageButton
             android:id="@+id/deadCal"
             android:layout_width="@dimen/imgBtn_size"
             android:layout_height="@dimen/imgBtn_size"
@@ -203,20 +203,20 @@
             android:layout_marginTop="8dp"
             android:src="@android:drawable/ic_menu_day"
             app:layout_constraintStart_toEndOf="@+id/deadDateTxt"
-            app:layout_constraintTop_toBottomOf="@+id/startCal" />
+            app:layout_constraintTop_toBottomOf="@+id/startCal" />-->
 
         <RatingBar
             android:id="@+id/rewardRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="116dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:numStars="6"
             android:stepSize="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/deadDateTxt" />
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -224,6 +224,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="145dp" />
+            app:layout_constraintGuide_begin="154dp" />
+
+        <TextView
+            android:id="@+id/periodLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="～"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            app:layout_constraintEnd_toStartOf="@+id/deadDateTxt"
+            app:layout_constraintStart_toEndOf="@+id/startDateTxt"
+            tools:layout_editor_absoluteY="162dp"
+            tools:text="～" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="200dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

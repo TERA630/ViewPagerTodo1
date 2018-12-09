@@ -34,23 +34,42 @@ class DetailActivity : AppCompatActivity() {
             itemList.add(newItem)
             itemList[itemList.lastIndex]
         }
+
+        val listToGetTag = MutableList(itemList.size) { index -> FilteredToDoItem(index, itemList[index].copy()) }
+        val tagList = getTagListFromItemList(listToGetTag)
+        val autoCompleteAdaptor = ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList)
+        binding.tagTxt.setAdapter(autoCompleteAdaptor)
+
         binding.item = itemToEdit
         binding.rewardRate.rating = itemToEdit.reward.toFloat()
 
-        val listToGetTag = MutableList(itemList.size) { index -> FilteredToDoItem(index, itemList[index].copy()) }
-        val autoCompleteAdaptor = ArrayAdapter<String>(this, R.layout.autocompletet_tag, getTagListFromItemList(listToGetTag))
-        binding.tagTxt.setAdapter(autoCompleteAdaptor)
-
         // Set Event handler
+
+        binding.applyBtn.setOnClickListener {
+            saveListToTextFile(context, itemList)
+            startMainActivity(binding.item.tagString)
+        }
+        binding.cancelBtn.setOnClickListener {
+            startMainActivity(this.mComingPage)
+        }
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val monthOfYear = calendar.get(Calendar.MONTH)
+        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+        val startDataSetListener = DataSetListener(binding.startDateTxt)
+        val deadDataSetListener = DataSetListener(binding.deadDateTxt)
+
         binding.startDateTxt.setOnClickListener { v ->
-            if (itemToEdit.hasStartLine) {
+            if (itemToEdit.hasStartLine) { // StartLine　On→Offにする場合
                 itemToEdit.hasStartLine = false
                 val backGround = getDrawable(R.drawable.frame_depress)
                 v.background = backGround
             } else {
-                itemToEdit.hasStartLine = true
+                itemToEdit.hasStartLine = true // StartLine Off→Onにする場合
                 val backGround = getDrawable(R.drawable.frame_elevate)
                 v.background = backGround
+                val startDatePicker = DatePickerDialog(context, startDataSetListener, year, monthOfYear, dayOfMonth)
+                startDatePicker.show()
             }
         }
         binding.deadDateTxt.setOnClickListener { v ->
@@ -62,33 +81,9 @@ class DetailActivity : AppCompatActivity() {
                 itemToEdit.hasDeadLine = true
                 val backGround = getDrawable(R.drawable.frame_elevate)
                 v.background = backGround
+                val deadDatePicker = DatePickerDialog(context, deadDataSetListener, year, monthOfYear, dayOfMonth)
+                deadDatePicker.show()
             }
-        }
-        binding.applyBtn.setOnClickListener {
-            saveListToTextFile(context, itemList)
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("returnPage", this.mComingPage) // TODO new Item , exiting Item
-            startActivity(intent, null)
-        }
-        binding.cancelBtn.setOnClickListener {
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("returnPage", this.mComingPage) // TODO new Item , exiting Item
-            startActivity(intent, null)
-        }
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val monthOfYear = calendar.get(Calendar.MONTH)
-        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-        val startDataSetListener = DataSetListener(binding.startDateTxt)
-        val deadDataSetListener = DataSetListener(binding.deadDateTxt)
-
-        binding.startCal.setOnClickListener {
-            val startDatePicker = DatePickerDialog(context, startDataSetListener, year, monthOfYear, dayOfMonth)
-            startDatePicker.show()
-        }
-        binding.deadCal.setOnClickListener {
-            val deadDatePicker = DatePickerDialog(context, deadDataSetListener, year, monthOfYear, dayOfMonth)
-            deadDatePicker.show()
         }
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top)
     }
@@ -97,6 +92,12 @@ class DetailActivity : AppCompatActivity() {
         override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
             _textView.text = "$year/${month + 1}/$dayOfMonth"
         }
+    }
+
+    fun startMainActivity(_tagString: String) {
+        val intent = Intent(this@DetailActivity.applicationContext, MainActivity::class.java)
+        intent.putExtra("startPage", _tagString) // TODO new Item , exiting Item
+        startActivity(intent, null)
     }
 
 }

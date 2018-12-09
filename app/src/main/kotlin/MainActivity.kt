@@ -20,6 +20,8 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
+const val INDEX_WHEN_TO_MAKE_NEW_ITEM = 1
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var model: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,16 +31,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model = ViewModelProviders.of(this).get(MainViewModel::class.java)
         model.initItems(this)
 
-        toolbar_layout.title = " "
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
 
         // Pager Adapter setup
-        val startPage = intent.getIntExtra("returnPage", 0) // Detailから戻るときはComingPageへ 違えば0で
+        val startPage = intent.getStringExtra("startPage")
+                ?: model.tagList[0] // startPageがなければTagリストの1番目から表示
         val pagerAdapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         val viewPager = main_viewpager as ViewPager
         viewPager.adapter = pagerAdapter
         (main_tab as TabLayout).setupWithViewPager(viewPager)
-        viewPager.setCurrentItem(startPage, true)
+        val indexOfStartPage = model.tagList.indexOfFirst { it == startPage }
+        viewPager.setCurrentItem(indexOfStartPage, true)
 
         // Drawer setup
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -50,27 +53,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         kUtils.hide(this)
 
         // set event handlers
-
-        showOnlyFistItemOrNot.setOnCheckedChangeListener { _, isChecked ->
-            model.isOnlyFirstItemShown = isChecked
-        }
         mainActivity_fab.setOnClickListener {
-            val shownPageNumber = viewPager.currentItem
-            val shownTagText = model.tagList[shownPageNumber]
-            Log.i("test", "now page is $shownPageNumber,and tag is $shownTagText")
-            val intent = Intent(this@MainActivity.baseContext, DetailActivity::class.java)
-            intent.putExtra("parentID", -1)
-            intent.putExtra("tagString", shownTagText)
-            intent.putExtra("comingPage", viewPager.currentItem)
-            model.saveItem(this@MainActivity.applicationContext)
-            startActivity(intent)
+            startDetailActivity(viewPager.currentItem, INDEX_WHEN_TO_MAKE_NEW_ITEM)
         }
     }
-
     override fun onPause() {
         super.onPause()
         model.saveItem(this.applicationContext)
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_CANCELED) return
+        data?.let {
+            val uri = data.data
+            uri?.let {
+                model.loadItemsFromSdCard(this@MainActivity.baseContext, uri)
+            } ?: Log.w("test", "uri in data of intent was null at onActivityResult..")
+        } ?: Log.w("test", "data of intent was null at onActivityResult..")
+    }
+
     override fun onBackPressed() {
         model.saveItem(this.applicationContext)
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -84,6 +86,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks here.
+        when (item.itemId) {
+            R.id.save_to_text -> {
+                model.saveItem(this@MainActivity.applicationContext)
+            }
+            R.id.load_from_text -> {
+                model.loadItem(this@MainActivity.applicationContext)
+            }
+            R.id.load_from_sdcard -> {
+                startStorageAccess(REQUEST_CODE_READ)
+            }
+        }
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -106,24 +126,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startStorageAccess(REQUEST_CODE_READ)
                 return true
             }
+            R.id.action_deleteFile -> {
+                deleteItemsInFile(this@MainActivity.applicationContext)
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
-    }
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
-        when (item.itemId) {
-            R.id.save_to_text -> {
-                model.saveItem(this@MainActivity.applicationContext)
-            }
-            R.id.load_from_text -> {
-                model.loadItem(this@MainActivity.applicationContext)
-            }
-            R.id.load_from_sdcard -> {
-                startStorageAccess(REQUEST_CODE_READ)
-            }
-        }
-        drawer_layout.closeDrawer(GravityCompat.START)
-        return true
     }
 
     private fun startStorageAccess(requestCode: Int) {
@@ -133,14 +141,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivityForResult(intent, requestCode)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_CANCELED) return
-        data?.let {
-            val uri = data.data
-            uri?.let {
-                model.loadItemsFromSdCard(this@MainActivity.baseContext, uri)
-            } ?: Log.w("test", "uri in data of intent was null at onActivityResult..")
-        } ?: Log.w("test", "data of intent was null at onActivityResult..")
+    fun startDetailActivity(_pageFrom: Int, _indexOfRawItem_ToEdit: Int) {
+        val shownTagText = model.tagList[_pageFrom]
+        val intent = Intent(this@MainActivity.baseContext, DetailActivity::class.java)
+        intent.putExtra("parentID", _indexOfRawItem_ToEdit)
+        intent.putExtra("tagString", shownTagText)
+        intent.putExtra("comingPage", _pageFrom)
+        model.saveItem(this@MainActivity.applicationContext)
+        startActivity(intent)
     }
 }

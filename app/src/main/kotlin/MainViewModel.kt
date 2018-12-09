@@ -25,9 +25,11 @@ class MainViewModel : ViewModel() {
         if ((rawItemList.size == 0)) {
             rawItemList = makeDefaultList(_context)
         }
+
         itemList.value = pickItemsToShow(rawItemList)
 
         tagList = getTagListFromItemList(getItemList())
+        mRepository = Repository()
         archievement = mRepository.loadIntFromPreference(REWARD, _context)
     }
 
@@ -51,7 +53,7 @@ class MainViewModel : ViewModel() {
 
 
     fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean {
-        Log.i("test", "onEditorActionDone Call")
+        Log.i("test", "onEditorActionDone was Called by $event")
         return when (actionId) {
             EditorInfo.IME_ACTION_DONE, EditorInfo.IME_ACTION_NONE, EditorInfo.IME_ACTION_NEXT, EditorInfo.IME_NULL -> {
                 val keyboardUtils = KeyboardUtils()
@@ -97,7 +99,7 @@ class MainViewModel : ViewModel() {
         val list = emptyList<FilteredToDoItem>().toMutableList()
         if (isOnlyFirstItemShown) {
             for (i in rawList.indices) {
-                if (rawList[i].preceding != "nothing") {
+                if (rawList[i].preceding == "nothing") {
                     list.add(FilteredToDoItem(i, rawList[i].copy()))
                 }
             }

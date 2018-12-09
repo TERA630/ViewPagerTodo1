@@ -5,9 +5,38 @@ import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import java.io.*
 
+fun deleteItemsInFile(_context: Context) {
+    try {
+        _context.deleteFile(TODO_TEXT_FILE)
+    } catch (e: Exception) {
+        Log.e("test", "${e.message} occur")
+    }
+}
+
+fun inputStreamToLines(_inputStream: java.io.InputStream): List<String> {
+    return try {
+        val isr = InputStreamReader(_inputStream)
+        val br = BufferedReader(isr)
+        val result = br.readLines()
+        br.close()
+        result
+    } catch (e: NoSuchFileException) {
+        Log.w("test", "File not found at inputStreamToLines")
+        emptyList()
+    } catch (e: Exception) {
+        Log.w("test", "File IO Exception occur at inputStreamToLines")
+        emptyList()
+    }
+}
+
 fun loadListFromTextFile(_context: Context): MutableList<ToDoItem> {
-    val allLine = inputStreamToLines(_context.openFileInput(TODO_TEXT_FILE))
-    return convertTextListToItems(_lines = allLine)
+    try {
+        val allLine = inputStreamToLines(_context.openFileInput(TODO_TEXT_FILE))
+        return convertTextListToItems(_lines = allLine)
+    } catch (e: Exception) {
+        Log.w("test", "${e.cause} bring {${e.message}")
+        return emptyList<ToDoItem>().toMutableList()
+    }
 }
 fun loadListFromTextFileAtSdcard(_context: Context, _documentDir: DocumentFile): MutableList<ToDoItem> {
     val file = _documentDir.findFile(TODO_TEXT_FILE)
@@ -20,21 +49,7 @@ fun loadListFromTextFileAtSdcard(_context: Context, _documentDir: DocumentFile):
         } ?: throw FileNotFoundException("$TODO_TEXT_FILE was not found")
 }
 
-fun inputStreamToLines(_inputStream: java.io.InputStream): List<String> {
-    return try {
-        val isr = InputStreamReader(_inputStream)
-        val br = BufferedReader(isr)
-        val result = br.readLines()
-        br.close()
-        result
-    } catch (e: FileNotFoundException) {
-        Log.w("test", "File not found")
-        emptyList()
-    } catch (e: IOException) {
-        Log.w("test", "File IO Exception occur")
-        emptyList()
-    }
-}
+
 fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
     try {
         val fileOut = context.openFileOutput(TODO_TEXT_FILE, Context.MODE_PRIVATE and Context.MODE_APPEND)

@@ -24,12 +24,14 @@ class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
     lateinit var mAdapter: MainRecyclerAdaptor
     lateinit var mTag:String
+    private var mPosition = 0
 
     companion object {
-        fun newInstance(tagString: String): MainFragment {
+        fun newInstance(tagString: String, position: Int): MainFragment {
             val bundle = Bundle()
             val newFragment = MainFragment()
             bundle.putString("tagString", tagString)
+            bundle.putInt("pagePosition", position)
             newFragment.arguments = bundle
             return newFragment
         }
@@ -37,19 +39,14 @@ class MainFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         model = ViewModelProviders.of(this.activity!!).get()
-        mTag = this.arguments!!.getString("tagString") ?: model.tagList[0]
+        mTag = this.arguments?.getString("tagString") ?: model.tagList[0]
+        mPosition = this.arguments?.getInt("pagePosition") ?: 0
     }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_main, fragment_frame)
-    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val filterStr = mTag
-        val list = if (filterStr == "all") {
-            model.getItemListWithTag("")
-        } else {
-            model.getItemListWithTag(filterStr)
-        }
+        val list = model.getItemListWithTag(filterStr)
         mAdapter = MainRecyclerAdaptor(list, model)
         recycler_view.adapter = mAdapter
         runAnimation(recycler_view)
@@ -58,14 +55,7 @@ class MainFragment : Fragment() {
             override fun onClick(view: View, numberToCall: Int) {
                 when (view.id) {
                     R.id.editBtn -> {
-                        val context = this@MainFragment.context
-                                ?: throw Exception("context is null at MainFragment")
-                        val intent = Intent(context, DetailActivity::class.java)
-                        intent.putExtra("parentID", numberToCall)
-                        intent.putExtra("tagString", filterStr)
-                        intent.putExtra("comingPage", main_viewpager.currentItem)
-                        model.saveItem(context)
-                        startActivity(intent)
+                        (this@MainFragment.activity as MainActivity).startDetailActivity(mPosition, numberToCall)
                     }
                     R.id.delBtn -> {
                         model.deleteItem(numberToCall)
@@ -73,19 +63,19 @@ class MainFragment : Fragment() {
                 }
             }
         })
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_main, fragment_frame)
     }
     override fun onStart() {
         super.onStart()
+        // itemList 更新時に実行される。
         model.itemList.observe(this, Observer {
-                val filterStr = this.arguments!!.getString("tagString") ?: ""
-                val list = if (filterStr == "all") {
-                    model.getItemListWithTag("")
-                } else {
-                    model.getItemListWithTag(filterStr)
-                }
-                mAdapter.setListOfAdapter(list)
-                mAdapter.notifyDataSetChanged()
+            val filterStr = this.arguments!!.getString("tagString") ?: ""
+            val list = model.getItemListWithTag(filterStr)
+            mAdapter.setListOfAdapter(list)
+            mAdapter.notifyDataSetChanged()
         })
     }
     private fun runAnimation(recyclerView: RecyclerView) {
