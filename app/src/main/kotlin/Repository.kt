@@ -93,6 +93,8 @@ fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
     precedingMatch?.let { _toDoItem.preceding = it.value }
     val succeedingMatch = Regex(",succeeding:(.+)").find(_text) // preceding は　succeeding: .... の形式
     succeedingMatch?.let { _toDoItem.succeeding = it.value }
+    val isDoneMatch = Regex(",isDone,").find(_text)
+    isDoneMatch?.let { _toDoItem.isDone = true}
 
     val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text) // startDate は　dddd/dd/dd～　の形式
         if (startDateMatch != null) {
@@ -100,14 +102,16 @@ fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
             _toDoItem.startLine = (Regex("[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(startDateMatch.value))?.value ?: "1970/01/01"
         }
     val deadDateMatch = Regex(" ～[0-9]{4}/[0-9]{1,2}/[0-9]{1,2} ").find(_text) // deadDate は　～dddd/dd/dd　の形式
-        if (deadDateMatch != null) {
+    if (deadDateMatch != null) {
             _toDoItem.hasDeadLine = true
             _toDoItem.deadLine = (Regex(" [0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(deadDateMatch.value))?.value ?: "1970/01/01"
         }
-        val rewardMatch = Regex(",reward:[0-9]").find(_text)
-        if (rewardMatch != null) {
+    val rewardMatch = Regex(",reward:[0-9]").find(_text)
+    if (rewardMatch != null) {
             _toDoItem.reward = (Regex("[0-9]").find(rewardMatch.value))?.value?.toInt() ?: 1
-        }
+    }
+
+
         return _toDoItem
     }
 // ToDoItem[] から1行のテキストへ
@@ -123,6 +127,7 @@ fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     val periodText = buildPeriodTextFromItem(toDoItem)
     sb.append(periodText)
     sb.append(",reward:", toDoItem.reward)
+    if((toDoItem.isDone)) sb.append(",isDone,")
     return sb.toString()
 }
 

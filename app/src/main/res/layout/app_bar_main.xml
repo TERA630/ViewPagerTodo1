@@ -2,6 +2,7 @@
 <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -10,37 +11,35 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="60dp"
         android:fitsSystemWindows="true" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/main_tab"
         style="@style/AppTheme"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_gravity="bottom"
         app:tabGravity="center"
-        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabIndicatorColor="@color/middleLight"
         app:tabMode="scrollable" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/mainActivity_fab"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_gravity="end|bottom|right"
-        app:layout_anchor="@id/main_viewpager"
-        android:src="@android:drawable/ic_input_add"
-        app:fabSize="normal"
-        app:layout_anchorGravity="end"
-        tools:layout_marginBottom="32dp"
-        tools:src="@android:drawable/ic_input_add" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/mainActivity_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="32dp"
+            android:src="@android:drawable/ic_input_add"
+            app:elevation="@dimen/activity_horizontal_margin"
+            tools:src="@android:drawable/ic_input_add" />
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/main_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="match_parent"
         android:background="@color/lowLight" />
-
-
+    </FrameLayout>
 </com.google.android.material.appbar.AppBarLayout>

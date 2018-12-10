@@ -12,6 +12,7 @@
     android:focusable="true"
     tools:openDrawer="start">
 
+
     <include layout="@layout/app_bar_main" />
 
     <com.google.android.material.navigation.NavigationView
@@ -22,5 +23,6 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.yoshi.viewpagertodo1.databinding.ActivityDetailBinding
+import kotlinx.android.synthetic.main.row_item.*
 
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +33,12 @@ class DetailActivity : AppCompatActivity() {
         } else {
             itemList[number]
         }
-
+        val itemTitleList = List(itemList.size){index->itemList[index].title}
+        val itemTitleListAdapter = ArrayAdapter<String>(this,R.layout.autocompletet_tag, itemTitleList)
         binding.tagTxt.setAdapter(ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList))
+        binding.precedingTxt.setAdapter(itemTitleListAdapter)
+        binding.succeedingTxt.setAdapter(itemTitleListAdapter)
+
         binding.item = itemToEdit
         binding.rewardRate.rating = itemToEdit.reward.toFloat()
 
