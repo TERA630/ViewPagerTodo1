@@ -12,7 +12,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.navigation.NavigationView
@@ -21,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 const val INDEX_WHEN_TO_MAKE_NEW_ITEM = 1
+const val KEY_TAG_STR = "tagString"
+const val KEY_TAG_LIST = "tagList"
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var model: MainViewModel
@@ -32,30 +33,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.initItems(this)
 
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
-
-        // Pager Adapter setup
-        val startPage = intent.getStringExtra("startPage")
-                ?: model.tagList[0] // startPageがなければTagリストの1番目から表示
-        val pagerAdapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
-        val viewPager = main_viewpager as ViewPager
-        viewPager.adapter = pagerAdapter
-        (main_tab as TabLayout).setupWithViewPager(viewPager)
-        val indexOfStartPage = model.tagList.indexOfFirst { it == startPage }
-        viewPager.setCurrentItem(indexOfStartPage, true)
-
-        // Drawer setup
-        val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-        nav_view.setNavigationItemSelectedListener(this)
+        val viewPager = main_viewpager
+        viewPagerSetup(viewPager)
+        drawerSetup()
 
         val kUtils = KeyboardUtils()
         kUtils.hide(this)
 
         // set event handlers
-        mainActivity_fab.setOnClickListener {
-            startDetailActivity(viewPager.currentItem, INDEX_WHEN_TO_MAKE_NEW_ITEM)
-        }
+        mainActivity_fab.setOnClickListener { startDetailActivity(viewPager.currentItem, INDEX_WHEN_TO_MAKE_NEW_ITEM) }
     }
     override fun onPause() {
         super.onPause()
@@ -72,7 +58,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             } ?: Log.w("test", "uri in data of intent was null at onActivityResult..")
         } ?: Log.w("test", "data of intent was null at onActivityResult..")
     }
-
     override fun onBackPressed() {
         model.saveItem(this.applicationContext)
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -86,7 +71,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -103,7 +87,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -140,14 +123,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val intent = sv.createAccessIntent(Environment.DIRECTORY_DOWNLOADS)
         startActivityForResult(intent, requestCode)
     }
-
     fun startDetailActivity(_pageFrom: Int, _indexOfRawItem_ToEdit: Int) {
         val shownTagText = model.tagList[_pageFrom]
         val intent = Intent(this@MainActivity.baseContext, DetailActivity::class.java)
         intent.putExtra("parentID", _indexOfRawItem_ToEdit)
-        intent.putExtra("tagString", shownTagText)
-        intent.putExtra("comingPage", _pageFrom)
+        intent.putExtra(KEY_TAG_STR, shownTagText)
+        intent.putExtra(KEY_TAG_LIST, makelistToCSV(model.tagList))
         model.saveItem(this@MainActivity.applicationContext)
         startActivity(intent)
+    }
+
+    private fun drawerSetup() {
+        val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+        nav_view.setNavigationItemSelectedListener(this)
+    }
+
+    private fun viewPagerSetup(_viewPager: ViewPager) {
+        _viewPager.adapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
+        (main_tab as TabLayout).setupWithViewPager(_viewPager)
+        val comingTag = intent.getStringExtra(KEY_TAG_STR)
+                ?: model.tagList[0] // startPageがなければTagリストの1番目から表示
+        val indexOfStartPage = model.tagList.indexOfFirst { it == comingTag }
+        _viewPager.setCurrentItem(indexOfStartPage, true)
+
     }
 }

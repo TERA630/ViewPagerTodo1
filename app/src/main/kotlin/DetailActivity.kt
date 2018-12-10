@@ -13,44 +13,37 @@ import androidx.databinding.DataBindingUtil
 import com.example.yoshi.viewpagertodo1.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
-
-    var mComingPage: Int = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         this.title = " "
         binding.setLifecycleOwner(this@DetailActivity)
-
         val number = intent.extras?.getInt("parentID") ?: 0
-        val tagSting = intent.extras?.getString("tagString") ?: ""
-        mComingPage = intent.extras?.getInt("comingPage") ?: 0
+        val tagSting = intent.extras?.getString(KEY_TAG_STR) ?: ""
+        val tagListCSV = intent.extras?.getString(KEY_TAG_LIST) ?: ""
+        val tagList = tagListCSV.split(",")
+
         val context = this@DetailActivity
         val itemList = loadListFromTextFile(context)
-        val itemToEdit = if (number in 0..itemList.lastIndex) {
-            itemList[number]
-        } else {
+        val itemToEdit = if (number == INDEX_WHEN_TO_MAKE_NEW_ITEM) {
             val newItem = ToDoItem(title = "", tagString = tagSting, startLine = getToday())
             itemList.add(newItem)
             itemList[itemList.lastIndex]
+        } else {
+            itemList[number]
         }
 
-        val listToGetTag = MutableList(itemList.size) { index -> FilteredToDoItem(index, itemList[index].copy()) }
-        val tagList = getTagListFromItemList(listToGetTag)
-        val autoCompleteAdaptor = ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList)
-        binding.tagTxt.setAdapter(autoCompleteAdaptor)
-
+        binding.tagTxt.setAdapter(ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList))
         binding.item = itemToEdit
         binding.rewardRate.rating = itemToEdit.reward.toFloat()
 
         // Set Event handler
-
         binding.applyBtn.setOnClickListener {
             saveListToTextFile(context, itemList)
-            startMainActivity(binding.item.tagString)
+            startMainActivity(itemToEdit.tagString)
         }
         binding.cancelBtn.setOnClickListener {
-            startMainActivity(this.mComingPage)
+            startMainActivity(tagSting)
         }
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -94,9 +87,9 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    fun startMainActivity(_tagString: String) {
+    private fun startMainActivity(_tagString: String) {
         val intent = Intent(this@DetailActivity.applicationContext, MainActivity::class.java)
-        intent.putExtra("startPage", _tagString) // TODO new Item , exiting Item
+        intent.putExtra(KEY_TAG_STR, _tagString) // TODO new Item , exiting Item
         startActivity(intent, null)
     }
 

@@ -125,3 +125,9 @@ fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     sb.append(",reward:", toDoItem.reward)
     return sb.toString()
 }
+
+fun makelistToCSV(_list: List<String>): String {
+    val sb = StringBuffer()
+    _list.joinTo(sb)
+    return sb.toString()
+}
