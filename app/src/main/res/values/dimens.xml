@@ -7,4 +7,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="app_bar_height">24dp</dimen>
     <dimen name="imgBtn_size">48dp</dimen>
+    <dimen name="titleText_size">244dp</dimen>
 </resources>
