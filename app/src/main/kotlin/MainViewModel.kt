@@ -45,10 +45,10 @@ class MainViewModel : ViewModel() {
         return rawItemList
     }
 
-    fun calculateAchievedPoints(_context: Context) {
+    fun calculateReward(_context: Context) {
 
         val achievedList = getRawList().filter { it.isDone }
-        val notYetList = getItemList().filterNot { it.item.isDone }
+        val notYetList = getRawList().filterNot { it.isDone }
 
         var getReward = 0
         for (i in achievedList.indices) {
@@ -56,8 +56,9 @@ class MainViewModel : ViewModel() {
         }
         this.mReward += getReward
         mRepository.saveIntToPreference(REWARD, this.mReward, _context = _context)
-        this.itemList.value = notYetList.toMutableList()
+        rawItemList = notYetList.toMutableList()
         this.tagList = getTagListFromItemList(getItemList())
+        this.itemList.value = pickItemsToShow(notYetList)
     }
 
     fun loadItem(_context: Context) {

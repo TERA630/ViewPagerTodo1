@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.action_settings -> return true
             R.id.clearDone_and_getReward -> {
-                model.calculateAchievedPoints(baseContext)
+                model.calculateReward(baseContext)
                 return true
             }
             R.id.action_saveItem -> {
