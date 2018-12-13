@@ -10,8 +10,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.yoshi.viewpagertodo1.databinding.ActivityDetailBinding
+import kotlin.math.E
 
 class DetailActivity : AppCompatActivity() {
+    lateinit var itemList:MutableList<ToDoItem>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
@@ -23,7 +26,7 @@ class DetailActivity : AppCompatActivity() {
         val tagList = tagListCSV.split(",")
 
         val context = this@DetailActivity
-        val itemList = loadListFromTextFile(context)
+        itemList = loadListFromTextFile(context)
         val itemToEdit = if (number == INDEX_WHEN_TO_MAKE_NEW_ITEM) {
             // アイテムの新規作成
             val newItem = ToDoItem(title = "", tagString = tagSting, startLine = getToday())
@@ -43,6 +46,8 @@ class DetailActivity : AppCompatActivity() {
 
         // Set Event handler
         binding.applyBtn.setOnClickListener {
+            // 編集したアイテムの保存
+            updateItemsRelated(itemToEdit)
             saveListToTextFile(context, itemList)
             startMainActivity(itemToEdit.tagString)
         }
@@ -95,6 +100,19 @@ class DetailActivity : AppCompatActivity() {
         val intent = Intent(this@DetailActivity.applicationContext, MainActivity::class.java)
         intent.putExtra(KEY_TAG_STR, _tagString) // TODO new Item , exiting Item
         startActivity(intent, null)
+    }
+    private fun updateItemsRelated(_item:ToDoItem){
+        if(_item.succeeding != EMPTY_ITEM) {
+            for (i in itemList.indices) {
+                if (itemList[i].title == _item.succeeding) itemList[i].preceding = _item.title
+            }
+        }
+        if(_item.preceding != EMPTY_ITEM) {
+            for (i in itemList.indices) {
+                if (itemList[i].title == _item.preceding) itemList[i].succeeding = _item.title
+            }
+        }
+
     }
 
 }

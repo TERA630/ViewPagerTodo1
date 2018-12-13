@@ -11,8 +11,8 @@ const val REQUEST_CODE_READ = 1
 data class ToDoItem constructor(
         var title: String = "thing to do",
         var tagString: String = "home",
-        var preceding: String = "EMPTY_ITEM",
-        var succeeding: String = "EMPTY_ITEM",
+        var preceding: String = EMPTY_ITEM,
+        var succeeding: String = EMPTY_ITEM,
         var reward: Int = 1,
         var isDone: Boolean = false,
         var isRoutine: Boolean = false,

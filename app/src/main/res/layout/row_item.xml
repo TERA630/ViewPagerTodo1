@@ -61,5 +61,12 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_marginEnd="8dp"
             tools:src="@android:drawable/ic_menu_edit" />
+
+        <ImageButton
+            android:id="@+id/openChildButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_more"
+            app:layout_constraintEnd_toStartOf="@id/delBtn"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

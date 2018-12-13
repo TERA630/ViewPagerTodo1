@@ -30,6 +30,7 @@ class MainRecyclerAdaptor(
         val ivh = holder as ItemViewHolder
         ivh.mBinding.item = mList[position].item
         ivh.mBinding.periodViewer.text = buildPeriodTextFromItem(mList[position].item)
+        if(mList[position].item.succeeding == EMPTY_ITEM) ivh.mBinding.openChildButton.visibility = View.GONE
 
         ivh.mBinding.itemTitle.setOnCheckedChangeListener { _, boolean ->
             mList[position].item.isDone = boolean

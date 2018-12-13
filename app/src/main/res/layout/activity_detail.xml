@@ -108,41 +108,38 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="after"
+            app:layout_constraintTop_toBottomOf="@id/tagTxt"
+            app:layout_constraintBottom_toTopOf="@id/succeedingLabel"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="116dp"
             tools:text="after" />
 
         <AutoCompleteTextView
             android:id="@+id/precedingTxt"
             android:layout_width="@dimen/titleText_size"
-            android:layout_height="45dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_height="wrap_content"
             android:inputType="textAutoComplete"
             android:text="@={item.preceding}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/precedingLabel"
-            app:layout_constraintTop_toBottomOf="@+id/tagTxt" />
+            app:layout_constraintTop_toBottomOf="@id/tagTxt" />
 
         <TextView
             android:id="@+id/succeedingLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
             android:text="before"
+            app:layout_constraintTop_toBottomOf="@id/precedingLabel"
+            app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="183dp"
+
             tools:text="before" />
 
         <AutoCompleteTextView
             android:id="@+id/succeedingTxt"
             android:layout_width="@dimen/titleText_size"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:inputType="textAutoComplete"
             android:text="@={item.succeeding}"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
@@ -169,19 +166,12 @@
             app:layout_constraintTop_toTopOf="@+id/guideline3"
             tools:text="@string/undefinedDate" />
 
-        <!--        <ImageButton
-            android:id="@+id/startCal"
-            android:layout_width="@dimen/imgBtn_size"
-            android:layout_height="@dimen/imgBtn_size"
-            android:src="@android:drawable/ic_menu_day"
-            tools:layout_editor_absoluteX="168dp"
-            tools:layout_editor_absoluteY="159dp" />-->
-
         <TextView
             android:id="@+id/deadDateTxt"
             android:layout_width="128dp"
             android:layout_height="32dp"
             android:background="@{item.hasDeadLine ? @drawable/frame_elevate : @drawable/frame_depress}"
+            android:elevation="@dimen/activity_horizontal_margin"
             android:text="@={item.deadLine}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
@@ -189,7 +179,6 @@
             app:layout_constraintStart_toEndOf="@+id/startDateTxt"
             app:layout_constraintTop_toTopOf="@+id/guideline3"
             tools:text="@string/undefinedDate" />
-
 
 
         <RatingBar
