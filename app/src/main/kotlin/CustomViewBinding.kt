@@ -30,3 +30,16 @@ fun onEditorDone(txtView: TextView, actionId: Int, event: KeyEvent): Boolean {
     return true
 }
 
+fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean {
+    Log.i("test", "onEditorActionDone was Called by $event")
+    return when (actionId) {
+        EditorInfo.IME_ACTION_DONE, EditorInfo.IME_ACTION_NONE, EditorInfo.IME_ACTION_NEXT, EditorInfo.IME_NULL -> {
+            val keyboardUtils = KeyboardUtils()
+            keyboardUtils.hide(edit.context, edit)
+            true
+        }
+        else -> {
+            false
+        }
+    }
+}

@@ -1,9 +1,7 @@
 package com.example.yoshi.viewpagertodo1
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 // Viewmodelに依存
@@ -27,6 +24,7 @@ class MainFragment : Fragment() {
     private var mPosition = 0
 
     companion object {
+        // instance生成時に（今プロジェクトではViewPagerから）Fragment作成に必要な変数をセットしておく。
         fun newInstance(tagString: String, position: Int): MainFragment {
             val bundle = Bundle()
             val newFragment = MainFragment()
@@ -58,7 +56,7 @@ class MainFragment : Fragment() {
                         (this@MainFragment.activity as MainActivity).startDetailActivity(mPosition, numberToCall)
                     }
                     R.id.delBtn -> {
-                        model.deleteItem(numberToCall)
+                        model.deleteItem(numberToCall, view.context)
                     }
                 }
             }

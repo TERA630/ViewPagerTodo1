@@ -20,17 +20,8 @@
     <string name="loadItem">アイテムの読込み</string>
     <string name="loadItem_FromSdCard">アイテムをSDカードから読込み</string>
     <string name="deleteFile">保存したアイテムのクリア</string>
+    <string name="setting_visible_item">表示アイテムの設定</string>
 
-    <string-array name="period_array">
-        <item>一回</item>
-        <item>毎日</item>
-        <item>隔日</item>
-        <item>3日毎</item>
-        <item>4日毎</item>
-        <item>5日毎</item>
-        <item>6日毎</item>
-        <item>7日毎</item>
-    </string-array>
     <string-array name="date_array">
         <item>本日</item>
         <item>明日</item>
@@ -55,7 +46,7 @@
         <item>子供部屋の引出注文</item>
         <item>財務書類まとめ</item>
         <item>ロジェフレア関連入出金</item>
-        <item>ズボン整理</item>
+        <item>年賀状コメント</item>
     </string-array>
     <string-array name="default_todoItem_tag">
         <item>書類</item>
@@ -65,6 +56,7 @@
         <item>財務</item>
         <item>財務</item>
         <item>整理</item>
+        <item>挨拶</item>
     </string-array>
     <string-array name="menu_items">
         <item>make item default</item>

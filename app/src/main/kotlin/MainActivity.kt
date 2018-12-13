@@ -36,18 +36,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val viewPager = main_viewpager
         viewPagerSetup(viewPager)
         drawerSetup()
-
         val kUtils = KeyboardUtils()
         kUtils.hide(this)
-
         // set event handlers
         mainActivity_fab.setOnClickListener { startDetailActivity(viewPager.currentItem, INDEX_WHEN_TO_MAKE_NEW_ITEM) }
     }
-    override fun onPause() {
-        super.onPause()
-        model.saveItem(this.applicationContext)
-    }
 
+    private fun drawerSetup() {
+        val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+        nav_view.setNavigationItemSelectedListener(this)
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_CANCELED) return
@@ -110,13 +110,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
             R.id.action_deleteFile -> {
-                deleteItemsInFile(this@MainActivity.applicationContext)
+                deleteTextFile(this@MainActivity.applicationContext)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        model.saveItem(this.applicationContext)
+    }
     private fun startStorageAccess(requestCode: Int) {
         val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
         val sv = sm.primaryStorageVolume
@@ -132,14 +136,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.saveItem(this@MainActivity.applicationContext)
         startActivity(intent)
     }
-
-    private fun drawerSetup() {
-        val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-        nav_view.setNavigationItemSelectedListener(this)
-    }
-
     private fun viewPagerSetup(_viewPager: ViewPager) {
         _viewPager.adapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         (main_tab as TabLayout).setupWithViewPager(_viewPager)

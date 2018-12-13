@@ -5,14 +5,13 @@ import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import java.io.*
 
-fun deleteItemsInFile(_context: Context) {
+fun deleteTextFile(_context: Context) {
     try {
         _context.deleteFile(TODO_TEXT_FILE)
     } catch (e: Exception) {
         Log.e("test", "${e.message} occur")
     }
 }
-
 fun inputStreamToLines(_inputStream: java.io.InputStream): List<String> {
     return try {
         val isr = InputStreamReader(_inputStream)

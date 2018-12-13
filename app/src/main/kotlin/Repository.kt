@@ -8,12 +8,11 @@ const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
 const val REQUEST_CODE_READ = 1
 
-
 data class ToDoItem constructor(
         var title: String = "thing to do",
         var tagString: String = "home",
-        var preceding: String = "nothing",
-        var succeeding: String = "nothing",
+        var preceding: String = "EMPTY_ITEM",
+        var succeeding: String = "EMPTY_ITEM",
         var reward: Int = 1,
         var isDone: Boolean = false,
         var isRoutine: Boolean = false,
@@ -110,18 +109,16 @@ fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
     if (rewardMatch != null) {
             _toDoItem.reward = (Regex("[0-9]").find(rewardMatch.value))?.value?.toInt() ?: 1
     }
-
-
         return _toDoItem
     }
 // ToDoItem[] から1行のテキストへ
 fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     val sb = StringBuilder(toDoItem.title)
             .append(",", toDoItem.tagString, ",")
-    if ((toDoItem.preceding != "nothing") and (toDoItem.preceding != "")) {
+    if ((toDoItem.preceding != EMPTY_ITEM) and (toDoItem.preceding != "")) {
         sb.append("preceding:", toDoItem.preceding, ",")
     }
-    if ((toDoItem.succeeding != "nothing") and (toDoItem.succeeding != "")) {
+    if ((toDoItem.succeeding != EMPTY_ITEM) and (toDoItem.succeeding != "")) {
         sb.append("succeeding:", toDoItem.succeeding, ",")
     }
     val periodText = buildPeriodTextFromItem(toDoItem)

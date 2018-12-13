@@ -4,14 +4,12 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.yoshi.viewpagertodo1.databinding.ActivityDetailBinding
-import kotlinx.android.synthetic.main.row_item.*
 
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,10 +25,11 @@ class DetailActivity : AppCompatActivity() {
         val context = this@DetailActivity
         val itemList = loadListFromTextFile(context)
         val itemToEdit = if (number == INDEX_WHEN_TO_MAKE_NEW_ITEM) {
+            // アイテムの新規作成
             val newItem = ToDoItem(title = "", tagString = tagSting, startLine = getToday())
             itemList.add(newItem)
             itemList[itemList.lastIndex]
-        } else {
+        } else {    //　アイテムの更新
             itemList[number]
         }
         val itemTitleList = List(itemList.size){index->itemList[index].title}
