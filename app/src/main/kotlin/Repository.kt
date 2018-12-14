@@ -56,7 +56,6 @@ fun buildPeriodTextFromItem(item: ToDoItem): String {
     if (item.hasDeadLine) stringBuilder.append(item.deadLine)
     return stringBuilder.toString()
 }
-
 fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
     val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
     val result = mutableListOf<ToDoItem>()
@@ -88,10 +87,10 @@ fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<St
 }
 
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
-    val precedingMatch = Regex(",preceding:(.+)").find(_text) // preceding は　preceding: .... の形式
-    precedingMatch?.let { _toDoItem.preceding = it.value }
-    val succeedingMatch = Regex(",succeeding:(.+)").find(_text) // preceding は　succeeding: .... の形式
-    succeedingMatch?.let { _toDoItem.succeeding = it.value }
+    val precedingMatch = Regex("(,preceding:)(.+?)([,.*\n])").find(_text) // preceding は　preceding: .... の形式
+    precedingMatch?.destructured?.let { (prefix, data, _) -> _toDoItem.preceding = data }
+    val succeedingMatch = Regex("(,succeeding:)(.+?)([,.*\n])").find(_text) // preceding は　succeeding: .... の形式
+    succeedingMatch?.destructured?.let { (prefix, data, _) -> _toDoItem.succeeding = data }
     val isDoneMatch = Regex(",isDone,").find(_text)
     isDoneMatch?.let { _toDoItem.isDone = true}
 
