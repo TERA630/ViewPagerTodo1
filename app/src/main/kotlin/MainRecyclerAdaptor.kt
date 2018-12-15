@@ -58,20 +58,18 @@ class MainRecyclerAdaptor(
             listener.onClick(v, mList[position].unFilter)
             notifyItemRemoved(position)
         }
-        ivh.itemView.openChildToggle.setOnClickListener { v: View ->
+        ivh.itemView.openChildToggle.setOnClickListener{ v ->
             if(ivh.isItemOpened) {
                 ivh.isItemOpened = false
                 ivh.mBinding.periodViewer.visibility = View.GONE
+                notifyItemChanged(position)
             } else {
                 ivh.isItemOpened = true
-
-                val arrayAdaptor  = ArrayAdapter(v.context,R.layout.autocompletet_tag,model.findSucceedingItems(mList[position].item.title))
-
+                ivh.mBinding.childViewer.adapter = ArrayAdapter(v.context,R.layout.list_plaintext,model.findSucceedingItems(mList[position].item.title))
                 ivh.mBinding.periodViewer.visibility = View.VISIBLE
+                notifyItemChanged(position)
             }
-            val itemSucceeding = model.findSucceedingItems(mList[position].item.title)
 
-            this.notifyItemRangeInserted(position + 1, itemSucceeding.size)
         }
 
     }
