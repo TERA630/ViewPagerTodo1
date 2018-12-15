@@ -34,16 +34,16 @@ class MainViewModel : ViewModel() {
         itemList.value = pickItemsToShow(rawItemList)
     }
 
-    fun findSucceedingItems(_title: String): MutableList<FilteredToDoItem> {
-        val result = mutableListOf<FilteredToDoItem>()
+    fun findSucceedingItems(_title: String): MutableList<String> {
+        val result = mutableListOf<String>()
         for (index in rawItemList.indices) {
-            if (rawItemList[index].preceding == _title) result.add(FilteredToDoItem(index, rawItemList[index].copy()))
+            if (rawItemList[index].preceding == _title) result.add(rawItemList[index].title)
         }
         return result
     }
-
     fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
-            ?: mutableListOf(FilteredToDoItem(INDEX_WHEN_TO_MAKE_NEW_ITEM, ToDoItem("Enter Item")))
+            ?: mutableListOf(FilteredToDoItem(INDEX_WHEN_TO_MAKE_NEW_ITEM, ToDoItem(EMPTY_ITEM)))
+
     fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
         val filteredList = getItemList().filter { it.item.tagString.contains(filterStr) }
         return filteredList.toMutableList()
@@ -86,14 +86,10 @@ class MainViewModel : ViewModel() {
         val list = emptyList<FilteredToDoItem>().toMutableList()
         if (isOnlyFirstItemShown) {
             for (i in rawList.indices) {
-                if (rawList[i].preceding == EMPTY_ITEM) {
-                    list.add(FilteredToDoItem(i, rawList[i].copy()))
-                }
+                if (rawList[i].preceding == EMPTY_ITEM)  list.add(FilteredToDoItem(i, rawList[i].copy()))
             }
         } else {
-            for (i in rawList.indices) {
-                list.add(FilteredToDoItem(i, rawList[i].copy()))
-            }
+            for (i in rawList.indices) list.add(FilteredToDoItem(i, rawList[i].copy()))
         }
         return list
     }

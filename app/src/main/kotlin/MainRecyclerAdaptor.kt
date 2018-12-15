@@ -3,6 +3,8 @@ package com.example.yoshi.viewpagertodo1
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
@@ -41,7 +43,7 @@ class MainRecyclerAdaptor(
         val ivh = holder as ItemViewHolder
         ivh.mBinding.item = mList[position].item
         ivh.mBinding.periodViewer.text = buildPeriodTextFromItem(mList[position].item)
-        if(mList[position].item.succeeding == EMPTY_ITEM) ivh.mBinding.openChildButton.visibility = View.GONE
+        if(mList[position].item.succeeding == EMPTY_ITEM) ivh.mBinding.openChildToggle.visibility = View.GONE
 
         ivh.mBinding.itemTitle.setOnCheckedChangeListener { _, boolean ->
             mList[position].item.isDone = boolean
@@ -56,7 +58,17 @@ class MainRecyclerAdaptor(
             listener.onClick(v, mList[position].unFilter)
             notifyItemRemoved(position)
         }
-        ivh.itemView.openChildButton.setOnClickListener { v: View ->
+        ivh.itemView.openChildToggle.setOnClickListener { v: View ->
+            if(ivh.isItemOpened) {
+                ivh.isItemOpened = false
+                ivh.mBinding.periodViewer.visibility = View.GONE
+            } else {
+                ivh.isItemOpened = true
+
+                val arrayAdaptor  = ArrayAdapter(v.context,R.layout.autocompletet_tag,model.findSucceedingItems(mList[position].item.title))
+
+                ivh.mBinding.periodViewer.visibility = View.VISIBLE
+            }
             val itemSucceeding = model.findSucceedingItems(mList[position].item.title)
 
             this.notifyItemRangeInserted(position + 1, itemSucceeding.size)
@@ -64,10 +76,10 @@ class MainRecyclerAdaptor(
 
     }
 
-
     override fun getItemCount(): Int = mList.size
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mBinding = RowItemBinding.bind(itemView)
+        var isItemOpened:Boolean = false
     }
     interface OnItemClickListener {
         fun onClick(view: View, numberToCall: Int)
