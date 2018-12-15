@@ -8,16 +8,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
 import kotlinx.android.synthetic.main.row_item.view.*
 
-private val ITEM_CALLBACK = object : DiffUtil.ItemCallback<FilteredToDoItem>() {
 
-    override fun areItemsTheSame(oldItem: FilteredToDoItem, newItem: FilteredToDoItem): Boolean {
-        return (oldItem.unFilter == newItem.unFilter)
+class DiffCallback(val oldList: List<FilteredToDoItem>, val newList: List<FilteredToDoItem>) : DiffUtil.Callback() {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return (oldList[oldItemPosition].unFilter == newList[newItemPosition].unFilter)
     }
-    override fun areContentsTheSame(oldItem: FilteredToDoItem, newItem: FilteredToDoItem): Boolean {
-        return (oldItem.item.title == newItem.item.title) && (oldItem.item.tagString == newItem.item.tagString) &&
-                (oldItem.item.hasStartLine == newItem.item.hasStartLine) && (oldItem.item.hasDeadLine == newItem.item.hasDeadLine) &&
-                (oldItem.item.startLine == newItem.item.deadLine) && (oldItem.item.deadLine == newItem.item.deadLine) &&
-                (oldItem.item.isDone == newItem.item.isDone)
+
+    override fun getOldListSize(): Int {
+        return oldList.size
+    }
+
+    override fun getNewListSize(): Int {
+        return newList.size
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = oldList[oldItemPosition].item
+        val newItem = newList[newItemPosition].item
+        return (oldItem.title == newItem.title) && (oldItem.tagString == newItem.tagString) &&
+                (oldItem.hasStartLine == newItem.hasStartLine) && (oldItem.hasDeadLine == newItem.hasDeadLine) &&
+                (oldItem.startLine == newItem.deadLine) && (oldItem.deadLine == newItem.deadLine) &&
+                (oldItem.isDone == newItem.isDone)
     }
 }
 
@@ -43,12 +54,16 @@ class MainRecyclerAdaptor(
         }
         ivh.itemView.delBtn.setOnClickListener { v: View ->
             listener.onClick(v, mList[position].unFilter)
+            notifyItemRemoved(position)
         }
+        ivh.itemView.openChildButton.setOnClickListener { v: View ->
+            val itemSucceeding = model.findSucceedingItems(mList[position].item.title)
+
+            this.notifyItemRangeInserted(position + 1, itemSucceeding.size)
+        }
+
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
-        return ItemViewHolder(rowView)
-    }
+
 
     override fun getItemCount(): Int = mList.size
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -63,4 +78,10 @@ class MainRecyclerAdaptor(
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
     }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
+        return ItemViewHolder(rowView)
+    }
+
 }

@@ -34,6 +34,14 @@ class MainViewModel : ViewModel() {
         itemList.value = pickItemsToShow(rawItemList)
     }
 
+    fun findSucceedingItems(_title: String): MutableList<FilteredToDoItem> {
+        val result = mutableListOf<FilteredToDoItem>()
+        for (index in rawItemList.indices) {
+            if (rawItemList[index].preceding == _title) result.add(FilteredToDoItem(index, rawItemList[index].copy()))
+        }
+        return result
+    }
+
     fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
             ?: mutableListOf(FilteredToDoItem(INDEX_WHEN_TO_MAKE_NEW_ITEM, ToDoItem("Enter Item")))
     fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
