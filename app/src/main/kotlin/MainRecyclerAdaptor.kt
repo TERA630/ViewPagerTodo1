@@ -4,11 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
 import kotlinx.android.synthetic.main.row_item.view.*
+
+const val ROW_HEIGHT_CLOSED = 174
 
 
 class DiffCallback(val oldList: List<FilteredToDoItem>, val newList: List<FilteredToDoItem>) : DiffUtil.Callback() {
@@ -58,15 +59,15 @@ class MainRecyclerAdaptor(
             listener.onClick(v, mList[position].unFilter)
             notifyItemRemoved(position)
         }
-        ivh.itemView.openChildToggle.setOnClickListener{ v ->
-            if(ivh.isItemOpened) {
+        ivh.itemView.openChildToggle.setOnClickListener { buttonView ->
+            if (ivh.isItemOpened) {
                 ivh.isItemOpened = false
-                ivh.mBinding.periodViewer.visibility = View.GONE
+                ivh.mBinding.childViewer.visibility = View.GONE
                 notifyItemChanged(position)
             } else {
                 ivh.isItemOpened = true
-                ivh.mBinding.childViewer.adapter = ArrayAdapter(v.context,R.layout.list_plaintext,model.findSucceedingItems(mList[position].item.title))
-                ivh.mBinding.periodViewer.visibility = View.VISIBLE
+                ivh.mBinding.childViewer.adapter = ArrayAdapter(buttonView.context, R.layout.list_plaintext, model.findSucceedingItems(mList[position].item.title))
+                ivh.mBinding.childViewer.visibility = View.VISIBLE
                 notifyItemChanged(position)
             }
 
@@ -91,6 +92,7 @@ class MainRecyclerAdaptor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
+
         return ItemViewHolder(rowView)
     }
 
