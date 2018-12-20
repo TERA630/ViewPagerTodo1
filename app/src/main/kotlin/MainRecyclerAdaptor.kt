@@ -1,16 +1,21 @@
 package com.example.yoshi.viewpagertodo1
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
+import kotlinx.android.synthetic.main.fragment_main.view.*
 import kotlinx.android.synthetic.main.row_item.view.*
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+
 
 const val ROW_HEIGHT_CLOSED = 174
-
 
 class DiffCallback(val oldList: List<FilteredToDoItem>, val newList: List<FilteredToDoItem>) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -34,7 +39,6 @@ class DiffCallback(val oldList: List<FilteredToDoItem>, val newList: List<Filter
                 (oldItem.isDone == newItem.isDone)
     }
 }
-
 class MainRecyclerAdaptor(
         private var mList: MutableList<FilteredToDoItem>,
         private val model: MainViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -52,6 +56,8 @@ class MainRecyclerAdaptor(
             model.getItemList()[indexOfRawList].item.isDone = boolean
             notifyItemChanged(position)
         }
+
+
         ivh.itemView.editBtn.setOnClickListener { v: View ->
             listener.onClick(v, mList[position].unFilter)
         }
@@ -59,16 +65,20 @@ class MainRecyclerAdaptor(
             listener.onClick(v, mList[position].unFilter)
             notifyItemRemoved(position)
         }
-        ivh.itemView.openChildToggle.setOnClickListener { buttonView ->
+        ivh.itemView.openChildToggle.setOnClickListener {
             if (ivh.isItemOpened) {
                 ivh.isItemOpened = false
-                ivh.mBinding.childViewer.visibility = View.GONE
+                ivh.itemView.childViewer.visibility = View.GONE
+                Log.i("test", " row height is ${ivh.itemView.height}: ")
+                ivh.mBinding.rowFrame.layoutParams.height = 158
                 notifyItemChanged(position)
             } else {
                 ivh.isItemOpened = true
-                ivh.mBinding.childViewer.adapter = ArrayAdapter(buttonView.context, R.layout.list_plaintext, model.findSucceedingItems(mList[position].item.title))
+                ivh.mBinding.childViewer.adapter = ArrayAdapter(ivh.itemView.context, R.layout.list_plaintext, model.findSucceedingItems(mList[position].item.title))
                 ivh.mBinding.childViewer.visibility = View.VISIBLE
-                notifyItemChanged(position)
+                ivh.mBinding.rowFrame.layoutParams.height = 158+  ivh.itemView.childViewer.height
+                Log.i("test", "row height is ${ivh.itemView.height} by ${ivh.itemView.childViewer.height} ")
+                notifyItemRangeChanged(position,mList.size-position)
             }
 
         }
@@ -92,7 +102,6 @@ class MainRecyclerAdaptor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
-
         return ItemViewHolder(rowView)
     }
 
