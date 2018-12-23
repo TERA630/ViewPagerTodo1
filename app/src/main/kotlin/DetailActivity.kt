@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.yoshi.viewpagertodo1.databinding.ActivityDetailBinding
-import kotlin.math.E
 
 class DetailActivity : AppCompatActivity() {
     lateinit var itemList:MutableList<ToDoItem>
@@ -22,8 +21,7 @@ class DetailActivity : AppCompatActivity() {
         binding.setLifecycleOwner(this@DetailActivity)
         val number = intent.extras?.getInt("parentID") ?: 0
         val tagSting = intent.extras?.getString(KEY_TAG_STR) ?: ""
-        val tagListCSV = intent.extras?.getString(KEY_TAG_LIST) ?: ""
-        val tagList = tagListCSV.split(",")
+
 
         val context = this@DetailActivity
         itemList = loadListFromTextFile(context)
@@ -35,14 +33,13 @@ class DetailActivity : AppCompatActivity() {
         } else {    //　アイテムの更新
             itemList[number]
         }
-        val itemTitleList = List(itemList.size){index->itemList[index].title}
-        val itemTitleListAdapter = ArrayAdapter<String>(this,R.layout.autocompletet_tag, itemTitleList)
-        binding.tagTxt.setAdapter(ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList))
-        binding.precedingTxt.setAdapter(itemTitleListAdapter)
-        binding.succeedingTxt.setAdapter(itemTitleListAdapter)
+
+        val tagListCSV = intent.extras?.getString(KEY_TAG_LIST) ?: ""
+
 
         binding.item = itemToEdit
-        binding.rewardRate.rating = itemToEdit.reward.toFloat()
+        bindTagList(binding,tagListCSV)
+        bindViewRelatedOtherItems(binding,itemToEdit)
 
         // Set Event handler
         binding.applyBtn.setOnClickListener {
@@ -113,6 +110,29 @@ class DetailActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun bindViewRelatedOtherItems(binding:ActivityDetailBinding, itemToEdit:ToDoItem ){
+        // メンバ変数　itemListを参照
+
+        binding.succeedingTxt.setText( if(itemToEdit.succeeding == EMPTY_ITEM) {
+            ""
+        } else itemToEdit.succeeding
+        )
+        binding.precedingTxt.setText( if(itemToEdit.succeeding == EMPTY_ITEM) {
+            ""
+        } else itemToEdit.preceding
+        )
+        binding.rewardRate.rating = itemToEdit.reward.toFloat()
+        val itemTitleList = List(itemList.size){index->itemList[index].title}
+
+        val itemTitleListAdapter = ArrayAdapter<String>(this,R.layout.autocompletet_tag, itemTitleList)
+        binding.precedingTxt.setAdapter(itemTitleListAdapter)
+        binding.succeedingTxt.setAdapter(itemTitleListAdapter)
+    }
+    private fun bindTagList(binding: ActivityDetailBinding,tagListCSV:String){
+        val tagList = tagListCSV.split(",")
+        binding.tagTxt.setAdapter(ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList))
     }
 
 }

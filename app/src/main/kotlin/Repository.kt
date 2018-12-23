@@ -2,7 +2,6 @@ package com.example.yoshi.viewpagertodo1
 
 import android.content.Context
 
-const val ITEM_DATA = "toDoItems"
 const val REWARD = "reward"
 const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
@@ -27,15 +26,7 @@ class FilteredToDoItem constructor(
 )
 
 class Repository {
-    private fun saveStringToPreference(_key: String, _string: String, _context: Context) {
-        val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
-        preferenceEditor.putString(_key, _string)
-        preferenceEditor.apply()
-    }
-    private fun loadStringFromPreference(_key: String, _context: Context): String {
-        val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
-        return preferences?.getString(_key, EMPTY_ITEM) ?: EMPTY_ITEM
-    }
+
     fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
         val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
         preferenceEditor.putInt(_key, _int)
@@ -69,7 +60,11 @@ fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
     return result
 }
     // manage ItemList
-
+fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<String> {
+    val rawTagList: List<String> = List(_list.size) { index -> _list[index].item.tagString }
+    val result = rawTagList.distinct()
+    return result.toMutableList()
+}
 fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
     val res = _context.resources
     val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
@@ -79,38 +74,6 @@ fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
     }
     return toDoList.toMutableList()
 }
-
-fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<String> {
-    val rawTagList: List<String> = List(_list.size) { index -> _list[index].item.tagString }
-    val result = rawTagList.distinct()
-    return result.toMutableList()
-}
-
-fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
-    val precedingMatch = Regex("(,preceding:)(.+?)([,.*\n])").find(_text) // preceding は　preceding: .... の形式
-    precedingMatch?.destructured?.let { (prefix, data, _) -> _toDoItem.preceding = data }
-    val succeedingMatch = Regex("(,succeeding:)(.+?)([,.*\n])").find(_text) // preceding は　succeeding: .... の形式
-    succeedingMatch?.destructured?.let { (prefix, data, _) -> _toDoItem.succeeding = data }
-    val isDoneMatch = Regex(",isDone,").find(_text)
-    isDoneMatch?.let { _toDoItem.isDone = true}
-
-    val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text) // startDate は　dddd/dd/dd～　の形式
-        if (startDateMatch != null) {
-            _toDoItem.hasStartLine = true
-            _toDoItem.startLine = (Regex("[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(startDateMatch.value))?.value ?: "1970/01/01"
-        }
-    val deadDateMatch = Regex(" ～[0-9]{4}/[0-9]{1,2}/[0-9]{1,2} ").find(_text) // deadDate は　～dddd/dd/dd　の形式
-    if (deadDateMatch != null) {
-            _toDoItem.hasDeadLine = true
-            _toDoItem.deadLine = (Regex(" [0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(deadDateMatch.value))?.value ?: "1970/01/01"
-        }
-    val rewardMatch = Regex(",reward:[0-9]").find(_text)
-    if (rewardMatch != null) {
-            _toDoItem.reward = (Regex("[0-9]").find(rewardMatch.value))?.value?.toInt() ?: 1
-    }
-        return _toDoItem
-    }
-// ToDoItem[] から1行のテキストへ
 fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     val sb = StringBuilder(toDoItem.title)
             .append(",", toDoItem.tagString, ",")
@@ -126,9 +89,32 @@ fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     if((toDoItem.isDone)) sb.append(",isDone,")
     return sb.toString()
 }
-
-fun makelistToCSV(_list: List<String>): String {
+fun makeListToCSV(_list: List<String>): String {
     val sb = StringBuffer()
     _list.joinTo(sb)
     return sb.toString()
 }
+fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
+    val precedingMatch = Regex("(,preceding:)(.+?)([,.*\n])").find(_text) // preceding は　preceding: .... の形式
+    precedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.preceding = data }
+    val succeedingMatch = Regex("(,succeeding:)(.+?)([,.*\n])").find(_text) // preceding は　succeeding: .... の形式
+    succeedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.succeeding = data }
+    val isDoneMatch = Regex(",isDone,").find(_text)
+    isDoneMatch?.let { _toDoItem.isDone = true}
+
+    val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text) // startDate は　dddd/dd/dd～　の形式
+    if (startDateMatch != null) {
+        _toDoItem.hasStartLine = true
+        _toDoItem.startLine = (Regex("[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(startDateMatch.value))?.value ?: "1970/01/01"
+    }
+    val deadDateMatch = Regex(" ～[0-9]{4}/[0-9]{1,2}/[0-9]{1,2} ").find(_text) // deadDate は　～dddd/dd/dd　の形式
+    if (deadDateMatch != null) {
+        _toDoItem.hasDeadLine = true
+        _toDoItem.deadLine = (Regex(" [0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(deadDateMatch.value))?.value ?: "1970/01/01"
+    }
+    val rewardMatch = Regex(",reward:[0-9]").find(_text)
+    if (rewardMatch != null) {
+        _toDoItem.reward = (Regex("[0-9]").find(rewardMatch.value))?.value?.toInt() ?: 1
+    }
+    return _toDoItem
+} // ToDoItem[] から1行のテキストへ

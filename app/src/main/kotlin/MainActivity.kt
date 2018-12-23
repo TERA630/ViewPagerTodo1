@@ -28,18 +28,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+
         model = ViewModelProviders.of(this).get(MainViewModel::class.java)
         model.initItems(this)
 
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
         val viewPager = main_viewpager
+        appBarSetup(this.baseContext)
         viewPagerSetup(viewPager)
         drawerSetup()
         val kUtils = KeyboardUtils()
         kUtils.hide(this)
         // set event handlers
         mainActivity_fab.setOnClickListener { startDetailActivity(viewPager.currentItem, INDEX_WHEN_TO_MAKE_NEW_ITEM) }
+    }
+    private fun appBarSetup(_context:Context){
+        setSupportActionBar(toolbar)
+        appBarUpdate(_context)
+    }
+    private fun appBarUpdate(context: Context){
+        val sb = StringBuilder(context.resources.getString(R.string.achievement))
+        sb.append(model.mReward)
+        this.setTitle(sb.toString())
     }
 
     private fun drawerSetup() {
@@ -95,6 +105,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.action_settings -> return true
             R.id.clearDone_and_getReward -> {
                 model.calculateReward(baseContext)
+                appBarUpdate(this.baseContext)
                 return true
             }
             R.id.action_saveItem -> {
@@ -116,7 +127,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             else -> return super.onOptionsItemSelected(item)
         }
     }
-
     override fun onPause() {
         super.onPause()
         model.saveItem(this.applicationContext)
@@ -132,10 +142,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val intent = Intent(this@MainActivity.baseContext, DetailActivity::class.java)
         intent.putExtra("parentID", _indexOfRawItem_ToEdit)
         intent.putExtra(KEY_TAG_STR, shownTagText)
-        intent.putExtra(KEY_TAG_LIST, makelistToCSV(model.tagList))
+        intent.putExtra(KEY_TAG_LIST, makeListToCSV(model.tagList))
         model.saveItem(this@MainActivity.applicationContext)
         startActivity(intent)
     }
+
     private fun viewPagerSetup(_viewPager: ViewPager) {
         _viewPager.adapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         (main_tab as TabLayout).setupWithViewPager(_viewPager)
