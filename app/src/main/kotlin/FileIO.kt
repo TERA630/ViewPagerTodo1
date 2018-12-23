@@ -65,3 +65,7 @@ fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
         e.printStackTrace()
     }
 }
+
+fun saveListToTextFileAtSdcard(_context: Context){
+
+}
