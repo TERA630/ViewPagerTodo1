@@ -10,16 +10,15 @@ import androidx.lifecycle.ViewModel
 class MainViewModel : ViewModel() {
     private var rawItemList = MutableList(1) { ToDoItem() }
     val itemList = MutableLiveData<MutableList<FilteredToDoItem>>()
-    var mReward: Int = 0
     lateinit var tagList: MutableList<String>
     private lateinit var mRepository: Repository
     var isOnlyFirstItemShown: Boolean = true
+    var mReward: Int = 0
 
     fun initItems(_context: Context) {
         loadItem(_context)
-        if ((rawItemList.size == 0)) {
-            rawItemList = makeDefaultList(_context)
-        }
+        if (rawItemList.size == 0) rawItemList = makeDefaultList(_context)
+
         itemList.value = pickItemsToShow(rawItemList)
         tagList = getTagListFromItemList(getItemList())
         mRepository = Repository()
@@ -27,10 +26,10 @@ class MainViewModel : ViewModel() {
     }
 
     fun deleteItem(index: Int, _context: Context) {
-        val mList = getItemList()
-        rawItemList.removeAt(mList[index].unFilter)
-        updateItemsRelatedWithDeletedItem(mList[index].item.title, _context)
-        saveItem(_context)
+        val itemToDelete = getItemList()[index]
+        rawItemList.removeAt(itemToDelete.unFilter)
+        updateItemsRelatedWithDeletedItem(itemToDelete.item.title)
+        saveRawItemList(_context)
         itemList.value = pickItemsToShow(rawItemList)
     }
 
@@ -55,16 +54,19 @@ class MainViewModel : ViewModel() {
 
     fun calculateReward(_context: Context) {
 
-        val achievedList = getRawList().filter { it.isDone }
-        val notYetList = getRawList().filterNot { it.isDone }
+        val rawList = getRawList()
+        val achievedList = rawList.filter { it.isDone }
 
         var getReward = 0
         for (i in achievedList.indices) {
             getReward += achievedList[i].reward
+            updateItemsRelatedWithDeletedItem(achievedList[i].title)
         }
         this.mReward += getReward
         mRepository.saveIntToPreference(REWARD, this.mReward, _context = _context)
+        val notYetList = rawList.filterNot { it.isDone }
         rawItemList = notYetList.toMutableList()
+        saveRawItemList(_context)
         this.tagList = getTagListFromItemList(getItemList())
         this.itemList.value = pickItemsToShow(notYetList)
     }
@@ -93,11 +95,22 @@ class MainViewModel : ViewModel() {
         }
         return list
     }
-    fun saveItem(_context: Context) {
+
+    fun saveRawItemList(_context: Context) {
         saveListToTextFile(_context, rawItemList)
     }
 
-    private fun updateItemsRelatedWithDeletedItem(_title: String, _context: Context) {
+    fun saveItemsToSdCard(_context: Context, uri: Uri) {
+
+        _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        val pickedDir = DocumentFile.fromTreeUri(_context, uri)
+        pickedDir?.let {
+            saveListToTextFileAtSdcard(_context, pickedDir, rawItemList)
+            itemList.value = pickItemsToShow(rawItemList)
+        }
+    }
+
+    private fun updateItemsRelatedWithDeletedItem(_title: String) {
         for (i in rawItemList.indices) {
             if (rawItemList[i].succeeding == _title) rawItemList[i].succeeding = EMPTY_ITEM
             if (rawItemList[i].preceding == _title) rawItemList[i].preceding = EMPTY_ITEM
