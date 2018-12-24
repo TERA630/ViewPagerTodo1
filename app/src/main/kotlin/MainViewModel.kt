@@ -26,13 +26,12 @@ class MainViewModel : ViewModel() {
     }
 
     fun deleteItem(index: Int, _context: Context) {
-        val itemToDelete = getItemList()[index]
-        rawItemList.removeAt(itemToDelete.unFilter)
-        updateItemsRelatedWithDeletedItem(itemToDelete.item.title)
+        val mList = getItemList()
+        updateItemsRelatedWithDeletedItem(mList[index].item.title)
+        rawItemList.removeAt(mList[index].unFilter)
         saveRawItemList(_context)
         itemList.value = pickItemsToShow(rawItemList)
     }
-
     fun findSucceedingItems(_title: String): MutableList<String> {
         val result = mutableListOf<String>()
         for (index in rawItemList.indices) {
@@ -76,12 +75,15 @@ class MainViewModel : ViewModel() {
     }
 
     fun loadItemsFromSdCard(_context: Context, uri: Uri) {
-
         _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
         val pickedDir = DocumentFile.fromTreeUri(_context, uri)
         pickedDir?.let {
-            rawItemList = loadListFromTextFileAtSdcard(_context, pickedDir)
-            itemList.value = pickItemsToShow(rawItemList)
+            try {
+                rawItemList = loadListFromTextFileAtSdcard(_context, pickedDir)
+                itemList.value = pickItemsToShow(rawItemList)
+            } catch (e: Exception) {
+                return
+            }
         }
     }
     private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
@@ -101,7 +103,6 @@ class MainViewModel : ViewModel() {
     }
 
     fun saveItemsToSdCard(_context: Context, uri: Uri) {
-
         _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         val pickedDir = DocumentFile.fromTreeUri(_context, uri)
         pickedDir?.let {

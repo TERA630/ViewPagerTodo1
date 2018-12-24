@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (requestCode) {
             REQUEST_CODE_READ -> {
                 model.loadItemsFromSdCard(this@MainActivity.baseContext, uri)
+
                 return
             }
             REQUEST_CODE_WRITE -> {
