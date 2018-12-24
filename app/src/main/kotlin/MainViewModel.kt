@@ -42,12 +42,10 @@ class MainViewModel : ViewModel() {
     }
     fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
             ?: mutableListOf(FilteredToDoItem(INDEX_WHEN_TO_MAKE_NEW_ITEM, ToDoItem(EMPTY_ITEM)))
-
     fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
         val filteredList = getItemList().filter { it.item.tagString.contains(filterStr) }
         return filteredList.toMutableList()
     }
-
     private fun getRawList(): MutableList<ToDoItem> {
         return rawItemList
     }
@@ -70,11 +68,9 @@ class MainViewModel : ViewModel() {
         this.tagList = getTagListFromItemList(getItemList())
         this.itemList.value = pickItemsToShow(notYetList)
     }
-
     fun loadItem(_context: Context) {
         rawItemList = loadListFromTextFile(_context)
     }
-
     fun loadItemsFromSdCard(_context: Context, uri: Uri) {
 
         _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -85,15 +81,10 @@ class MainViewModel : ViewModel() {
         }
     }
     private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
-        val list = emptyList<FilteredToDoItem>().toMutableList()
-        if (isOnlyFirstItemShown) {
-            for (i in rawList.indices) {
-                if (rawList[i].preceding == EMPTY_ITEM)  list.add(FilteredToDoItem(i, rawList[i].copy()))
-            }
-        } else {
-            for (i in rawList.indices) list.add(FilteredToDoItem(i, rawList[i].copy()))
-        }
-        return list
+
+        val wrappedList = MutableList(rawList.size) { index -> FilteredToDoItem(index, rawList[index].copy()) }
+        return wrappedList.filter { it.item.preceding == EMPTY_ITEM }.toMutableList()
+
     }
 
     fun saveRawItemList(_context: Context) {
@@ -109,7 +100,6 @@ class MainViewModel : ViewModel() {
             itemList.value = pickItemsToShow(rawItemList)
         }
     }
-
     private fun updateItemsRelatedWithDeletedItem(_title: String) {
         for (i in rawItemList.indices) {
             if (rawItemList[i].succeeding == _title) rawItemList[i].succeeding = EMPTY_ITEM
