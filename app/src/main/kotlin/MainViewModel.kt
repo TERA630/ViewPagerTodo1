@@ -11,7 +11,6 @@ class MainViewModel : ViewModel() {
     private var rawItemList = MutableList(1) { ToDoItem() }
     val itemList = MutableLiveData<MutableList<FilteredToDoItem>>()
     lateinit var tagList: MutableList<String>
-    private lateinit var mRepository: Repository
     var isOnlyFirstItemShown: Boolean = true
     var mReward: Int = 0
 
@@ -21,8 +20,7 @@ class MainViewModel : ViewModel() {
 
         itemList.value = pickItemsToShow(rawItemList)
         tagList = getTagListFromItemList(getItemList())
-        mRepository = Repository()
-        mReward = mRepository.loadIntFromPreference(REWARD, _context)
+        mReward = loadIntFromPreference(REWARD, _context)
     }
 
     fun deleteItem(index: Int, _context: Context) {
@@ -61,7 +59,7 @@ class MainViewModel : ViewModel() {
             updateItemsRelatedWithDeletedItem(achievedList[i].title)
         }
         this.mReward += getReward
-        mRepository.saveIntToPreference(REWARD, this.mReward, _context = _context)
+        saveIntToPreference(REWARD, this.mReward, _context = _context)
         val notYetList = rawList.filterNot { it.isDone }
         rawItemList = notYetList.toMutableList()
         saveRawItemList(_context)
@@ -81,10 +79,10 @@ class MainViewModel : ViewModel() {
         }
     }
     private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
-
         val wrappedList = MutableList(rawList.size) { index -> FilteredToDoItem(index, rawList[index].copy()) }
-        return wrappedList.filter { it.item.preceding == EMPTY_ITEM }.toMutableList()
-
+        return if (isOnlyFirstItemShown) {
+            wrappedList.filter { it.item.preceding == EMPTY_ITEM }.toMutableList()
+        } else wrappedList
     }
 
     fun saveRawItemList(_context: Context) {
