@@ -21,10 +21,7 @@ class DetailActivity : AppCompatActivity() {
         binding.setLifecycleOwner(this@DetailActivity)
         val number = intent.extras?.getInt("parentID") ?: 0
         val tagSting = intent.extras?.getString(KEY_TAG_STR) ?: ""
-
-
-        val context = this@DetailActivity
-        itemList = loadListFromTextFile(context)
+        itemList = loadListFromTextFile(this@DetailActivity)
         val itemToEdit = if (number == INDEX_WHEN_TO_MAKE_NEW_ITEM) {
             // アイテムの新規作成
             val newItem = ToDoItem(title = "", tagString = tagSting, startLine = getToday())
@@ -33,24 +30,58 @@ class DetailActivity : AppCompatActivity() {
         } else {    //　アイテムの更新
             itemList[number]
         }
-
         val tagListCSV = intent.extras?.getString(KEY_TAG_LIST) ?: ""
-
-
+        // make view from data
         binding.item = itemToEdit
         bindTagList(binding,tagListCSV)
-        bindViewRelatedOtherItems(binding,itemToEdit)
+        setupViewRelatedToOtherItems(binding, itemToEdit)
+        setupViewRelatedToCalender(binding, itemToEdit)
 
         // Set Event handler
         binding.applyBtn.setOnClickListener {
             // 編集したアイテムの保存
             updateItemsRelated(itemToEdit)
-            saveListToTextFile(context, itemList)
+            saveListToTextFile(this@DetailActivity.applicationContext, itemList)
             startMainActivity(itemToEdit.tagString)
         }
         binding.cancelBtn.setOnClickListener {
             startMainActivity(tagSting)
         }
+
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top)
+    }
+
+    class DataSetListener(private val _textView: TextView) : DatePickerDialog.OnDateSetListener {
+        override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+            _textView.text = "$year/${month + 1}/$dayOfMonth"
+        }
+    }
+
+    private fun setupViewRelatedToOtherItems(binding: ActivityDetailBinding, itemToEdit: ToDoItem) {
+        // メンバ変数　itemListを参照
+
+        binding.succeedingTxt.setText(if (itemToEdit.succeeding == EMPTY_ITEM) {
+            ""
+        } else itemToEdit.succeeding
+        )
+        binding.precedingTxt.setText(if (itemToEdit.succeeding == EMPTY_ITEM) {
+            ""
+        } else itemToEdit.preceding
+        )
+        binding.rewardRate.rating = itemToEdit.reward.toFloat()
+        val itemTitleList = List(itemList.size) { index -> itemList[index].title }
+
+        val itemTitleListAdapter = ArrayAdapter<String>(this, R.layout.autocompletet_tag, itemTitleList)
+        binding.precedingTxt.setAdapter(itemTitleListAdapter)
+        binding.succeedingTxt.setAdapter(itemTitleListAdapter)
+    }
+
+    private fun bindTagList(binding: ActivityDetailBinding, tagListCSV: String) {
+        val tagList = tagListCSV.split(",")
+        binding.tagTxt.setAdapter(ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList))
+    }
+
+    private fun setupViewRelatedToCalender(binding: ActivityDetailBinding, itemToEdit: ToDoItem) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val monthOfYear = calendar.get(Calendar.MONTH)
@@ -67,7 +98,7 @@ class DetailActivity : AppCompatActivity() {
                 itemToEdit.hasStartLine = true // StartLine Off→Onにする場合
                 val backGround = getDrawable(R.drawable.frame_elevate)
                 v.background = backGround
-                val startDatePicker = DatePickerDialog(context, startDataSetListener, year, monthOfYear, dayOfMonth)
+                val startDatePicker = DatePickerDialog(this.baseContext, startDataSetListener, year, monthOfYear, dayOfMonth)
                 startDatePicker.show()
             }
         }
@@ -80,19 +111,11 @@ class DetailActivity : AppCompatActivity() {
                 itemToEdit.hasDeadLine = true
                 val backGround = getDrawable(R.drawable.frame_elevate)
                 v.background = backGround
-                val deadDatePicker = DatePickerDialog(context, deadDataSetListener, year, monthOfYear, dayOfMonth)
+                val deadDatePicker = DatePickerDialog(this.baseContext, deadDataSetListener, year, monthOfYear, dayOfMonth)
                 deadDatePicker.show()
             }
         }
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top)
     }
-
-    class DataSetListener(private val _textView: TextView) : DatePickerDialog.OnDateSetListener {
-        override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-            _textView.text = "$year/${month + 1}/$dayOfMonth"
-        }
-    }
-
     private fun startMainActivity(_tagString: String) {
         val intent = Intent(this@DetailActivity.applicationContext, MainActivity::class.java)
         intent.putExtra(KEY_TAG_STR, _tagString) // TODO new Item , exiting Item
@@ -111,28 +134,4 @@ class DetailActivity : AppCompatActivity() {
         }
 
     }
-
-    private fun bindViewRelatedOtherItems(binding:ActivityDetailBinding, itemToEdit:ToDoItem ){
-        // メンバ変数　itemListを参照
-
-        binding.succeedingTxt.setText( if(itemToEdit.succeeding == EMPTY_ITEM) {
-            ""
-        } else itemToEdit.succeeding
-        )
-        binding.precedingTxt.setText( if(itemToEdit.succeeding == EMPTY_ITEM) {
-            ""
-        } else itemToEdit.preceding
-        )
-        binding.rewardRate.rating = itemToEdit.reward.toFloat()
-        val itemTitleList = List(itemList.size){index->itemList[index].title}
-
-        val itemTitleListAdapter = ArrayAdapter<String>(this,R.layout.autocompletet_tag, itemTitleList)
-        binding.precedingTxt.setAdapter(itemTitleListAdapter)
-        binding.succeedingTxt.setAdapter(itemTitleListAdapter)
-    }
-    private fun bindTagList(binding: ActivityDetailBinding,tagListCSV:String){
-        val tagList = tagListCSV.split(",")
-        binding.tagTxt.setAdapter(ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList))
-    }
-
 }

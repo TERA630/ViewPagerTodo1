@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model = ViewModelProviders.of(this).get(MainViewModel::class.java)
         model.initItems(this)
 
-        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
         val viewPager = main_viewpager
         appBarSetup(this.baseContext)
         viewPagerSetup(viewPager)
@@ -41,6 +40,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         kUtils.hide(this)
         // set event handlers
         mainActivity_fab.setOnClickListener { startDetailActivity(viewPager.currentItem, INDEX_WHEN_TO_MAKE_NEW_ITEM) }
+        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
     }
     private fun appBarSetup(_context:Context){
         setSupportActionBar(toolbar)
@@ -49,9 +49,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun appBarUpdate(context: Context){
         val sb = StringBuilder(context.resources.getString(R.string.achievement))
         sb.append(model.mReward)
-        this.setTitle(sb.toString())
+        this.title = sb.toString()
     }
-
     private fun drawerSetup() {
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
@@ -61,15 +60,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_CANCELED) return
-        data?.let {
-            val uri = data.data
-            uri?.let {
+        if (data == null) {
+            Log.w("test", "data of intent was null at onActivityResult..")
+            return
+        }
+        val uri = data.data
+        if (uri == null) {
+            Log.w("test", "uri in data of intent was null at onActivityResult..")
+            return
+        }
+        when (requestCode) {
+            REQUEST_CODE_READ -> {
                 model.loadItemsFromSdCard(this@MainActivity.baseContext, uri)
-            } ?: Log.w("test", "uri in data of intent was null at onActivityResult..")
-        } ?: Log.w("test", "data of intent was null at onActivityResult..")
+                return
+            }
+            REQUEST_CODE_WRITE -> {
+                model.saveItemsToSdCard(this, uri)
+                return
+            }
+        }
     }
     override fun onBackPressed() {
-        model.saveItem(this.applicationContext)
+        model.saveRawItemList(this.applicationContext)
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
@@ -81,11 +93,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
+
+    // ドロワーアイテムのイベント処理
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.save_to_text -> {
-                model.saveItem(this@MainActivity.applicationContext)
+                model.saveRawItemList(this@MainActivity.applicationContext)
             }
             R.id.load_from_text -> {
                 model.loadItem(this@MainActivity.applicationContext)
@@ -97,6 +111,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
+    // メニューアイテムのイベント処理
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -109,7 +125,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
             R.id.action_saveItem -> {
-                model.saveItem(this@MainActivity.applicationContext)
+                model.saveRawItemList(this@MainActivity.applicationContext)
                 return true
             }
             R.id.action_loadItem -> {
@@ -118,6 +134,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.action_loadItem_FromSdCard -> {
                 startStorageAccess(REQUEST_CODE_READ)
+                return true
+            }
+            R.id.action_saveItem_ToSdCard -> {
+                startStorageAccess(REQUEST_CODE_WRITE)
                 return true
             }
             R.id.action_deleteFile -> {
@@ -129,12 +149,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     override fun onPause() {
         super.onPause()
-        model.saveItem(this.applicationContext)
+        model.saveRawItemList(this.applicationContext)
     }
     private fun startStorageAccess(requestCode: Int) {
         val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
         val sv = sm.primaryStorageVolume
-        val intent = sv.createAccessIntent(Environment.DIRECTORY_DOWNLOADS)
+        val intent = sv.createAccessIntent(Environment.DIRECTORY_DOWNLOADS) // Intent.dataにURIが入るはず
         startActivityForResult(intent, requestCode)
     }
     fun startDetailActivity(_pageFrom: Int, _indexOfRawItem_ToEdit: Int) {
@@ -143,10 +163,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         intent.putExtra("parentID", _indexOfRawItem_ToEdit)
         intent.putExtra(KEY_TAG_STR, shownTagText)
         intent.putExtra(KEY_TAG_LIST, makeListToCSV(model.tagList))
-        model.saveItem(this@MainActivity.applicationContext)
+        model.saveRawItemList(this@MainActivity.applicationContext)
         startActivity(intent)
     }
-
     private fun viewPagerSetup(_viewPager: ViewPager) {
         _viewPager.adapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         (main_tab as TabLayout).setupWithViewPager(_viewPager)

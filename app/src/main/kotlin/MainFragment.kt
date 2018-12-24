@@ -40,7 +40,6 @@ class MainFragment : Fragment() {
         mTag = this.arguments?.getString("tagString") ?: model.tagList[0]
         mPosition = this.arguments?.getInt("pagePosition") ?: 0
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val filterStr = mTag
@@ -62,7 +61,6 @@ class MainFragment : Fragment() {
             }
         })
     }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, fragment_frame)
     }

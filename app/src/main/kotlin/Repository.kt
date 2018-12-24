@@ -6,6 +6,8 @@ const val REWARD = "reward"
 const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
 const val REQUEST_CODE_READ = 1
+const val REQUEST_CODE_WRITE = 2
+
 
 data class ToDoItem constructor(
         var title: String = "thing to do",

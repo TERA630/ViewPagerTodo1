@@ -19,6 +19,7 @@
     <string name="saveItem">現在のアイテムを保存</string>
     <string name="loadItem">アイテムの読込み</string>
     <string name="loadItem_FromSdCard">アイテムをSDカードから読込み</string>
+    <string name="saveItem_ToSdCard">アイテムをSDカードに書き込み</string>
     <string name="deleteFile">保存したアイテムのクリア</string>
     <string name="setting_visible_item">表示アイテムの設定</string>
 

@@ -27,7 +27,6 @@ fun inputStreamToLines(_inputStream: java.io.InputStream): List<String> {
         emptyList()
     }
 }
-
 fun loadListFromTextFile(_context: Context): MutableList<ToDoItem> {
     return try {
         val allLine = inputStreamToLines(_context.openFileInput(TODO_TEXT_FILE))
@@ -66,6 +65,31 @@ fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
     }
 }
 
-fun saveListToTextFileAtSdcard(_context: Context){
+fun saveListToTextFileAtSdcard(_context: Context, _documentDir: DocumentFile, _list: MutableList<ToDoItem>) {
+
+    var file = _documentDir.findFile(TODO_TEXT_FILE)
+    if (file == null) {
+    }
+
+    try {
+        val outputStream = _context.contentResolver.openOutputStream(file.uri)
+
+
+        val osw = OutputStreamWriter(outputStream, "UTF-8")
+        val bw = BufferedWriter(osw)
+        for (index in _list.indices) {
+            bw.write(makeItemToOneLineText(_list[index]))
+            bw.newLine()
+        }
+        bw.close()
+
+
+    } catch (e: FileNotFoundException) {
+        Log.e("test", "File not found at saveListToTextFile")
+        e.printStackTrace()
+    } catch (e: IOException) {
+        Log.e("test", "IOException occur at saveListToTextFile")
+        e.printStackTrace()
+    }
 
 }
