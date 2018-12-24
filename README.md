@@ -1,6 +1,11 @@
 # ViewPagerTodo1
 
+sliding ToDo List
+using viewpager and recycler_view
+
+
 # TODO
+make ICON
 
 dpi|dot per inch| resolution| icon size
 ---|---|---
