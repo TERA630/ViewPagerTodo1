@@ -94,7 +94,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
-
     // ドロワーアイテムのイベント処理
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
@@ -112,7 +111,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
-
     // メニューアイテムのイベント処理
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
@@ -167,6 +165,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.saveRawItemList(this@MainActivity.applicationContext)
         startActivity(intent)
     }
+
+    // intent [KEY_TAG_STR]
     private fun viewPagerSetup(_viewPager: ViewPager) {
         _viewPager.adapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         (main_tab as TabLayout).setupWithViewPager(_viewPager)

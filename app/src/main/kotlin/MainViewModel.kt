@@ -11,8 +11,7 @@ class MainViewModel : ViewModel() {
     private var rawItemList = MutableList(1) { ToDoItem() }
     val itemList = MutableLiveData<MutableList<FilteredToDoItem>>()
     lateinit var tagList: MutableList<String>
-    private lateinit var mRepository: Repository
-    var isOnlyFirstItemShown: Boolean = true
+    private var isOnlyFirstItemShown: Boolean = true
     var mReward: Int = 0
 
     fun initItems(_context: Context) {
@@ -21,13 +20,12 @@ class MainViewModel : ViewModel() {
 
         itemList.value = pickItemsToShow(rawItemList)
         tagList = getTagListFromItemList(getItemList())
-        mRepository = Repository()
-        mReward = mRepository.loadIntFromPreference(REWARD, _context)
+        mReward = loadIntFromPreference(REWARD, _context)
     }
 
     fun deleteItem(index: Int, _context: Context) {
         val mList = getItemList()
-        updateItemsRelatedWithDeletedItem(mList[index].item.title)
+        eraseRelationshipWithItem(mList[index].item.title)
         rawItemList.removeAt(mList[index].unFilter)
         saveRawItemList(_context)
         itemList.value = pickItemsToShow(rawItemList)
@@ -41,12 +39,10 @@ class MainViewModel : ViewModel() {
     }
     fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
             ?: mutableListOf(FilteredToDoItem(INDEX_WHEN_TO_MAKE_NEW_ITEM, ToDoItem(EMPTY_ITEM)))
-
     fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
         val filteredList = getItemList().filter { it.item.tagString.contains(filterStr) }
         return filteredList.toMutableList()
     }
-
     private fun getRawList(): MutableList<ToDoItem> {
         return rawItemList
     }
@@ -59,21 +55,19 @@ class MainViewModel : ViewModel() {
         var getReward = 0
         for (i in achievedList.indices) {
             getReward += achievedList[i].reward
-            updateItemsRelatedWithDeletedItem(achievedList[i].title)
+            eraseRelationshipWithItem(achievedList[i].title)
         }
         this.mReward += getReward
-        mRepository.saveIntToPreference(REWARD, this.mReward, _context = _context)
+        saveIntToPreference(REWARD, this.mReward, _context = _context)
         val notYetList = rawList.filterNot { it.isDone }
         rawItemList = notYetList.toMutableList()
         saveRawItemList(_context)
         this.tagList = getTagListFromItemList(getItemList())
         this.itemList.value = pickItemsToShow(notYetList)
     }
-
     fun loadItem(_context: Context) {
         rawItemList = loadListFromTextFile(_context)
     }
-
     fun loadItemsFromSdCard(_context: Context, uri: Uri) {
         _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
         val pickedDir = DocumentFile.fromTreeUri(_context, uri)
@@ -87,15 +81,10 @@ class MainViewModel : ViewModel() {
         }
     }
     private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
-        val list = emptyList<FilteredToDoItem>().toMutableList()
-        if (isOnlyFirstItemShown) {
-            for (i in rawList.indices) {
-                if (rawList[i].preceding == EMPTY_ITEM)  list.add(FilteredToDoItem(i, rawList[i].copy()))
-            }
-        } else {
-            for (i in rawList.indices) list.add(FilteredToDoItem(i, rawList[i].copy()))
-        }
-        return list
+        val wrappedList = MutableList(rawList.size) { index -> FilteredToDoItem(index, rawList[index].copy()) }
+        return if (isOnlyFirstItemShown) {
+            wrappedList.filter { it.item.preceding == EMPTY_ITEM }.toMutableList()
+        } else wrappedList
     }
 
     fun saveRawItemList(_context: Context) {
@@ -110,8 +99,7 @@ class MainViewModel : ViewModel() {
             itemList.value = pickItemsToShow(rawItemList)
         }
     }
-
-    private fun updateItemsRelatedWithDeletedItem(_title: String) {
+    private fun eraseRelationshipWithItem(_title: String) {
         for (i in rawItemList.indices) {
             if (rawItemList[i].succeeding == _title) rawItemList[i].succeeding = EMPTY_ITEM
             if (rawItemList[i].preceding == _title) rawItemList[i].preceding = EMPTY_ITEM

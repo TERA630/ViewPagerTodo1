@@ -7,6 +7,8 @@ const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
 const val REQUEST_CODE_READ = 1
 const val REQUEST_CODE_WRITE = 2
+const val DROPBOX_APP_KEY="obxt63d1h0c2d3e"
+const val DROPBOX_APP_SECTRET="dktusfcbh5rxd9r"
 
 
 data class ToDoItem constructor(
@@ -27,17 +29,16 @@ class FilteredToDoItem constructor(
         var item: ToDoItem = ToDoItem()
 )
 
-class Repository {
 
-    fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
+fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
         val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
         preferenceEditor.putInt(_key, _int)
         preferenceEditor.apply()
     }
-    fun loadIntFromPreference(_key: String, _context: Context): Int {
+
+fun loadIntFromPreference(_key: String, _context: Context): Int {
         val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
         return preferences?.getInt(_key, 0) ?: 0
-    }
 }
 
 fun buildPeriodTextFromItem(item: ToDoItem): String {
