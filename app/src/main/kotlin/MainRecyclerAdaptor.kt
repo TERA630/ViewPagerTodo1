@@ -5,14 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ListView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
-import kotlinx.android.synthetic.main.fragment_main.view.*
 import kotlinx.android.synthetic.main.row_item.view.*
-import android.widget.LinearLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 
 
 const val ROW_HEIGHT_CLOSED = 174
@@ -40,7 +36,7 @@ class DiffCallback(val oldList: List<FilteredToDoItem>, val newList: List<Filter
     }
 }
 class MainRecyclerAdaptor(
-        private var mList: MutableList<FilteredToDoItem>,
+        var mList: MutableList<FilteredToDoItem>,
         private val model: MainViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var listener: OnItemClickListener
 

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -64,14 +65,17 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, fragment_frame)
     }
+
+    // リスト更新時にアダプターへ通知する部分の設定
     override fun onStart() {
         super.onStart()
         // itemList 更新時に実行される。
         model.itemList.observe(this, Observer {
             val filterStr = this.arguments!!.getString("tagString") ?: ""
             val list = model.getItemListWithTag(filterStr)
+            val diff = DiffUtil.calculateDiff((DiffCallback(mAdapter.mList, list)), false)
             mAdapter.setListOfAdapter(list)
-            mAdapter.notifyDataSetChanged()
+            diff.dispatchUpdatesTo(mAdapter)
         })
     }
     private fun runAnimation(recyclerView: RecyclerView) {

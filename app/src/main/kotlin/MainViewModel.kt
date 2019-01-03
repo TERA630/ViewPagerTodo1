@@ -25,7 +25,7 @@ class MainViewModel : ViewModel() {
 
     fun deleteItem(index: Int, _context: Context) {
         val mList = getItemList()
-        eraseRelationshipWithItem(mList[index].item.title)
+        eraseRelationWithItem(mList[index].item.title)
         rawItemList.removeAt(mList[index].unFilter)
         saveRawItemList(_context)
         itemList.value = pickItemsToShow(rawItemList)
@@ -55,7 +55,7 @@ class MainViewModel : ViewModel() {
         var getReward = 0
         for (i in achievedList.indices) {
             getReward += achievedList[i].reward
-            eraseRelationshipWithItem(achievedList[i].title)
+            eraseRelationWithItem(achievedList[i].title)
         }
         this.mReward += getReward
         saveIntToPreference(REWARD, this.mReward, _context = _context)
@@ -99,7 +99,8 @@ class MainViewModel : ViewModel() {
             itemList.value = pickItemsToShow(rawItemList)
         }
     }
-    private fun eraseRelationshipWithItem(_title: String) {
+
+    private fun eraseRelationWithItem(_title: String) {
         for (i in rawItemList.indices) {
             if (rawItemList[i].succeeding == _title) rawItemList[i].succeeding = EMPTY_ITEM
             if (rawItemList[i].preceding == _title) rawItemList[i].preceding = EMPTY_ITEM
