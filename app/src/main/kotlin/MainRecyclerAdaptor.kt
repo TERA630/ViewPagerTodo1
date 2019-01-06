@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.row_item.view.*
 
 const val ROW_HEIGHT_CLOSED = 174
 
-class DiffCallback(val oldList: List<FilteredToDoItem>, val newList: List<FilteredToDoItem>) : DiffUtil.Callback() {
+class DiffCallback(private val oldList: List<FilteredToDoItem>,
+                   private val newList: List<FilteredToDoItem>) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return (oldList[oldItemPosition].unFilter == newList[newItemPosition].unFilter)
     }

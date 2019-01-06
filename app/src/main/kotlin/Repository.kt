@@ -7,8 +7,7 @@ const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
 const val REQUEST_CODE_READ = 1
 const val REQUEST_CODE_WRITE = 2
-const val DROPBOX_APP_KEY="obxt63d1h0c2d3e"
-const val DROPBOX_APP_SECTRET="dktusfcbh5rxd9r"
+
 
 
 data class ToDoItem constructor(
@@ -30,16 +29,7 @@ class FilteredToDoItem constructor(
 )
 
 
-fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
-        val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
-        preferenceEditor.putInt(_key, _int)
-        preferenceEditor.apply()
-    }
 
-fun loadIntFromPreference(_key: String, _context: Context): Int {
-        val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
-        return preferences?.getInt(_key, 0) ?: 0
-}
 
 fun buildPeriodTextFromItem(item: ToDoItem): String {
     val stringBuilder = if (item.hasStartLine) {
@@ -67,6 +57,11 @@ fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<St
     val rawTagList: List<String> = List(_list.size) { index -> _list[index].item.tagString }
     val result = rawTagList.distinct()
     return result.toMutableList()
+}
+
+fun loadIntFromPreference(_key: String, _context: Context): Int {
+    val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
+    return preferences?.getInt(_key, 0) ?: 0
 }
 fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
     val res = _context.resources
@@ -97,6 +92,12 @@ fun makeListToCSV(_list: List<String>): String {
     _list.joinTo(sb)
     return sb.toString()
 }
+
+fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
+    val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
+    preferenceEditor.putInt(_key, _int)
+    preferenceEditor.apply()
+}
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
     val precedingMatch = Regex("(,preceding:)(.+?)([,.*\n])").find(_text) // preceding は　preceding: .... の形式
     precedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.preceding = data }
@@ -120,4 +121,4 @@ fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
         _toDoItem.reward = (Regex("[0-9]").find(rewardMatch.value))?.value?.toInt() ?: 1
     }
     return _toDoItem
-} // ToDoItem[] から1行のテキストへ
+}

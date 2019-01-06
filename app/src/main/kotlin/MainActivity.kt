@@ -14,10 +14,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
+import com.dropbox.core.v2.users.FullAccount
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+
 
 const val INDEX_WHEN_TO_MAKE_NEW_ITEM = 1
 const val KEY_TAG_STR = "tagString"
@@ -25,6 +27,8 @@ const val KEY_TAG_LIST = "tagList"
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var model: MainViewModel
+    private var ACCESS_TOKEN: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -57,6 +61,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
     }
+
+    fun getUserAccount() {
+        val dbxClient = ACCESS_TOKEN?.let { getDropBoxClient(it) }
+
+        val task = object : UserAccountTask.TaskDelegate {
+            override fun onAccountReceived(account: FullAccount) {
+                Log.i("test", account.email)
+                Log.i("test", account.name.displayName)
+                Log.i("test", account.accountType.name)
+            }
+
+            override fun onError(error: Exception?) {
+                Log.e("test", "error was occur at getUserAccount.")
+            }
+        }
+
+        dbxClient?.let {
+            UserAccountTask(it, task).execute()
+        }
+
+
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_CANCELED) return
@@ -72,7 +98,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (requestCode) {
             REQUEST_CODE_READ -> {
                 model.loadItemsFromSdCard(this@MainActivity.baseContext, uri)
-
                 return
             }
             REQUEST_CODE_WRITE -> {
@@ -150,6 +175,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onPause()
         model.saveRawItemList(this.applicationContext)
     }
+
     private fun startStorageAccess(requestCode: Int) {
         val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
         val sv = sm.primaryStorageVolume
