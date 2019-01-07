@@ -12,7 +12,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.yoshi.viewpagertodo1.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
-    lateinit var itemList:MutableList<ToDoItem>
+    private lateinit var itemList: MutableList<ToDoItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +80,6 @@ class DetailActivity : AppCompatActivity() {
         val tagList = tagListCSV.split(",")
         binding.tagTxt.setAdapter(ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList))
     }
-
     private fun setupViewRelatedToCalender(binding: ActivityDetailBinding, itemToEdit: ToDoItem) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)

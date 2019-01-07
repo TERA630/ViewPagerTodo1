@@ -20,14 +20,16 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
-
 const val INDEX_WHEN_TO_MAKE_NEW_ITEM = 1
 const val KEY_TAG_STR = "tagString"
 const val KEY_TAG_LIST = "tagList"
 
+const val REQUEST_CODE_SD_READ = 1
+const val REQUEST_CODE_SD_WRITE = 2
+const val REQUEST_CODE_DROPBOX_UPLOAD = 3
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var model: MainViewModel
-    private var ACCESS_TOKEN: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,52 +39,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.initItems(this)
 
         val viewPager = main_viewpager
-        appBarSetup(this.baseContext)
-        viewPagerSetup(viewPager)
-        drawerSetup()
+        setUpAppBar(this.baseContext)
+        setupViewPager(viewPager)
+        setUpDrawer()
         val kUtils = KeyboardUtils()
         kUtils.hide(this)
         // set event handlers
         mainActivity_fab.setOnClickListener { startDetailActivity(viewPager.currentItem, INDEX_WHEN_TO_MAKE_NEW_ITEM) }
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
     }
-    private fun appBarSetup(_context:Context){
-        setSupportActionBar(toolbar)
-        appBarUpdate(_context)
-    }
+
     private fun appBarUpdate(context: Context){
         val sb = StringBuilder(context.resources.getString(R.string.achievement))
         sb.append(model.mReward)
         this.title = sb.toString()
     }
-    private fun drawerSetup() {
-        val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-        nav_view.setNavigationItemSelectedListener(this)
-    }
 
-    fun getUserAccount() {
-        val dbxClient = ACCESS_TOKEN?.let { getDropBoxClient(it) }
+    private fun getUserAccount(accessToken: String) {
 
+        val dbxClient = getDropBoxClient(accessToken)
         val task = object : UserAccountTask.TaskDelegate {
             override fun onAccountReceived(account: FullAccount) {
                 Log.i("test", account.email)
                 Log.i("test", account.name.displayName)
                 Log.i("test", account.accountType.name)
             }
-
             override fun onError(error: Exception?) {
                 Log.e("test", "error was occur at getUserAccount.")
             }
         }
-
-        dbxClient?.let {
-            UserAccountTask(it, task).execute()
-        }
-
-
+        UserAccountTask(dbxClient, task).execute()
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_CANCELED) return
@@ -96,11 +84,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return
         }
         when (requestCode) {
-            REQUEST_CODE_READ -> {
+            REQUEST_CODE_SD_READ -> {
                 model.loadItemsFromSdCard(this@MainActivity.baseContext, uri)
                 return
             }
-            REQUEST_CODE_WRITE -> {
+            REQUEST_CODE_SD_WRITE -> {
                 model.saveItemsToSdCard(this, uri)
                 return
             }
@@ -130,7 +118,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 model.loadItem(this@MainActivity.applicationContext)
             }
             R.id.load_from_sdcard -> {
-                startStorageAccess(REQUEST_CODE_READ)
+                startStorageAccess(REQUEST_CODE_SD_READ)
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -157,15 +145,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
             R.id.action_loadItem_FromSdCard -> {
-                startStorageAccess(REQUEST_CODE_READ)
+                startStorageAccess(REQUEST_CODE_SD_READ)
                 return true
             }
             R.id.action_saveItem_ToSdCard -> {
-                startStorageAccess(REQUEST_CODE_WRITE)
+                startStorageAccess(REQUEST_CODE_SD_WRITE)
                 return true
             }
             R.id.action_deleteFile -> {
                 deleteTextFile(this@MainActivity.applicationContext)
+                return true
+            }
+            R.id.action_uploadItems_ToDropBox -> {
+                val token = loadStringFromPreference("access-token", this@MainActivity.applicationContext)
+                if (token == null) {
+                    val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_DROPBOX_UPLOAD)
+                } else {
+                    getUserAccount(token)
+                }
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -176,6 +174,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.saveRawItemList(this.applicationContext)
     }
 
+    private fun setUpAppBar(_context: Context) {
+        setSupportActionBar(toolbar)
+        appBarUpdate(_context)
+    }
+
+    private fun setUpDrawer() {
+        val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+        nav_view.setNavigationItemSelectedListener(this)
+    }
+
+    private fun setupViewPager(_viewPager: ViewPager) {
+        _viewPager.adapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
+        (main_tab as TabLayout).setupWithViewPager(_viewPager)
+        val comingTag = intent.getStringExtra(KEY_TAG_STR)
+                ?: model.tagList[0] // startPageがなければTagリストの1番目から表示
+        val indexOfStartPage = model.tagList.indexOfFirst { it == comingTag }
+        _viewPager.setCurrentItem(indexOfStartPage, true)
+    }
     private fun startStorageAccess(requestCode: Int) {
         val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
         val sv = sm.primaryStorageVolume
@@ -191,15 +209,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.saveRawItemList(this@MainActivity.applicationContext)
         startActivity(intent)
     }
-
     // intent [KEY_TAG_STR]
-    private fun viewPagerSetup(_viewPager: ViewPager) {
-        _viewPager.adapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
-        (main_tab as TabLayout).setupWithViewPager(_viewPager)
-        val comingTag = intent.getStringExtra(KEY_TAG_STR)
-                ?: model.tagList[0] // startPageがなければTagリストの1番目から表示
-        val indexOfStartPage = model.tagList.indexOfFirst { it == comingTag }
-        _viewPager.setCurrentItem(indexOfStartPage, true)
 
-    }
 }

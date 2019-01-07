@@ -20,6 +20,7 @@
     <string name="loadItem">アイテムの読込み</string>
     <string name="loadItem_FromSdCard">アイテムをSDカードから読込み</string>
     <string name="saveItem_ToSdCard">アイテムをSDカードに書き込み</string>
+    <string name="uploadItems_ToDropBox">アイテムをDropBoxにアップロード</string>
     <string name="deleteFile">保存したアイテムのクリア</string>
     <string name="setting_visible_item">表示アイテムの設定</string>
     <string name="DROPBOX_APP_KEY">obxt63d1h0c2d3e</string>

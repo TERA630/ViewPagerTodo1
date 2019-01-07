@@ -5,9 +5,6 @@ import android.content.Context
 const val REWARD = "reward"
 const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
-const val REQUEST_CODE_READ = 1
-const val REQUEST_CODE_WRITE = 2
-
 
 
 data class ToDoItem constructor(
@@ -63,6 +60,13 @@ fun loadIntFromPreference(_key: String, _context: Context): Int {
     val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
     return preferences?.getInt(_key, 0) ?: 0
 }
+
+fun loadStringFromPreference(_key: String, _context: Context): String? {
+    val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
+    return preferences?.getString(_key, null)
+}
+
+
 fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
     val res = _context.resources
     val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
@@ -98,6 +102,13 @@ fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
     preferenceEditor.putInt(_key, _int)
     preferenceEditor.apply()
 }
+
+fun saveStringToPreference(_key: String, _string: String, _context: Context) {
+    val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
+    preferenceEditor.putString(_key, _string).apply()
+}
+
+
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
     val precedingMatch = Regex("(,preceding:)(.+?)([,.*\n])").find(_text) // preceding は　preceding: .... の形式
     precedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.preceding = data }

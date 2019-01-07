@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import java.io.*
-import kotlin.math.log
 
 fun deleteTextFile(_context: Context) {
     try {
@@ -53,7 +52,6 @@ fun loadListFromTextFileAtSdcard(_context: Context, _documentDir: DocumentFile):
         emptyList<ToDoItem>().toMutableList()
     }
 }
-
 fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
     try {
         val fileOut = context.openFileOutput(TODO_TEXT_FILE, Context.MODE_PRIVATE and Context.MODE_APPEND)
@@ -69,7 +67,6 @@ fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
         e.printStackTrace()
     }
 }
-
 fun saveListToTextFileAtSdcard(_context: Context, _documentDir: DocumentFile, _list: MutableList<ToDoItem>) {
 
     val file = _documentDir.findFile(TODO_TEXT_FILE)

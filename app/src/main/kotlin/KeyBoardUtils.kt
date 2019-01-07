@@ -14,25 +14,21 @@ class KeyboardUtils {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
         view.clearFocus()
     }
-
     fun hide(_activity: Activity) {
         val focus = _activity.currentFocus
         if (focus != null) {
             this.hide(_activity, focus)
         }
     }
-
     fun initHidden(_activity: Activity) {
         _activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
-
     fun show(_context: Context, text: EditText) {
         show(_context, text)
     }
-
     fun show(_context: Context?, edit: EditText, delayTime: Int) {
         val showKeyboardDelay = Runnable {
-            if (_context != null) {
+            _context?.let {
                 val imm = _context
                         .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.showSoftInput(edit, InputMethodManager.SHOW_IMPLICIT)

@@ -23,7 +23,6 @@ class MainFragment : Fragment() {
     lateinit var mAdapter: MainRecyclerAdaptor
     lateinit var mTag:String
     private var mPosition = 0
-
     companion object {
         // instance生成時に（今プロジェクトではViewPagerから）Fragment作成に必要な変数をセットしておく。
         fun newInstance(tagString: String, position: Int): MainFragment {
@@ -65,7 +64,6 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, fragment_frame)
     }
-
     // リスト更新時にアダプターへ通知する部分の設定
     override fun onStart() {
         super.onStart()
