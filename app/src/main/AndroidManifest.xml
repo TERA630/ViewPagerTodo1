@@ -29,7 +29,7 @@
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask">
             <intent-filter>
-                <data android:scheme="db-app_key" />
+                <data android:scheme="db-obxt63d1h0c2d3e" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
