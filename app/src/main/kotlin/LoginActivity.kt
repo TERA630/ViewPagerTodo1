@@ -2,6 +2,7 @@ package com.example.yoshi.viewpagertodo1
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -39,6 +40,10 @@ class LoginActivity : AppCompatActivity() {
                 if (!currentUid.equals(storedUid)) saveStringToPreference("user-id", currentUid, this@LoginActivity.applicationContext)
             }
             //Proceed to MainActivity
+            val data = Intent()
+            data.putExtra("user-id",currentUid)
+            data.putExtra("access-token",accessToken)
+            setResult(Activity.RESULT_OK,data)
         } else {
             Log.w("test", "Fail to get access_token")
             setResult(Activity.RESULT_CANCELED)

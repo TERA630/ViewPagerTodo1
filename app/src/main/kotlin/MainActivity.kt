@@ -78,19 +78,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Log.w("test", "data of intent was null at onActivityResult..")
             return
         }
-        val uri = data.data
-        if (uri == null) {
-            Log.w("test", "uri in data of intent was null at onActivityResult..")
-            return
-        }
         when (requestCode) {
             REQUEST_CODE_SD_READ -> {
-                model.loadItemsFromSdCard(this@MainActivity.baseContext, uri)
+                data.data?.let {
+                model.loadItemsFromSdCard(this@MainActivity.baseContext, it)}
                 return
             }
             REQUEST_CODE_SD_WRITE -> {
-                model.saveItemsToSdCard(this, uri)
+                data.data?.let{
+                model.saveItemsToSdCard(this, it)}
                 return
+            }
+            REQUEST_CODE_DROPBOX_UPLOAD ->{
+                val token = data.getStringExtra("access-token")
+                token?.let{
+                    val client = getDropBoxClient(token)
+
+                }
+
+
             }
         }
     }
