@@ -9,6 +9,7 @@ import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.WriteMode
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.IOException
 
 
@@ -36,13 +37,21 @@ class UploadTask (
     }
 }
 
-class DownloadTask {
-    fun
-            File file = new File(dstFilePath)
-    OutputStream os = new FileOutputStream(file)
-    mClient.files().download(metadata.getPathLower()).download(os)
+class DownloadTask(
+        private val mClient: DbxClientV2,
+        private val mFile: File) : AsyncTask<Void, Void, Void>() {
 
 
+    override fun doInBackground(vararg params: Void?): Void? {
+
+        try {
+            val os = FileOutputStream(mFile)
+            mClient.files().download("/").download(os)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
 }
 
 

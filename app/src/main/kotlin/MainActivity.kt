@@ -143,12 +143,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
             R.id.action_uploadItems_ToDropBox -> {
-                    val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
-                    startActivityForResult(intent, REQUEST_CODE_DROPBOX_UPLOAD)
+                val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
+                intent.putExtra("action", REQUEST_CODE_DROPBOX_UPLOAD)
+                startActivityForResult(intent, REQUEST_CODE_DROPBOX_UPLOAD)
                 return true
             }
             R.id.action_downloadItems_FromDropBox -> {
                 val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
+                intent.putExtra("action", REQUEST_CODE_DROPBOX_DOWNLOAD)
                 startActivityForResult(intent, REQUEST_CODE_DROPBOX_DOWNLOAD)
                 return true
             }
