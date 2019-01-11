@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
-import com.dropbox.core.v2.users.FullAccount
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,6 +26,8 @@ const val KEY_TAG_LIST = "tagList"
 const val REQUEST_CODE_SD_READ = 1
 const val REQUEST_CODE_SD_WRITE = 2
 const val REQUEST_CODE_DROPBOX_UPLOAD = 3
+const val REQUEST_CODE_DROPBOX_DOWNLOAD = 4
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var model: MainViewModel
@@ -39,9 +40,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.initItems(this)
 
         val viewPager = main_viewpager
-        setUpAppBar(this.baseContext)
+        setUpAppBarWithDrawer(this.baseContext)
         setupViewPager(viewPager)
-        setUpDrawer()
         val kUtils = KeyboardUtils()
         kUtils.hide(this)
         // set event handlers
@@ -54,23 +54,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         sb.append(model.mReward)
         this.title = sb.toString()
     }
-
-    private fun getUserAccount(accessToken: String) {
-
-        val dbxClient = getDropBoxClient(accessToken)
-        val task = object : UserAccountTask.TaskDelegate {
-            override fun onAccountReceived(account: FullAccount) {
-                Log.i("test", account.email)
-                Log.i("test", account.name.displayName)
-                Log.i("test", account.accountType.name)
-            }
-            override fun onError(error: Exception?) {
-                Log.e("test", "error was occur at getUserAccount.")
-            }
-        }
-        UserAccountTask(dbxClient, task).execute()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_CANCELED) return
@@ -89,17 +72,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 model.saveItemsToSdCard(this, it)}
                 return
             }
-            REQUEST_CODE_DROPBOX_UPLOAD ->{
-                val token = data.getStringExtra("access-token")
-                token?.let{
-                    val client = getDropBoxClient(token)
-
+            REQUEST_CODE_DROPBOX_UPLOAD -> {
+                return
+            }
+            REQUEST_CODE_DROPBOX_DOWNLOAD -> {
+                return
                 }
-
-
             }
         }
-    }
     override fun onBackPressed() {
         model.saveRawItemList(this.applicationContext)
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -163,13 +143,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
             R.id.action_uploadItems_ToDropBox -> {
-                val token = loadStringFromPreference("access-token", this@MainActivity.applicationContext)
-                if (token == null) {
                     val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
                     startActivityForResult(intent, REQUEST_CODE_DROPBOX_UPLOAD)
-                } else {
-                    getUserAccount(token)
-                }
+                return true
+            }
+            R.id.action_downloadItems_FromDropBox -> {
+                val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
+                startActivityForResult(intent, REQUEST_CODE_DROPBOX_DOWNLOAD)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -180,18 +160,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.saveRawItemList(this.applicationContext)
     }
 
-    private fun setUpAppBar(_context: Context) {
+    private fun setUpAppBarWithDrawer(_context: Context) {
         setSupportActionBar(toolbar)
         appBarUpdate(_context)
-    }
-
-    private fun setUpDrawer() {
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
     }
-
     private fun setupViewPager(_viewPager: ViewPager) {
         _viewPager.adapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         (main_tab as TabLayout).setupWithViewPager(_viewPager)
@@ -215,6 +191,4 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.saveRawItemList(this@MainActivity.applicationContext)
         startActivity(intent)
     }
-    // intent [KEY_TAG_STR]
-
 }

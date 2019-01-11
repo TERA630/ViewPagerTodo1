@@ -17,14 +17,15 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="showOnlyFirstItem">最初に行うアクションのみ表示</string>
     <string name="saveItem">現在のアイテムを保存</string>
+    <string name="saveItem_ToSdCard">アイテムをSDカードに書き込み</string>
     <string name="loadItem">アイテムの読込み</string>
     <string name="loadItem_FromSdCard">アイテムをSDカードから読込み</string>
-    <string name="saveItem_ToSdCard">アイテムをSDカードに書き込み</string>
     <string name="uploadItems_ToDropBox">アイテムをDropBoxにアップロード</string>
+    <string name="downloadItems_FromDropBox">アイテムをDropBoxからダウンロード</string>
     <string name="deleteFile">保存したアイテムのクリア</string>
     <string name="setting_visible_item">表示アイテムの設定</string>
     <string name="DROPBOX_APP_KEY">obxt63d1h0c2d3e</string>
-    <string name="DROPBOX_APP_SECTRET">dktusfcbh5rxd9r</string>
+    <string name="DROPBOX_APP_SECRET">dktusfcbh5rxd9r</string>
     <string name="sign_in">Sign in to DropBox</string>
 
     <string-array name="date_array">

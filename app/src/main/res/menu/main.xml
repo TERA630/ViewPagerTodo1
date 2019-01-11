@@ -25,6 +25,9 @@
         android:id="@+id/action_uploadItems_ToDropBox"
         android:title="@string/uploadItems_ToDropBox" />
     <item
+        android:id="@+id/action_downloadItems_FromDropBox"
+        android:title="@string/downloadItems_FromDropBox" />
+    <item
         android:id="@+id/action_deleteFile"
         android:title="@string/deleteFile" />
 
