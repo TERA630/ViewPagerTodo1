@@ -4,7 +4,6 @@ import android.os.AsyncTask
 import android.util.Log
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
-import com.dropbox.core.http.OkHttp3Requestor
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.WriteMode
 import java.io.File
@@ -52,12 +51,8 @@ class DownloadTask(
 
 
 fun getDropBoxClient(accessToken: String): DbxClientV2 {
-    val requester = OkHttp3Requestor(OkHttp3Requestor.defaultOkHttpClient())
-    val requestConfig = DbxRequestConfig.newBuilder("viewPagerTodo1")
-            .withHttpRequestor(requester)
+    val requestConfig = DbxRequestConfig.newBuilder("Name/Version")
             .build()
     val client = DbxClientV2(requestConfig, accessToken)
-    val account = client.users().currentAccount
-    Log.i("test", "user is ${account.name.displayName}")
     return client
 }
