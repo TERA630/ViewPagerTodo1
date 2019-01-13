@@ -20,6 +20,7 @@
     <string name="saveItem_ToSdCard">アイテムをSDカードに書き込み</string>
     <string name="loadItem">アイテムの読込み</string>
     <string name="loadItem_FromSdCard">アイテムをSDカードから読込み</string>
+    <string name="inLoginStatus">でログイン中</string>
     <string name="uploadItems_ToDropBox">アイテムをDropBoxにアップロード</string>
     <string name="downloadItems_FromDropBox">アイテムをDropBoxからダウンロード</string>
     <string name="deleteFile">保存したアイテムのクリア</string>

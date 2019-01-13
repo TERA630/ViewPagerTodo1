@@ -161,7 +161,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onPause()
         model.saveRawItemList(this.applicationContext)
     }
-
     private fun setUpAppBarWithDrawer(_context: Context) {
         setSupportActionBar(toolbar)
         appBarUpdate(_context)

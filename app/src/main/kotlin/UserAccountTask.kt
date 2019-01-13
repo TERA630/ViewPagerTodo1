@@ -9,16 +9,14 @@ import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.WriteMode
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.IOException
-
 
 class UploadTask (
         private val dbxClient: DbxClientV2,
-        private val file: File) : AsyncTask<Void, Void, Void>() {
-    private var error:Exception? = null
+        private val file: File) : AsyncTask<Void, Void, Boolean>() {
+    var error: Exception? = null
 
-    override fun doInBackground(vararg params: Void?): Void? {
+    override fun doInBackground(vararg params: Void?): Boolean {
         try {
             // Upload to Dropbox
             val inputStream = FileInputStream(file)
@@ -26,6 +24,7 @@ class UploadTask (
                     .withMode(WriteMode.OVERWRITE) //always overwrite existing file
                     .uploadAndFinish(inputStream)
             Log.d("Upload Status", "Success")
+            return true
         } catch (e: DbxException) {
             e.printStackTrace()
             error = e
@@ -33,32 +32,32 @@ class UploadTask (
             e.printStackTrace()
             error = e
         }
-        return null
+        return false
     }
 }
 
 class DownloadTask(
-        private val mClient: DbxClientV2,
-        private val mFile: File) : AsyncTask<Void, Void, Void>() {
+        private val mClientV2: DbxClientV2) : AsyncTask<Void, Void, Boolean>() {
+    var error: Exception? = null
 
-
-    override fun doInBackground(vararg params: Void?): Void? {
-
-        try {
-            val os = FileOutputStream(mFile)
-            mClient.files().download("/").download(os)
-        } catch (e: Exception) {
-            e.printStackTrace()
+    override fun doInBackground(vararg params: Void?): Boolean {
+        val result = mClientV2.files().search("", TODO_TEXT_FILE)
+        if (result == null) return false
+        else {
+            mClientV2.files().download(TODO_TEXT_FILE)
+            return true
         }
-        return null
     }
 }
 
 
 fun getDropBoxClient(accessToken: String): DbxClientV2 {
     val requester = OkHttp3Requestor(OkHttp3Requestor.defaultOkHttpClient())
-    val requestConfig = DbxRequestConfig.newBuilder("viewPagerTodo")
+    val requestConfig = DbxRequestConfig.newBuilder("viewPagerTodo1")
             .withHttpRequestor(requester)
             .build()
-    return DbxClientV2(requestConfig, accessToken)
+    val client = DbxClientV2(requestConfig, accessToken)
+    val account = client.users().currentAccount
+    Log.i("test", "user is ${account.name.displayName}")
+    return client
 }
