@@ -11,13 +11,12 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
-
 class UploadTask (
         private val dbxClient: DbxClientV2,
-        private val file: File) : AsyncTask<Void, Void, Void>() {
+        private val file: File) : AsyncTask<Void, Void, Boolean>() {
     private var error:Exception? = null
 
-    override fun doInBackground(vararg params: Void?): Void? {
+    override fun doInBackground(vararg params: Void?): Boolean {
         try {
             // Upload to Dropbox
             val inputStream = FileInputStream(file)
@@ -25,6 +24,7 @@ class UploadTask (
                     .withMode(WriteMode.OVERWRITE) //always overwrite existing file
                     .uploadAndFinish(inputStream)
             Log.d("Upload Status", "Success")
+            return true
         } catch (e: DbxException) {
             e.printStackTrace()
             error = e
@@ -32,19 +32,22 @@ class UploadTask (
             e.printStackTrace()
             error = e
         }
-        return null
+        return false
     }
 }
 
-class DownloadTask {
-    fun
-            File file = new File(dstFilePath)
-    OutputStream os = new FileOutputStream(file)
-    mClient.files().download(metadata.getPathLower()).download(os)
+class DownloadTask(
+        private val mClientV2: DbxClientV2) : AsyncTask<Void, Void, Boolean>() {
 
-
+    override fun doInBackground(vararg params: Void?): Boolean {
+        val result = mClientV2.files().search("", TODO_TEXT_FILE)
+        if (result == null) return false
+        else {
+            mClientV2.files().download(TODO_TEXT_FILE)
+            return true
+        }
+    }
 }
-
 
 fun getDropBoxClient(accessToken: String): DbxClientV2 {
     val requester = OkHttp3Requestor(OkHttp3Requestor.defaultOkHttpClient())
