@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.dropbox.core.android.Auth
 import com.dropbox.core.v2.DbxClientV2
 import kotlinx.android.synthetic.main.activity_login.*
-import java.io.FileInputStream
 
 const val DROPBOX_TOKEN = "dropbox_access_token"
 
@@ -30,17 +29,17 @@ class LoginActivity : AppCompatActivity() {
                 val sb = StringBuilder(resources.getText(R.string.inLoginStatus))
                 sb.insert(0, it)
                 val action = this.intent.getIntExtra("action", 0)
-                itemsExchangeToDropBox(action, clientV2)
+                accessToDropBox(action, clientV2)
             } ?: throw IllegalStateException()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        getAccessToken()
+        startAccessWithToken()
     }
 
-    private fun getAccessToken() {
+    private fun startAccessWithToken() {
         val accessToken = Auth.getOAuth2Token() //generate Access Token
         if (accessToken != null) {
             saveStringToPreference(DROPBOX_TOKEN, accessToken, this@LoginActivity.applicationContext)
@@ -55,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
             //Proceed to upload or download
             canClientLinkedName(clientV2)?.let {
                 val action = this.intent.getIntExtra("action", 0)
-                itemsExchangeToDropBox(action, clientV2)
+                accessToDropBox(action, clientV2)
                 setResult(Activity.RESULT_OK)
             } ?: run {
             Log.w("test", "Fail to get access_token")
@@ -64,13 +63,14 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun itemsExchangeToDropBox(request: Int, client: DbxClientV2): Boolean {
+    private fun accessToDropBox(request: Int, client: DbxClientV2): Boolean {
         if (request == REQUEST_CODE_DROPBOX_UPLOAD) {
+            statusOfDropBox.text = resources.getText(R.string.startUpload)
             try {
-                val fis = FileInputStream(TODO_TEXT_FILE)
+                val fis = openFileInput(TODO_TEXT_FILE)
                 val sb = StringBuilder("/").append(TODO_TEXT_FILE)
-                val metadata = client.files().uploadBuilder(sb.toString())
-                        .uploadAndFinish(fis)
+                val destinationFile = sb.toString()
+
             } catch (e: Exception) {
                 Log.w("test", "fail to Upload.")
                 setResult(Activity.RESULT_CANCELED)
@@ -85,6 +85,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun canClientLinkedName(client: DbxClientV2): String? {
+
         return client.users().currentAccount.name.displayName
     }
 }

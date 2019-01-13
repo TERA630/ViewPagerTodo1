@@ -6,16 +6,53 @@ import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.WriteMode
+import com.dropbox.core.v2.users.FullAccount
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
+class UserAccountTask(private val mClientV2: DbxClientV2,
+                      val delegate: TaskDelegate) : AsyncTask<Void, Void, FullAccount?>() {
+
+    interface TaskDelegate {
+        fun onAccountReceived(account: FullAccount)
+        fun onError(error: Exception?)
+    }
+
+    var error: Exception? = null
+    override fun doInBackground(vararg params: Void?): FullAccount? {
+        try {
+            return mClientV2.users().currentAccount
+        } catch (e: DbxException) {
+            e.printStackTrace()
+            error = e
+        }
+        return null
+    }
+
+    override fun onPostExecute(account: FullAccount?) {
+        super.onPostExecute(account)
+
+        if (account != null && error == null) {
+            delegate.onAccountReceived(account)
+        } else {
+            delegate.onError(error)
+        }
+    }
+}
+
 class UploadTask (
         private val dbxClient: DbxClientV2,
-        private val file: File) : AsyncTask<Void, Void, Boolean>() {
+        private val file: File,
+        private val delegate: TaskDelegate) : AsyncTask<Void, Void, Void?>() {
     var error: Exception? = null
 
-    override fun doInBackground(vararg params: Void?): Boolean {
+    interface TaskDelegate {
+        fun onSuccessUpLoad()
+        fun onError(error: Exception?)
+    }
+
+    override fun doInBackground(vararg params: Void?): Void? {
         try {
             // Upload to Dropbox
             val inputStream = FileInputStream(file)
@@ -23,7 +60,6 @@ class UploadTask (
                     .withMode(WriteMode.OVERWRITE) //always overwrite existing file
                     .uploadAndFinish(inputStream)
             Log.d("Upload Status", "Success")
-            return true
         } catch (e: DbxException) {
             e.printStackTrace()
             error = e
@@ -31,13 +67,27 @@ class UploadTask (
             e.printStackTrace()
             error = e
         }
-        return false
+        return null
+    }
+
+    override fun onPostExecute(result: Void?) {
+        if (error == null) {
+            delegate.onSuccessUpLoad()
+        } else {
+            delegate.onError(error)
+        }
     }
 }
 
 class DownloadTask(
-        private val mClientV2: DbxClientV2) : AsyncTask<Void, Void, Boolean>() {
+        private val mClientV2: DbxClientV2,
+        private val delegate: TaskDelegate) : AsyncTask<Void, Void, Void>() {
     var error: Exception? = null
+
+    interface TaskDelegate {
+        fun onSuccessUpLoad()
+        fun onError(error: Exception?)
+    }
 
     override fun doInBackground(vararg params: Void?): Boolean {
         val result = mClientV2.files().search("", TODO_TEXT_FILE)
@@ -47,12 +97,20 @@ class DownloadTask(
             return true
         }
     }
+
+    override fun onPostExecute(result: Void?) {
+        if (error == null) {
+            delegate.onSuccessUpLoad()
+        } else {
+            delegate.onError(error)
+        }
+    }
+
 }
 
 
 fun getDropBoxClient(accessToken: String): DbxClientV2 {
     val requestConfig = DbxRequestConfig.newBuilder("Name/Version")
             .build()
-    val client = DbxClientV2(requestConfig, accessToken)
-    return client
+    return DbxClientV2(requestConfig, accessToken)
 }
