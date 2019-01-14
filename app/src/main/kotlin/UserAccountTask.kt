@@ -89,15 +89,14 @@ class DownloadTask(
         fun onError(error: Exception?)
     }
 
-    override fun doInBackground(vararg params: Void?): Boolean {
+    override fun doInBackground(vararg params: Void?): Void? {
         val result = mClientV2.files().search("", TODO_TEXT_FILE)
-        if (result == null) return false
+        if (result == null) return null
         else {
             mClientV2.files().download(TODO_TEXT_FILE)
-            return true
         }
+        return null
     }
-
     override fun onPostExecute(result: Void?) {
         if (error == null) {
             delegate.onSuccessUpLoad()
