@@ -8,7 +8,6 @@ import com.dropbox.core.android.Auth
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.users.FullAccount
 import kotlinx.android.synthetic.main.activity_login.*
-import java.io.File
 import java.io.IOException
 
 const val DROPBOX_TOKEN = "dropbox_access_token"
@@ -29,9 +28,10 @@ class LoginActivity : AppCompatActivity() {
             val clientV2 = getDropBoxClient(token)
             if (canClientLinkedName(clientV2)) {
                 val sb = StringBuilder(resources.getText(R.string.inLoginStatus))
+                statusOfDropBox.text = sb.toString()
                 val action = this.intent.getIntExtra("action", 0)
                 accessToDropBox(action, clientV2)
-            } else throw IllegalStateException()
+            } else throw IllegalStateException("Token was not linked to Account.")
         }
     }
 
@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
             user_id_label.text = currentUid
             val storedUid = loadStringFromPreference("user-id", this@LoginActivity.applicationContext)
             storedUid?.let {
-                if (!currentUid.equals(storedUid)) saveStringToPreference("user-id", currentUid, this@LoginActivity.applicationContext)
+                if (currentUid != storedUid) saveStringToPreference("user-id", currentUid, this@LoginActivity.applicationContext)
             }
             val clientV2 = getDropBoxClient(accessToken)
             //Proceed to upload or download
@@ -70,18 +70,25 @@ class LoginActivity : AppCompatActivity() {
             REQUEST_CODE_DROPBOX_UPLOAD -> {
                 statusOfDropBox.text = resources.getText(R.string.startUpload)
                 try {
+                    val fis = openFileInput(TODO_TEXT_FILE)
                     val delegate = object : UploadTask.TaskDelegate {
                         override fun onSuccessUpLoad() {
                             Log.i("test", "upload succeeded.")
+                            statusOfDropBox.text = "$TODO_TEXT_FILE was successfully uploaded"
                         }
 
                         override fun onError(error: Exception?) {
-                            Log.w("test", "${error?.message} at ${error?.cause}")
+                            Log.w("test", "${error?.message} occur at accessToDropBox#UPLOAD")
                             throw IOException()
                         }
                     }
-                    val task = UploadTask(client, File(TODO_TEXT_FILE), delegate)
+                    val task = UploadTask(client, fis, delegate)
                     task.execute()
+                    sign_in_button.text = "元のアクティビティに戻ります"
+                    sign_in_button.setOnClickListener {
+                        setResult(Activity.RESULT_OK)
+                        finish()
+                    }
                 } catch (e: Exception) {
                     Log.w("test", "fail to Upload.")
                     setResult(Activity.RESULT_CANCELED)
@@ -89,24 +96,32 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             REQUEST_CODE_DROPBOX_DOWNLOAD -> {
+                statusOfDropBox.text = resources.getText(R.string.startDownload)
                 val downDelegate = object : DownloadTask.TaskDelegate {
                     override fun onSuccessUpLoad() {
                         Log.i("test", "upload succeeded.")
+                        statusOfDropBox.text = "$TODO_TEXT_FILE was successfully downloaded"
                     }
 
                     override fun onError(error: Exception?) {
-                        Log.w("test", "${error?.message} at ${error?.cause}")
+                        Log.w("test", "${error?.message} occur at accessToDropBox#DOWNLOAD")
                         throw IOException()
                     }
                 }
                 val task = DownloadTask(client, downDelegate)
                 task.execute()
+                sign_in_button.text = "元のアクティビティに戻ります"
+                sign_in_button.setOnClickListener {
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
                 return (task.error != null)
             }
             else -> return false
         }
         return false
     }
+
 
     private fun canClientLinkedName(client: DbxClientV2): Boolean {
         try {

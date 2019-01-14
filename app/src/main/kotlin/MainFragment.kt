@@ -15,12 +15,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 
-// Viewmodelに依存
-//
-
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
-    lateinit var mAdapter: MainRecyclerAdaptor
+    private lateinit var mAdapter: MainRecyclerAdaptor
     lateinit var mTag:String
     private var mPosition = 0
     companion object {
@@ -79,7 +76,7 @@ class MainFragment : Fragment() {
     private fun runAnimation(recyclerView: RecyclerView) {
         val controller: LayoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_falldown)
         recyclerView.layoutAnimation = controller
-        recyclerView.adapter?.let { it.notifyDataSetChanged() }
+        recyclerView.adapter?.notifyDataSetChanged()
                 ?: throw Exception("error in animation giving adaptor")
         recyclerView.scheduleLayoutAnimation()
     }

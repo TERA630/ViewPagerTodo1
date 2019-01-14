@@ -3,6 +3,7 @@ package com.example.yoshi.viewpagertodo1
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,6 +31,14 @@ class MainViewModel : ViewModel() {
         saveRawItemList(_context)
         itemList.value = pickItemsToShow(rawItemList)
     }
+
+    private fun eraseRelationWithItem(_title: String) {
+        for (i in rawItemList.indices) {
+            if (rawItemList[i].succeeding == _title) rawItemList[i].succeeding = EMPTY_ITEM
+            if (rawItemList[i].preceding == _title) rawItemList[i].preceding = EMPTY_ITEM
+        }
+    }
+
     fun findSucceedingItems(_title: String): MutableList<String> {
         val result = mutableListOf<String>()
         for (index in rawItemList.indices) {
@@ -75,8 +84,9 @@ class MainViewModel : ViewModel() {
             try {
                 rawItemList = loadListFromTextFileAtSdcard(_context, pickedDir)
                 itemList.value = pickItemsToShow(rawItemList)
+                tagList = getTagListFromItemList(getItemList())
             } catch (e: Exception) {
-                return
+                Log.e("test", "${e.message} was occur at MainViewModel#loadItemFromSdcard")
             }
         }
     }
@@ -100,10 +110,5 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private fun eraseRelationWithItem(_title: String) {
-        for (i in rawItemList.indices) {
-            if (rawItemList[i].succeeding == _title) rawItemList[i].succeeding = EMPTY_ITEM
-            if (rawItemList[i].preceding == _title) rawItemList[i].preceding = EMPTY_ITEM
-        }
-    }
+
 }

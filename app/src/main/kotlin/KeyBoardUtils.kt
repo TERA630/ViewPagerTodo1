@@ -23,7 +23,8 @@ class KeyboardUtils {
     fun initHidden(_activity: Activity) {
         _activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
-    fun show(_context: Context, text: EditText) {
+
+    private fun show(_context: Context, text: EditText) {
         show(_context, text)
     }
     fun show(_context: Context?, edit: EditText, delayTime: Int) {

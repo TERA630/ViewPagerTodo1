@@ -7,12 +7,11 @@ import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.WriteMode
 import com.dropbox.core.v2.users.FullAccount
-import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
 class UserAccountTask(private val mClientV2: DbxClientV2,
-                      val delegate: TaskDelegate) : AsyncTask<Void, Void, FullAccount?>() {
+                      private val delegate: TaskDelegate) : AsyncTask<Void, Void, FullAccount?>() {
 
     interface TaskDelegate {
         fun onAccountReceived(account: FullAccount)
@@ -43,7 +42,7 @@ class UserAccountTask(private val mClientV2: DbxClientV2,
 
 class UploadTask (
         private val dbxClient: DbxClientV2,
-        private val file: File,
+        private val fileInputStream: FileInputStream,
         private val delegate: TaskDelegate) : AsyncTask<Void, Void, Void?>() {
     var error: Exception? = null
 
@@ -55,10 +54,9 @@ class UploadTask (
     override fun doInBackground(vararg params: Void?): Void? {
         try {
             // Upload to Dropbox
-            val inputStream = FileInputStream(file)
-            dbxClient.files().uploadBuilder("/" + file.name) //Path in the user's Dropbox to save the file.
+            dbxClient.files().uploadBuilder("/$TODO_TEXT_FILE") //Path in the user's Dropbox to save the file.
                     .withMode(WriteMode.OVERWRITE) //always overwrite existing file
-                    .uploadAndFinish(inputStream)
+                    .uploadAndFinish(fileInputStream)
             Log.d("Upload Status", "Success")
         } catch (e: DbxException) {
             e.printStackTrace()

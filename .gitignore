@@ -10,3 +10,4 @@ proguard-rules.pro
 *.class
 
 local.properties
+settings.gradle

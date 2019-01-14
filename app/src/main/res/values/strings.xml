@@ -9,7 +9,12 @@
     <string name="undefinedDate">----/--/--</string>
 
     <string name="enterNewItem">新しいアイテムを入力</string>
+    <string name="enter_Tag">タグを入力して下さい</string>
+    <string name="enter_preceding_item">先行するアイテムを入力ください</string>
+    <string name="enter_succeeding_item">この次のアイテムを入力ください</string>
     <string name="getPoint">完了クリアし達成確認</string>
+    <string name="item_preceding">先行アイテム</string>
+    <string name="item_succeeding">後続アイテム</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -26,45 +31,37 @@
     <string name="deleteFile">保存したアイテムのクリア</string>
     <string name="setting_visible_item">表示アイテムの設定</string>
     <string name="startUpload">アップロードを始めます</string>
+    <string name="startDownload">ダウンロードを始めます</string>
+    <string name="tilda">～</string>
     <string name="DROPBOX_APP_KEY">obxt63d1h0c2d3e</string>
     <string name="DROPBOX_APP_SECRET">dktusfcbh5rxd9r</string>
     <string name="sign_in">Sign in to DropBox</string>
 
-    <string-array name="date_array">
-        <item>本日</item>
-        <item>明日</item>
-        <item>2日後</item>
-        <item>3日後</item>
-        <item>今週中</item>
-        <item>今月中</item>
-        <item>期限なし</item>
-    </string-array>
-    <integer-array name="dateFilter_array">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>7</item>
-        <item>30</item>
-    </integer-array>
     <string-array name="default_todoItem_title">
-        <item>個人番号カード登録証写真撮影</item>
-        <item>不動産収支まとめ</item>
+        <item>個人番号カード市役所に提出</item>
+        <item>不動産収支まとめ続き</item>
         <item>子供部屋のコンテナ注文</item>
-        <item>子供部屋の引出注文</item>
-        <item>財務書類まとめ</item>
+        <item>HDD処理</item>
+        <item>第108回消化器内視鏡学会関東支部例会ハンズオン</item>
+        <item>第6回大腸ESD ハンズオンセミナー in 北陸</item>
         <item>ロジェフレア関連入出金</item>
-        <item>年賀状コメント</item>
+        <item>年賀状整理</item>
+        <item>サドルバック</item>
+        <item>幅13cmのちりとり</item>
+        <item>ロングモニターアーム</item>
     </string-array>
     <string-array name="default_todoItem_tag">
-        <item>書類</item>
+        <item>書類提出</item>
         <item>財務</item>
         <item>整理</item>
         <item>整理</item>
-        <item>財務</item>
-        <item>財務</item>
+        <item>学会</item>
+        <item>学会</item>
         <item>整理</item>
         <item>挨拶</item>
+        <item>購入検討</item>
+        <item>購入検討</item>
+        <item>購入検討</item>
     </string-array>
     <string-array name="menu_items">
         <item>make item default</item>

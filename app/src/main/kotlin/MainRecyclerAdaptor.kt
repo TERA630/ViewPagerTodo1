@@ -84,7 +84,7 @@ class MainRecyclerAdaptor(
 
     override fun getItemCount(): Int = mList.size
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val mBinding = RowItemBinding.bind(itemView)
+        val mBinding: RowItemBinding = RowItemBinding.bind(itemView)
         var isItemOpened:Boolean = false
     }
     interface OnItemClickListener {

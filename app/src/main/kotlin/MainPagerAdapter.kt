@@ -4,7 +4,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
 // 依存関係　Of　DayPagerAdapter
-//　上流　MainActivity　で constructされる。　Viewmodel依存
+//　上流　MainActivity　で constructされる.
 //　下流　RecyclerFragmentの　Instance作成
 
 class MainPagerAdapter(fragmentManager: FragmentManager, val model: MainViewModel) : FragmentStatePagerAdapter(fragmentManager) {
