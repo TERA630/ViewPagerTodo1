@@ -53,12 +53,11 @@ class DetailActivity : AppCompatActivity() {
 
     class DataSetListener(private val _textView: TextView) : DatePickerDialog.OnDateSetListener {
         override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-            _textView.text = "$year/${month + 1}/$dayOfMonth"
+            _textView.text = _textView.context.getString(R.string.date_format, year, month + 1, dayOfMonth)
         }
     }
 
     private fun setupViewRelatedToOtherItems(binding: ActivityDetailBinding, itemToEdit: ToDoItem) {
-        // メンバ変数　itemListを参照
 
         binding.succeedingTxt.setText(if (itemToEdit.succeeding == EMPTY_ITEM) {
             ""

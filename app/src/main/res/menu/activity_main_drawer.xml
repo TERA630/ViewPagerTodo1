@@ -5,25 +5,10 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/make_defaultData"
             android:icon="@drawable/ic_menu_camera"
             android:title="make data default" />
-        <item
-            android:id="@+id/save_to_text"
-            android:icon="@drawable/save_78935"
-            android:title="save to textFile" />
-        <item
-            android:id="@+id/load_from_text"
-            android:icon="@drawable/load_39552"
-            android:title="Load from textFile" />
-        <item
-            android:id="@+id/load_from_sdcard"
-            android:icon="@drawable/load_39552"
-            android:title="Load from sdcard" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+
     </group>
 
     <item android:title="Communicate">

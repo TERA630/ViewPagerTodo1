@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
-    tools:context=".DetailFragment"
-    tools:ignore="ContentDescription">
-
+    tools:context=".DetailFragment">
     <data>
 
         <variable
@@ -28,55 +26,46 @@
             android:checked="@={item.done}"
             android:nextFocusDown="@id/titleTxt"
             android:nextFocusForward="@id/titleTxt"
-            app:layout_constraintBottom_toTopOf="@+id/guideline2"
+            app:layout_constraintBottom_toTopOf="@id/detail_guideline1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
         <EditText
             android:id="@+id/titleTxt"
             android:layout_width="@dimen/titleText_size"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="8dp"
             android:hint="@string/enterNewItem"
-            android:inputType="text|textPersonName"
+            android:inputType="text"
             android:nextFocusDown="@id/tagTxt"
             android:text="@={item.title}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintBottom_toTopOf="@+id/guideline2"
-            app:layout_constraintStart_toEndOf="@+id/doneChkBox"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/doneChkBox"
+            app:layout_constraintBottom_toTopOf="@id/detail_guideline1"
             tools:text="@string/enterNewItem" />
 
         <ImageButton
             android:id="@+id/applyBtn"
             android:layout_width="@dimen/imgBtn_size"
             android:layout_height="52dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="8dp"
             android:src="@android:drawable/ic_media_play"
-            app:layout_constraintBottom_toTopOf="@+id/guideline2"
-            app:layout_constraintEnd_toStartOf="@+id/cancelBtn"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cancelBtn"
             tools:src="@android:drawable/ic_media_play" />
 
         <ImageButton
             android:id="@+id/cancelBtn"
             android:layout_width="@dimen/imgBtn_size"
             android:layout_height="@dimen/imgBtn_size"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="8dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
-            app:layout_constraintBottom_toTopOf="@+id/guideline2"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/detail_guideline1"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:src="@android:drawable/ic_menu_close_clear_cancel" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
+            android:id="@+id/detail_guideline1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -95,10 +84,9 @@
             android:singleLine="true"
             android:text="@={item.tagString}"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintTop_toTopOf="@id/detail_guideline1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline2"
             tools:text="tags" />
 
         <TextView
@@ -108,8 +96,8 @@
             android:layout_marginStart="8dp"
             android:text="@string/item_preceding"
             app:layout_constraintTop_toBottomOf="@id/tagTxt"
-            app:layout_constraintBottom_toTopOf="@id/succeedingLabel"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/succeedingLabel"
             tools:text="after" />
 
         <AutoCompleteTextView
@@ -119,21 +107,19 @@
             android:hint="@string/enter_preceding_item"
             android:inputType="textAutoComplete"
             android:completionThreshold="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/precedingLabel"
-            app:layout_constraintTop_toBottomOf="@id/tagTxt" />
+            app:layout_constraintTop_toBottomOf="@id/tagTxt"
+            app:layout_constraintStart_toEndOf="@id/precedingLabel"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/succeedingLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="8dp"
             android:text="@string/item_preceding"
             app:layout_constraintTop_toBottomOf="@id/precedingLabel"
-            app:layout_constraintBottom_toTopOf="@+id/guideline3"
+            app:layout_constraintBottom_toTopOf="@id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
-
             tools:text="before" />
 
         <AutoCompleteTextView
@@ -143,10 +129,10 @@
             android:hint="@string/enter_succeeding_item"
             android:inputType="textAutoComplete"
             android:completionThreshold="2"
-            app:layout_constraintBottom_toTopOf="@+id/guideline3"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/precedingTxt"
             app:layout_constraintStart_toEndOf="@+id/succeedingLabel"
-            app:layout_constraintTop_toBottomOf="@+id/precedingTxt" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/guideline3" />
 
         <TextView
             android:id="@+id/startDateTxt"
