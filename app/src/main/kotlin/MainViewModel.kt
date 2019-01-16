@@ -13,6 +13,8 @@ class MainViewModel : ViewModel() {
     val itemList = MutableLiveData<MutableList<FilteredToDoItem>>()
     lateinit var tagList: MutableList<String>
     private var isOnlyFirstItemShown: Boolean = true
+
+
     var mReward: Int = 0
 
     fun initItems(_context: Context) {
