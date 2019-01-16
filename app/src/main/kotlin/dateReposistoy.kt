@@ -70,17 +70,6 @@ fun isBefore(itemDate: String, baseDateStr: String): Boolean {
     return false
 }
 
-fun fetchRecentDate(context: Context): MutableList<String> {
-    val resultList = MutableList(6) { "" }
-    val filterIntList = context.resources.getIntArray(R.array.dateFilter_array)
-    // 当日､翌日､2日後､3日後,7日後､30日後
-    for (i in filterIntList.indices) {
-        val cal = Calendar.getInstance(Locale.JAPAN)
-        cal.add(Calendar.DATE, filterIntList[i])
-        resultList[i] = "${cal.get(Calendar.YEAR)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.DAY_OF_MONTH)}"
-    }
-    return resultList
-}
 
 fun getToday(): String {
     val cal = Calendar.getInstance(Locale.JAPAN)

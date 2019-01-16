@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
             val clientV2 = getDropBoxClient(token)
             if (canClientLinkedName(clientV2)) {
                 val sb = StringBuilder(resources.getText(R.string.inLoginStatus))
-                statusOfDropBox.text = sb.toString()
+                status_login.text = sb.toString()
                 val action = this.intent.getIntExtra("action", 0)
                 accessToDropBox(action, clientV2)
             } else throw IllegalStateException("Token was not linked to Account.")
@@ -46,7 +46,8 @@ class LoginActivity : AppCompatActivity() {
             saveStringToPreference(DROPBOX_TOKEN, accessToken, this@LoginActivity.applicationContext)
 
             val currentUid = Auth.getUid()
-            user_id_label.text = currentUid
+            status_login.text = "$currentUid　がログインしています｡"
+            Log.i("test","$currentUid was logged in")
             val storedUid = loadStringFromPreference("user-id", this@LoginActivity.applicationContext)
             storedUid?.let {
                 if (currentUid != storedUid) saveStringToPreference("user-id", currentUid, this@LoginActivity.applicationContext)
@@ -68,13 +69,13 @@ class LoginActivity : AppCompatActivity() {
     private fun accessToDropBox(request: Int, client: DbxClientV2): Boolean {
         when (request) {
             REQUEST_CODE_DROPBOX_UPLOAD -> {
-                statusOfDropBox.text = resources.getText(R.string.startUpload)
+                status_login.text = resources.getText(R.string.startUpload)
                 try {
                     val fis = openFileInput(TODO_TEXT_FILE)
                     val delegate = object : UploadTask.TaskDelegate {
                         override fun onSuccessUpLoad() {
                             Log.i("test", "upload succeeded.")
-                            statusOfDropBox.text = "$TODO_TEXT_FILE was successfully uploaded"
+                            status_login.text = "$TODO_TEXT_FILE was successfully uploaded"
                         }
 
                         override fun onError(error: Exception?) {
@@ -96,11 +97,11 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             REQUEST_CODE_DROPBOX_DOWNLOAD -> {
-                statusOfDropBox.text = resources.getText(R.string.startDownload)
+                status_login.text = resources.getText(R.string.startDownload)
                 val downDelegate = object : DownloadTask.TaskDelegate {
                     override fun onSuccessUpLoad() {
                         Log.i("test", "upload succeeded.")
-                        statusOfDropBox.text = "$TODO_TEXT_FILE was successfully downloaded"
+                        status_login.text = "$TODO_TEXT_FILE was successfully downloaded"
                     }
 
                     override fun onError(error: Exception?) {
