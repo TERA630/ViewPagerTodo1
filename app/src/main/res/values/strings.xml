@@ -29,8 +29,10 @@
     <string name="uploadItems_ToDropBox">アイテムをDropBoxにアップロード</string>
     <string name="downloadItems_FromDropBox">アイテムをDropBoxからダウンロード</string>
     <string name="deleteFile">保存したアイテムのクリア</string>
+    <string name="press_login">ボタンを押すとDropboxログイン画面に遷移します</string>>
     <string name="setting_visible_item">表示アイテムの設定</string>
     <string name="status_login">%1$sでログイン中</string>
+    <string name="status_not_login">未ログイン</string>
     <string name="status_complete_download">%1$sのダウンロード完了</string>
     <string name="status_complete_upload">%1$sアップロード完了</string>
     <string name="status_start_download">ダウンロードを始めます</string>
