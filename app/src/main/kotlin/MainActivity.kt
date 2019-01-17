@@ -97,15 +97,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.save_to_text -> {
-                model.saveRawItemList(this@MainActivity.applicationContext)
-            }
-            R.id.load_from_text -> {
-                model.loadItem(this@MainActivity.applicationContext)
-            }
-            R.id.load_from_sdcard -> {
-                startStorageAccess(REQUEST_CODE_SD_READ)
-            }
+            R.id.make_defaultData ->
+                Log.i("test", "default item")
+            //
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
@@ -144,13 +138,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.action_uploadItems_ToDropBox -> {
                 val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
-                intent.putExtra("action", REQUEST_CODE_DROPBOX_UPLOAD)
                 startActivityForResult(intent, REQUEST_CODE_DROPBOX_UPLOAD)
                 return true
             }
             R.id.action_downloadItems_FromDropBox -> {
                 val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
-                intent.putExtra("action", REQUEST_CODE_DROPBOX_DOWNLOAD)
                 startActivityForResult(intent, REQUEST_CODE_DROPBOX_DOWNLOAD)
                 return true
             }

@@ -13,6 +13,7 @@ import java.io.IOException
 class UserAccountTask(private val mClientV2: DbxClientV2,
                       private val delegate: TaskDelegate) : AsyncTask<Void, Void, FullAccount?>() {
 
+
     interface TaskDelegate {
         fun onAccountReceived(account: FullAccount)
         fun onError(error: Exception?)

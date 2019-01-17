@@ -1,12 +1,12 @@
 <resources>
     <string name="action_settings">Settings</string>
     <string name="achievement">達成数:</string>
-    <string name="app_name">blank</string>
     <string name="apply">決定</string>
     <string name="cancel">元に戻す</string>
     <string name="newItem">新しいアイテム</string>
     <string name="filterCondition">表示条件</string>
     <string name="undefinedDate">----/--/--</string>
+    <string name="date_format">%1$d/%2$d/%3$d</string>
 
     <string name="enterNewItem">新しいアイテムを入力</string>
     <string name="enter_Tag">タグを入力して下さい</string>
@@ -25,14 +25,20 @@
     <string name="saveItem_ToSdCard">アイテムをSDカードに書き込み</string>
     <string name="loadItem">アイテムの読込み</string>
     <string name="loadItem_FromSdCard">アイテムをSDカードから読込み</string>
-    <string name="inLoginStatus">でログイン中</string>
+
     <string name="uploadItems_ToDropBox">アイテムをDropBoxにアップロード</string>
     <string name="downloadItems_FromDropBox">アイテムをDropBoxからダウンロード</string>
     <string name="deleteFile">保存したアイテムのクリア</string>
+    <string name="press_login">ボタンを押すとDropboxログイン画面に遷移します</string>>
     <string name="setting_visible_item">表示アイテムの設定</string>
-    <string name="startUpload">アップロードを始めます</string>
-    <string name="startDownload">ダウンロードを始めます</string>
+    <string name="status_login">%1$sでログイン中</string>
+    <string name="status_not_login">未ログイン</string>
+    <string name="status_complete_download">%1$sのダウンロード完了</string>
+    <string name="status_complete_upload">%1$sアップロード完了</string>
+    <string name="status_start_download">ダウンロードを始めます</string>
+    <string name="status_start_upload">アップロードを始めます</string>
     <string name="tilda">～</string>
+
     <string name="DROPBOX_APP_KEY">obxt63d1h0c2d3e</string>
     <string name="DROPBOX_APP_SECRET">dktusfcbh5rxd9r</string>
     <string name="sign_in">Sign in to DropBox</string>

@@ -16,7 +16,6 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/main_tab"
-        style="@style/AppTheme"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_gravity="bottom"
