@@ -136,14 +136,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 deleteTextFile(this@MainActivity.applicationContext)
                 return true
             }
-            R.id.action_uploadItems_ToDropBox -> {
+            R.id.action_start_DropBox -> {
                 val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_DROPBOX_UPLOAD)
-                return true
-            }
-            R.id.action_downloadItems_FromDropBox -> {
-                val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
-                startActivityForResult(intent, REQUEST_CODE_DROPBOX_DOWNLOAD)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

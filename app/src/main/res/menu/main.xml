@@ -22,11 +22,8 @@
         android:id="@+id/action_saveItem_ToSdCard"
         android:title="@string/saveItem_ToSdCard" />
     <item
-        android:id="@+id/action_uploadItems_ToDropBox"
-        android:title="@string/uploadItems_ToDropBox" />
-    <item
-        android:id="@+id/action_downloadItems_FromDropBox"
-        android:title="@string/downloadItems_FromDropBox" />
+        android:id="@+id/action_start_DropBox"
+        android:title="@string/menu_start_dropbox" />
     <item
         android:id="@+id/action_deleteFile"
         android:title="@string/deleteFile" />
