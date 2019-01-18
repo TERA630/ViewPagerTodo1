@@ -23,6 +23,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         val token = loadStringFromPreference(DROPBOX_TOKEN, this@LoginActivity.applicationContext)
         val signInButton = sign_in_button
+        comeBack_MainActivity.setOnClickListener {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        }
         if (token == null) {
             // tokenが未取得であれば、AuthActivityへ遷移する。
             signInButton.isEnabled = true
@@ -47,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
             val currentUid = Auth.getUid()
             status_login.text = getString(R.string.status_login, currentUid)
             Log.i("test", "$currentUid was logged in")
-            updateIdStored(currentUid)
+            storeIfIdUpdated(currentUid)
             }
         }
     private fun validateAndBeginDropBox(token: String, nameOfClient: String?, action: Int) {
@@ -57,8 +61,6 @@ class LoginActivity : AppCompatActivity() {
         } else {
             status_login.text = getString(R.string.status_login, nameOfClient)
             accessToDropBox(action, clientV2)
-            setResult(Activity.RESULT_OK)
-            finish()
         }
     }
     private fun accessToDropBox(request: Int, client: DbxClientV2): Boolean {
@@ -66,12 +68,6 @@ class LoginActivity : AppCompatActivity() {
             REQUEST_CODE_DROPBOX_UPLOAD -> {
                 try {
                     uploadTextFile(client)
-
-                    sign_in_button.text = "元のアクティビティに戻ります"
-                    sign_in_button.setOnClickListener {
-                        setResult(Activity.RESULT_OK)
-                        finish()
-                    }
                 } catch (e: Exception) {
                     Log.w("test", "fail to Upload.")
                     setResult(Activity.RESULT_CANCELED)
@@ -83,9 +79,8 @@ class LoginActivity : AppCompatActivity() {
                 val downDelegate = object : DownloadTask.TaskDelegate {
                     override fun onSuccessUpLoad() {
                         Log.i("test", "upload succeeded.")
-                        status_login.text = getString(R.string.status_complete_download)
+                        status_login.text = getString(R.string.status_complete_download, TODO_TEXT_FILE)
                     }
-
                     override fun onError(error: Exception?) {
                         Log.w("test", "${error?.message} occur at accessToDropBox#DOWNLOAD")
                         throw IOException()
@@ -138,17 +133,21 @@ class LoginActivity : AppCompatActivity() {
         status_connection.text = getString(R.string.status_start_upload)
         try {
             val fis = openFileInput(TODO_TEXT_FILE)
-            GlobalScope.launch {
+            val job = GlobalScope.launch {
                 _client.files().uploadBuilder("/$TODO_TEXT_FILE")
                         .withMode(WriteMode.OVERWRITE)
                         .uploadAndFinish(fis)
                 fis.close()
-                status_connection.text = getString(R.string.status_complete_upload)
             }
+            GlobalScope.launch(Dispatchers.Main) {
+                job.join()
+                status_connection.text = getString(R.string.status_complete_upload, TODO_TEXT_FILE)
+            }
+
         } catch (e: NoSuchFileException) {
             status_connection.text = getString(R.string.status_file_not_found, TODO_TEXT_FILE)
         } catch (e: Exception) {
-            status_connection.text = getString(R.string.status_file_not_found, e.message)
+            status_connection.text = getString(R.string.status_error_on_upload, e.message)
         }
     }
 
@@ -157,7 +156,8 @@ class LoginActivity : AppCompatActivity() {
         setResult(Activity.RESULT_CANCELED)
         finish()
     }
-    private fun updateIdStored(current: String?) {
+
+    private fun storeIfIdUpdated(current: String?) {
         val storedUid = loadStringFromPreference("user-id", this@LoginActivity.applicationContext)
         if (current == null || storedUid == null) return
         else {

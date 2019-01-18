@@ -18,17 +18,15 @@ data class ToDoItem constructor(
         var hasStartLine: Boolean = true,
         var startLine: String = "----/--/--",
         var hasDeadLine: Boolean = false,
-        var deadLine: String = "----/--/--"
+        var deadLine: String = "----/--/--",
+        var memo: String = EMPTY_ITEM
         )
 class FilteredToDoItem constructor(
         var unFilter: Int = 0,
         var item: ToDoItem = ToDoItem()
 )
 
-
-
-
-fun buildPeriodTextFromItem(item: ToDoItem): String {
+fun buildPeriodText(item: ToDoItem): String {
     val stringBuilder = if (item.hasStartLine) {
         StringBuilder(item.startLine + "～")
     } else {
@@ -85,10 +83,14 @@ fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     if ((toDoItem.succeeding != EMPTY_ITEM) and (toDoItem.succeeding != "")) {
         sb.append("succeeding:", toDoItem.succeeding, ",")
     }
-    val periodText = buildPeriodTextFromItem(toDoItem)
+
+    val periodText = buildPeriodText(toDoItem)
     sb.append(periodText)
     sb.append(",reward:", toDoItem.reward)
-    if((toDoItem.isDone)) sb.append(",isDone,")
+
+    if ((toDoItem.isDone)) sb.append(",isDone")
+    if ((toDoItem.memo) != EMPTY_ITEM) sb.append(",memo:", toDoItem.memo)
+
     return sb.toString()
 }
 fun makeListToCSV(_list: List<String>): String {
@@ -114,6 +116,9 @@ fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
     precedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.preceding = data }
     val succeedingMatch = Regex("(,succeeding:)(.+?)([,.*\n])").find(_text) // preceding は　succeeding: .... の形式
     succeedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.succeeding = data }
+    val memoMatch = Regex("(,memo:)(.+?)").find(_text)
+    memoMatch?.destructured?.let { (_, data) -> _toDoItem.memo = data }
+
     val isDoneMatch = Regex(",isDone,").find(_text)
     isDoneMatch?.let { _toDoItem.isDone = true}
 

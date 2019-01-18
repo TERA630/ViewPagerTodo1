@@ -20,9 +20,7 @@
             android:id="@+id/doneChkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="8dp"
             android:checked="@={item.done}"
             android:nextFocusDown="@id/titleTxt"
             android:nextFocusForward="@id/titleTxt"
@@ -172,7 +170,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="76dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:numStars="6"
             android:stepSize="1"
@@ -210,7 +208,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="378dp" />
+            app:layout_constraintGuide_begin="380dp" />
+
+        <EditText
+            android:id="@+id/memo"
+            android:layout_width="360dp"
+            android:layout_height="280dp"
+            android:layout_margin="8dp"
+            android:contentDescription="覚え書き"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:singleLine="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rewardRate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

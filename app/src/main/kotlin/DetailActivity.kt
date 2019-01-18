@@ -45,9 +45,9 @@ class DetailActivity : AppCompatActivity() {
             startMainActivity(itemToEdit.tagString)
         }
         binding.cancelBtn.setOnClickListener {
+            // 編集を破棄して戻る
             startMainActivity(tagSting)
         }
-
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top)
     }
 

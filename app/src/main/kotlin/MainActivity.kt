@@ -98,8 +98,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.make_defaultData ->
-                Log.i("test", "default item")
-            //
+                makeDefaultList(this.applicationContext)
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true

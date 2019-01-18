@@ -44,7 +44,7 @@ class MainRecyclerAdaptor(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val ivh = holder as ItemViewHolder
         ivh.mBinding.item = mList[position].item
-        ivh.mBinding.periodViewer.text = buildPeriodTextFromItem(mList[position].item)
+        ivh.mBinding.periodViewer.text = buildPeriodText(mList[position].item)
         if(mList[position].item.succeeding == EMPTY_ITEM) ivh.mBinding.openChildToggle.visibility = View.GONE
 
         ivh.mBinding.itemTitle.setOnCheckedChangeListener { _, boolean ->

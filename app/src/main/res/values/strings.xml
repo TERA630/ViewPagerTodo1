@@ -13,6 +13,7 @@
     <string name="enter_Tag">タグを入力して下さい</string>
     <string name="enter_preceding_item">先行するアイテムを入力ください</string>
     <string name="enter_succeeding_item">この次のアイテムを入力ください</string>
+    <string name="action_movetoMainActivity">リストへ戻ります｡</string>
     <string name="getPoint">完了クリアし達成確認</string>
     <string name="item_preceding">先行アイテム</string>
     <string name="item_succeeding">後続アイテム</string>
