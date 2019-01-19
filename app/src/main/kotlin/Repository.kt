@@ -19,7 +19,8 @@ data class ToDoItem constructor(
         var startLine: String = "----/--/--",
         var hasDeadLine: Boolean = false,
         var deadLine: String = "----/--/--",
-        var memo: String = EMPTY_ITEM
+        var memo: String = EMPTY_ITEM,
+        var upDatetime: String = "1970/01/01/00:00:00"
         )
 class FilteredToDoItem constructor(
         var unFilter: Int = 0,
@@ -70,7 +71,7 @@ fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
     val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
     val defaultItemTag = res.getStringArray(R.array.default_todoItem_tag)
     val toDoList = List(defaultItemTitle.size - 1) { index ->
-        ToDoItem(title = defaultItemTitle[index], tagString = defaultItemTag[index])
+        ToDoItem(title = defaultItemTitle[index], tagString = defaultItemTag[index], hasStartLine = true, startLine = getToday(), upDatetime = getCurrentTime())
     }
     return toDoList.toMutableList()
 }

@@ -7,12 +7,8 @@
     tools:context=".LoginActivity">
 
     <Button
+        style="@style/nonSpecific_text28"
         android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
         android:text="@string/sign_in"
         app:layout_constraintBottom_toBottomOf="@id/login_guideline1"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,10 +16,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        style="@style/nonSpecific_text18"
         android:id="@+id/status_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:text="@string/press_login"
         app:layout_constraintBottom_toTopOf="@+id/login_guideline1"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,29 +26,23 @@
         tools:Text="message about DROPBOX activity" />
 
     <androidx.constraintlayout.widget.Guideline
+        style="@style/nonspecific_row"
         android:id="@+id/login_guideline1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
         app:layout_constraintGuide_begin="230dp" />
 
     <Button
+        style="@style/nonSpecific_text18"
         android:id="@+id/upload_dropbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:text="@string/uploadItems_ToDropBox"
         android:enabled="false"
         app:layout_constraintBottom_toTopOf="@id/download_dropbox"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/login_guideline1" />
 
     <Button
+        style="@style/nonSpecific_text18"
         android:id="@+id/download_dropbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:enabled="false"
         android:text="@string/downloadItems_FromDropBox"
         app:layout_constraintBottom_toTopOf="@id/login_guideline2"
@@ -63,10 +51,8 @@
         app:layout_constraintTop_toBottomOf="@id/upload_dropbox" />
 
     <TextView
+        style="@style/nonSpecific_text18"
         android:id="@+id/status_connection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:text="@string/status_not_login"
         app:layout_constraintBottom_toBottomOf="@id/login_guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,18 +60,13 @@
         app:layout_constraintTop_toBottomOf="@id/download_dropbox" />
 
     <androidx.constraintlayout.widget.Guideline
+        style="@style/nonspecific_row"
         android:id="@+id/login_guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
         app:layout_constraintGuide_begin="460dp" />
 
     <Button
+        style="@style/nonSpecific_text18"
         android:id="@+id/comeBack_MainActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/action_movetoMainActivity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

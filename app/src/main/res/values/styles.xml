@@ -12,4 +12,38 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="nonSpecific_text28">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">28dp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="nonSpecific_text24">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="nonSpecific_text18">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:layout_margin">18dp</item>
+    </style>
+
+    <style name="nonSpecific_text16">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:layout_margin">18dp</item>
+    </style>
+
+    <style name="nonspecific_row">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
 </resources>

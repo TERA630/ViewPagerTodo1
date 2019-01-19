@@ -12,9 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 const val DROPBOX_TOKEN = "dropbox_access_token"
+
+// TODO クラウド上のファイルの確認
+//　TODO　ストレージ上のファイルの確認
+//　TODO ネットにつながっていないときどする？
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -65,36 +69,8 @@ class LoginActivity : AppCompatActivity() {
     }
     private fun accessToDropBox(request: Int, client: DbxClientV2): Boolean {
         when (request) {
-            REQUEST_CODE_DROPBOX_UPLOAD -> {
-                try {
-                    uploadTextFile(client)
-                } catch (e: Exception) {
-                    Log.w("test", "fail to Upload.")
-                    setResult(Activity.RESULT_CANCELED)
-                    finish()
-                }
-            }
-            REQUEST_CODE_DROPBOX_DOWNLOAD -> {
-                status_login.text = getString(R.string.status_start_download)
-                val downDelegate = object : DownloadTask.TaskDelegate {
-                    override fun onSuccessUpLoad() {
-                        Log.i("test", "upload succeeded.")
-                        status_login.text = getString(R.string.status_complete_download, TODO_TEXT_FILE)
-                    }
-                    override fun onError(error: Exception?) {
-                        Log.w("test", "${error?.message} occur at accessToDropBox#DOWNLOAD")
-                        throw IOException()
-                    }
-                }
-                val task = DownloadTask(client, downDelegate)
-                task.execute()
-                sign_in_button.text = "元のアクティビティに戻ります"
-                sign_in_button.setOnClickListener {
-                    setResult(Activity.RESULT_OK)
-                    finish()
-                }
-                return (task.error != null)
-            }
+            REQUEST_CODE_DROPBOX_UPLOAD -> uploadTextFile(client)
+            REQUEST_CODE_DROPBOX_DOWNLOAD -> downLoadTextFile(client)
             else -> return false
         }
         return false
@@ -151,6 +127,23 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun downLoadTextFile(_client: DbxClientV2) {
+        status_connection.text = getString(R.string.status_start_download)
+        try {
+            val job = GlobalScope.launch {
+                _client.files().download("/$TODO_TEXT_FILE")
+            }
+            GlobalScope.launch(Dispatchers.Main) {
+                job.join()
+                status_connection.text = getString(R.string.status_complete_download, TODO_TEXT_FILE)
+            }
+
+        } catch (e: NoSuchFileException) {
+            status_connection.text = getString(R.string.status_file_not_found, TODO_TEXT_FILE)
+        } catch (e: Exception) {
+            status_connection.text = getString(R.string.status_error_on_upload, e.message)
+        }
+    }
     private fun errorFinishActivity(message: String) {
         Log.w("test", message)
         setResult(Activity.RESULT_CANCELED)

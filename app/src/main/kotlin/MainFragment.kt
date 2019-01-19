@@ -15,6 +15,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 
+
+//　Fragementのイベント処理の責務
+//　ボタンクリックでなく､ロングタップへのイベント駆動へ組み替える
+
+
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
     private lateinit var mAdapter: MainRecyclerAdaptor

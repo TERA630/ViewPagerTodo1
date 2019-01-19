@@ -27,6 +27,7 @@
             app:layout_constraintBottom_toTopOf="@id/detail_guideline1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <EditText
             android:id="@+id/titleTxt"
             android:layout_width="@dimen/titleText_size"
@@ -36,19 +37,19 @@
             android:inputType="text"
             android:nextFocusDown="@id/tagTxt"
             android:text="@={item.title}"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/detail_guideline1"
             app:layout_constraintStart_toEndOf="@id/doneChkBox"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/enterNewItem" />
 
         <ImageButton
             android:id="@+id/applyBtn"
             android:layout_width="@dimen/imgBtn_size"
-            android:layout_height="52dp"
+            android:layout_height="48dp"
             android:layout_margin="8dp"
             android:src="@android:drawable/ic_media_play"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cancelBtn"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@android:drawable/ic_media_play" />
 
         <ImageButton
@@ -58,15 +59,13 @@
             android:layout_margin="8dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             app:layout_constraintBottom_toTopOf="@id/detail_guideline1"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@android:drawable/ic_menu_close_clear_cancel" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/detail_guideline1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            style="@style/nonspecific_row"
             app:layout_constraintGuide_begin="64dp" />
 
         <AutoCompleteTextView
@@ -82,54 +81,47 @@
             android:singleLine="true"
             android:text="@={item.tagString}"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintTop_toTopOf="@id/detail_guideline1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/detail_guideline1"
             tools:text="tags" />
 
         <TextView
             android:id="@+id/precedingLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            style="@style/nonSpecific_text16"
             android:text="@string/item_preceding"
-            app:layout_constraintTop_toBottomOf="@id/tagTxt"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/succeedingLabel"
+            app:layout_constraintTop_toBottomOf="@id/tagTxt"
             tools:text="after" />
 
         <AutoCompleteTextView
             android:id="@+id/precedingTxt"
-            android:layout_width="@dimen/titleText_size"
-            android:layout_height="wrap_content"
+            style="@style/nonSpecific_text16"
+            android:completionThreshold="1"
             android:hint="@string/enter_preceding_item"
             android:inputType="textAutoComplete"
-            android:completionThreshold="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/precedingLabel"
             app:layout_constraintTop_toBottomOf="@id/tagTxt" />
 
         <TextView
             android:id="@+id/succeedingLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            style="@style/nonSpecific_text16"
             android:text="@string/item_preceding"
-            app:layout_constraintTop_toBottomOf="@id/precedingLabel"
             app:layout_constraintBottom_toTopOf="@id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/precedingLabel"
             tools:text="before" />
 
         <AutoCompleteTextView
             android:id="@+id/succeedingTxt"
-            android:layout_width="@dimen/titleText_size"
-            android:layout_height="wrap_content"
+            style="@style/nonSpecific_text16"
+            android:completionThreshold="2"
             android:hint="@string/enter_succeeding_item"
             android:inputType="textAutoComplete"
-            android:completionThreshold="2"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
-            app:layout_constraintStart_toEndOf="@+id/succeedingLabel"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/succeedingLabel"
             app:layout_constraintTop_toBottomOf="@+id/precedingTxt" />
 
         <TextView
@@ -152,12 +144,10 @@
 
         <TextView
             android:id="@+id/deadDateTxt"
+            style="@style/nonSpecific_text24"
             android:layout_width="128dp"
-            android:layout_height="32dp"
             android:background="@{item.hasDeadLine ? @drawable/frame_elevate : @drawable/frame_depress}"
-            android:elevation="@dimen/activity_horizontal_margin"
             android:text="@={item.deadLine}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/startDateTxt"
@@ -169,34 +159,23 @@
             android:id="@+id/rewardRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_margin="8dp"
             android:numStars="6"
             android:stepSize="1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline" />
 
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="213dp" />
+            style="@style/nonspecific_row"
+            app:layout_constraintGuide_begin="228dp" />
 
         <TextView
             android:id="@+id/periodLbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
+            style="@style/nonSpecific_text24"
             android:text="@string/tilda"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toStartOf="@+id/deadDateTxt"
             app:layout_constraintStart_toEndOf="@+id/startDateTxt"
@@ -205,13 +184,12 @@
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="380dp" />
+            style="@style/nonspecific_row"
+            app:layout_constraintGuide_begin="288dp" />
 
         <EditText
             android:id="@+id/memo"
+            style="@style/nonSpecific_text18"
             android:layout_width="360dp"
             android:layout_height="280dp"
             android:layout_margin="8dp"
@@ -219,11 +197,22 @@
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine"
-            android:singleLine="true"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:singleLine="false"
+            android:text="@{item.memo}"
+            app:layout_constraintBottom_toTopOf="@id/upDateTimeLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rewardRate" />
+            app:layout_constraintTop_toBottomOf="@id/rewardRate" />
 
+        <TextView
+            android:id="@+id/upDateTimeLabel"
+            style="@style/nonSpecific_text18"
+            android:layout_marginBottom="8dp"
+            android:text="@{item.upDatetime}"
+            app:layout_constraintBottom_toBottomOf="@+id/memo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/memo"
+            tools:text="@string/undefinedDate" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

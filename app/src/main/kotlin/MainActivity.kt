@@ -38,14 +38,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         model = ViewModelProviders.of(this).get(MainViewModel::class.java)
         model.initItems(this)
-
-        val viewPager = main_viewpager
         setUpAppBarWithDrawer(this.baseContext)
-        setupViewPager(viewPager)
-        val kUtils = KeyboardUtils()
-        kUtils.hide(this)
+        setupFabAndViewPager(main_viewpager)
         // set event handlers
-        mainActivity_fab.setOnClickListener { startDetailActivity(viewPager.currentItem, INDEX_WHEN_TO_MAKE_NEW_ITEM) }
+
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
     }
 
@@ -155,13 +151,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
     }
-    private fun setupViewPager(_viewPager: ViewPager) {
+
+    private fun setupFabAndViewPager(_viewPager: ViewPager) {
         _viewPager.adapter = MainPagerAdapter(fragmentManager = supportFragmentManager, model = model)
         (main_tab as TabLayout).setupWithViewPager(_viewPager)
         val comingTag = intent.getStringExtra(KEY_TAG_STR)
-                ?: model.tagList[0] // startPageがなければTagリストの1番目から表示
+                ?: model.tagList[0] // 開始するページの指示タグがなければTagリストの1番目から表示
         val indexOfStartPage = model.tagList.indexOfFirst { it == comingTag }
         _viewPager.setCurrentItem(indexOfStartPage, true)
+        mainActivity_fab.setOnClickListener { startDetailActivity(_viewPager.currentItem, INDEX_WHEN_TO_MAKE_NEW_ITEM) }
     }
     private fun startStorageAccess(requestCode: Int) {
         val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
