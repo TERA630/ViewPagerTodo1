@@ -7,11 +7,12 @@ fun isValidAsDate(_string: String): Boolean {
     return validCheckEx.matches(_string)
 }
 
-fun isAfter(targetDateStr: String, baseDateStr: String): Boolean {
-    val dateRegEx = Regex("""([12]\d{3})/(\d|1[012])/(\d|[12][0-9]|3[01])""")
+fun isAfterByDate(targetDateStr: String, baseDateStr: String): Boolean {
+    val dateRegEx = Regex("""([12]\d{3})/(\d|1[012])/(\d|[12][0-9]|3[01]).*""")
     if (!((dateRegEx.matches(targetDateStr)) && (dateRegEx.matches(baseDateStr)))) {
         throw Exception("your $targetDateStr or $baseDateStr illegal dateString")
     }
+
     val matchingTargetDate = dateRegEx.find(targetDateStr)
     val (targetYear, targetMonth, targetDay) = matchingTargetDate!!.destructured
     val matchingBaseDate = dateRegEx.find(baseDateStr)
@@ -25,8 +26,38 @@ fun isAfter(targetDateStr: String, baseDateStr: String): Boolean {
                 (targetMonth < baseMonth) -> return false
                 (targetMonth == baseMonth) -> {
                     when {
-                        (targetDay >= baseDay) -> return true
+                        (targetDay > baseDay) -> return true
+                        (targetDay == baseDay) -> return isAfterByClock(targetDateStr, baseDateStr)
                         (targetDay < baseDay) -> return false
+                    }
+                }
+            }
+        }
+    }
+    return false
+}
+
+fun isAfterByClock(targetTime: String, baseTime: String): Boolean {
+
+    val timeRegEx = Regex("""([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])""")
+    val targetTimeMatch = timeRegEx.find(targetTime)
+    val (targetHour, targetMinute, targeSecond) = targetTimeMatch?.destructured
+            ?: throw IllegalStateException("input was illegal at isAfter")
+
+    val baseTimeMatch = timeRegEx.find(targetTime)
+    val (baseHour, baseMinute, baseSecond) = baseTimeMatch!!.destructured
+
+    when {
+        (targetHour > baseHour) -> return true  // ターゲット時刻(前の引数)が基準時間より後
+        (targetHour < baseHour) -> return false // ターゲット時間(前の引数)が基準時間より前
+        (targetHour == baseHour) -> {
+            when {
+                (targetMinute > baseMinute) -> return true
+                (targetMinute < baseMinute) -> return false
+                (targetMinute == baseMinute) -> {
+                    when {
+                        (targeSecond > baseSecond) -> return true
+                        (targeSecond <= baseSecond) -> return false
                     }
                 }
             }

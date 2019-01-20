@@ -18,6 +18,8 @@
     <string name="item_preceding">先行アイテム</string>
     <string name="item_succeeding">後続アイテム</string>
     <string name="menu_start_dropbox">アイテムをDROPBOXで共有</string>
+    <string name="merge">マージ</string>
+    <string name="overwrite">上書き</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -42,8 +44,10 @@
     <string name="status_complete_upload">%1$sアップロード完了</string>
     <string name="status_start_download">ダウンロードを始めます</string>
     <string name="status_start_upload">アップロードを始めます</string>
+    <string name="status_start_merge">マージを始めます</string>
     <string name="status_file_not_found">ファイル%1$sが見つかりません。</string>
     <string name="status_error_on_upload">アップロード時に%1$sが発生しました。</string>
+    <string name="status_existOrNot">クラウド上にファイルが存在するかどうか確かめています</string>
     <string name="tilda">～</string>
 
     <string name="DROPBOX_APP_KEY">obxt63d1h0c2d3e</string>

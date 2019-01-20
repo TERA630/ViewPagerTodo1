@@ -100,6 +100,29 @@ fun makeListToCSV(_list: List<String>): String {
     return sb.toString()
 }
 
+fun mergeItems(hereItems: MutableList<ToDoItem>, thereItems: MutableList<ToDoItem>) {
+    var resultItems = MutableList<ToDoItem>(0) { ToDoItem() }
+
+    for (i in thereItems.indices) {
+        var itemHereDuplicate = hereItems.find { it.title == thereItems[i].title }
+        if (itemHereDuplicate == null) {
+            // 一致するタイトルがなかった場合
+            resultItems.add(thereItems[i].copy()) // こちらのアイテムを最終結果に追加
+        } else {
+            val item = returnNewerItem(thereItems[i], itemHereDuplicate)
+            resultItems.add(item)
+        }
+    }
+
+}
+
+
+fun returnNewerItem(item1: ToDoItem, item2: ToDoItem): ToDoItem {
+
+    return if (isAfterByDate(item1.upDatetime, item2.upDatetime)) item1
+    else item2
+}
+
 fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
     val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
     preferenceEditor.putInt(_key, _int)

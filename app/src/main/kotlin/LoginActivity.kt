@@ -93,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun enableDropBoxConnection(displayName: String, token: String) {
+    private fun enableDropBoxConnection(displayName: String, token: String) {
         GlobalScope.launch(Dispatchers.Main) {
             status_login.text = getString(R.string.status_login, displayName)
             status_connection.text = getString(R.string.status_canConnect)
@@ -103,7 +103,6 @@ class LoginActivity : AppCompatActivity() {
             download_dropbox.setOnClickListener { validateAndBeginDropBox(token, displayName, REQUEST_CODE_DROPBOX_DOWNLOAD) }
         }
     }
-
 
     private fun uploadTextFile(_client: DbxClientV2) {
         status_connection.text = getString(R.string.status_start_upload)
@@ -126,6 +125,44 @@ class LoginActivity : AppCompatActivity() {
             status_connection.text = getString(R.string.status_error_on_upload, e.message)
         }
     }
+
+    private fun mergeAndUploadTextFile(_client: DbxClientV2) {
+        status_connection.text = getString(R.string.status_start_merge)
+        try {
+            val hearItems = loadListFromTextFile(this@LoginActivity.applicationContext)
+
+            val job_DownLoad = GlobalScope.launch {
+                _client.files().download("/$TODO_TEXT_FILE")
+            }
+            GlobalScope.launch(Dispatchers.Main) {
+                job_DownLoad.join()
+                status_connection.text = getString(R.string.status_complete_download, TODO_TEXT_FILE)
+                val thereItems = loadListFromTextFile() // クラウド上のアイテム
+            }
+
+
+            val fis = openFileInput(TODO_TEXT_FILE)
+            val job = GlobalScope.launch {
+                _client.files().uploadBuilder("/$TODO_TEXT_FILE")
+                        .withMode(WriteMode.OVERWRITE)
+                        .uploadAndFinish(fis)
+                fis.close()
+            }
+            GlobalScope.launch(Dispatchers.Main) {
+                job.join()
+                status_connection.text = getString(R.string.status_complete_upload, TODO_TEXT_FILE)
+            }
+
+
+        } catch (e: NoSuchFileException) {
+            status_connection.text = getString(R.string.status_file_not_found, TODO_TEXT_FILE)
+        } catch (e: Exception) {
+            status_connection.text = getString(R.string.status_error_on_upload, e.message)
+        }
+
+    }
+
+
 
     private fun downLoadTextFile(_client: DbxClientV2) {
         status_connection.text = getString(R.string.status_start_download)
