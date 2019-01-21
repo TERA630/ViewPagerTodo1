@@ -6,7 +6,6 @@ const val REWARD = "reward"
 const val EMPTY_ITEM = "empty item"
 const val TODO_TEXT_FILE = "toDoItems.txt"
 
-
 data class ToDoItem constructor(
         var title: String = "thing to do",
         var tagString: String = "home",
@@ -100,29 +99,38 @@ fun makeListToCSV(_list: List<String>): String {
     return sb.toString()
 }
 
-fun mergeItems(hereItems: MutableList<ToDoItem>, thereItems: MutableList<ToDoItem>) {
-    var resultItems = MutableList<ToDoItem>(0) { ToDoItem() }
+fun mergeItems(hereItems: MutableList<ToDoItem>, thereItems: MutableList<ToDoItem>): MutableList<ToDoItem> {
+    return if (hereItems.size >= thereItems.size) {
+        compareItems(hereItems, thereItems)
+    } else {
+        compareItems(thereItems, hereItems)
+    }
+}
 
-    for (i in thereItems.indices) {
-        var itemHereDuplicate = hereItems.find { it.title == thereItems[i].title }
-        if (itemHereDuplicate == null) {
-            // 一致するタイトルがなかった場合
-            resultItems.add(thereItems[i].copy()) // こちらのアイテムを最終結果に追加
+fun compareItems(fewerItems: MutableList<ToDoItem>, moreItems: MutableList<ToDoItem>): MutableList<ToDoItem> {
+
+    var resultItems = MutableList(0) { ToDoItem() }
+    for (i in moreItems.indices) {
+
+        val itemDuplicate = fewerItems.find { it.title == moreItems[i].title }
+        if (itemDuplicate == null) {
+            // 一致するタイトルがなかった場合moreItemを結果に追加。
+            resultItems.add(moreItems[i].copy()) // こちらのアイテムを最終結果に追加
         } else {
-            val item = returnNewerItem(thereItems[i], itemHereDuplicate)
+            // 一致するタイトルがあれば、新しい方を結果に追加
+            val item = returnNewerItem(moreItems[i], itemDuplicate)
             resultItems.add(item)
         }
     }
-
+    return resultItems
+    // タイトルが重なるアイテムが複数ある場合の動作は　　MoreItemにあり、相手になければ複数追加される。
+    // FewerItemに複数ある場合は、先に検索された方のみ追加される。
 }
 
-
 fun returnNewerItem(item1: ToDoItem, item2: ToDoItem): ToDoItem {
-
     return if (isAfterByDate(item1.upDatetime, item2.upDatetime)) item1
     else item2
 }
-
 fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
     val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
     preferenceEditor.putInt(_key, _int)

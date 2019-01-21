@@ -15,10 +15,9 @@ import kotlinx.coroutines.launch
 
 const val DROPBOX_TOKEN = "dropbox_access_token"
 
-// TODO クラウド上のファイルの確認
+//  TODO クラウド上のファイルの確認
 //　TODO　ストレージ上のファイルの確認
 //　TODO ネットにつながっていないときどする？
-
 
 class LoginActivity : AppCompatActivity() {
 
@@ -50,12 +49,12 @@ class LoginActivity : AppCompatActivity() {
     }
     private fun startAccessDBxWithAuth() {
         val accessToken = Auth.getOAuth2Token() //generate Access Token
-        if (accessToken != null) {
+        if (accessToken != null) { // Tokenが得られていればPreferenceに保存する。
             saveStringToPreference(DROPBOX_TOKEN, accessToken, this@LoginActivity.applicationContext)
             val currentUid = Auth.getUid()
             status_login.text = getString(R.string.status_login, currentUid)
             Log.i("test", "$currentUid was logged in")
-            storeIfIdUpdated(currentUid)
+            storeIdIfUpdated(currentUid)
             }
         }
     private fun validateAndBeginDropBox(token: String, nameOfClient: String?, action: Int) {
@@ -80,7 +79,6 @@ class LoginActivity : AppCompatActivity() {
         try {
             val client = getDropBoxClient(token)
             GlobalScope.launch {
-                // 非ブロックコルーチン
                 val account = GlobalScope.async(Dispatchers.Default) {
                     client.users().currentAccount
                 }.await()
@@ -103,7 +101,6 @@ class LoginActivity : AppCompatActivity() {
             download_dropbox.setOnClickListener { validateAndBeginDropBox(token, displayName, REQUEST_CODE_DROPBOX_DOWNLOAD) }
         }
     }
-
     private fun uploadTextFile(_client: DbxClientV2) {
         status_connection.text = getString(R.string.status_start_upload)
         try {
@@ -129,30 +126,33 @@ class LoginActivity : AppCompatActivity() {
     private fun mergeAndUploadTextFile(_client: DbxClientV2) {
         status_connection.text = getString(R.string.status_start_merge)
         try {
-            val hearItems = loadListFromTextFile(this@LoginActivity.applicationContext)
-
-            val job_DownLoad = GlobalScope.launch {
+            val hereItems = loadListFromTextFile(this@LoginActivity.applicationContext)
+            //　現状のファイルをhereItemsに読み込んだ後、クラウドよりアイテムをダウンロードする。
+            val jobDownLoad = GlobalScope.launch(Dispatchers.Default) {
                 _client.files().download("/$TODO_TEXT_FILE")
             }
             GlobalScope.launch(Dispatchers.Main) {
-                job_DownLoad.join()
+                jobDownLoad.join()
                 status_connection.text = getString(R.string.status_complete_download, TODO_TEXT_FILE)
-                val thereItems = loadListFromTextFile() // クラウド上のアイテム
             }
+            val jobMergeAndUpload = GlobalScope.launch(Dispatchers.Default) {
+                jobDownLoad.join()
+                //　クラウドからダウンロードが終われば、それをThereItemに読み込んで、マージする。
+                val thereItems = loadListFromTextFile(this@LoginActivity.applicationContext) //クラウド上のアイテム
+                val mergedItems = mergeItems(hereItems, thereItems)
+                saveListToTextFile(this@LoginActivity.applicationContext, mergedItems)
 
-
-            val fis = openFileInput(TODO_TEXT_FILE)
-            val job = GlobalScope.launch {
+                val fis = openFileInput(TODO_TEXT_FILE)
                 _client.files().uploadBuilder("/$TODO_TEXT_FILE")
                         .withMode(WriteMode.OVERWRITE)
                         .uploadAndFinish(fis)
                 fis.close()
             }
+
             GlobalScope.launch(Dispatchers.Main) {
-                job.join()
+                jobMergeAndUpload.join()
                 status_connection.text = getString(R.string.status_complete_upload, TODO_TEXT_FILE)
             }
-
 
         } catch (e: NoSuchFileException) {
             status_connection.text = getString(R.string.status_file_not_found, TODO_TEXT_FILE)
@@ -161,9 +161,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
-
-
-
     private fun downLoadTextFile(_client: DbxClientV2) {
         status_connection.text = getString(R.string.status_start_download)
         try {
@@ -187,7 +184,7 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun storeIfIdUpdated(current: String?) {
+    private fun storeIdIfUpdated(current: String?) {
         val storedUid = loadStringFromPreference("user-id", this@LoginActivity.applicationContext)
         if (current == null || storedUid == null) return
         else {
