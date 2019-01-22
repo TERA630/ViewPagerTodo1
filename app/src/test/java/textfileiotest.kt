@@ -1,13 +1,19 @@
 package com.example.yoshi.viewpagertodo1
 
+import android.content.Context
+import android.util.Log
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.junit.Assert.assertThat
+import org.assertj.core.api.Assertions.*
+import java.io.BufferedWriter
+import java.io.OutputStreamWriter
+
 
 @RunWith(RobolectricTestRunner::class)
 class SerializersTest : Throwable() {
-
 
     fun getListFromContext(): MutableList<ToDoItem> {
         val mockedContext = RuntimeEnvironment.systemContext
@@ -19,8 +25,14 @@ class SerializersTest : Throwable() {
         val oneItem = loadListFromTextFile(RuntimeEnvironment.systemContext)
         val twoItem = getListFromContext()
         val result1 = mergeItems(oneItem, twoItem)
-        val result2 = oneItem.addAll(twoItem)
-        assert(false, )
+        val result2 = MutableList(oneItem.size){ index-> oneItem[index].copy()}
+        result2.addAll(twoItem)
+
+        assertThat(result1).isIn(result2)
+        saveListToFileAs("test_result1",RuntimeEnvironment.systemContext,result1)
+        saveListToFileAs("test_result2",RuntimeEnvironment.systemContext,result2)
+
+
 
     }
 
@@ -31,6 +43,22 @@ class SerializersTest : Throwable() {
             sb.append(line)
         }
         return sb.toString()
+    }
+
+    fun saveListToFileAs(_name:String,context: Context, _list: MutableList<ToDoItem>) {
+        try {
+            val fileOut = context.openFileOutput(_name, Context.MODE_PRIVATE and Context.MODE_APPEND)
+            val osw = OutputStreamWriter(fileOut, "UTF-8")
+            val bw = BufferedWriter(osw)
+            for (index in _list.indices) {
+                bw.write(makeItemToOneLineText(_list[index]))
+                bw.newLine()
+            }
+            bw.close()
+        } catch (e: Exception) {
+            Log.e("test", "${e.message} occur by ${e.cause} at saveListToFileAs")
+            e.printStackTrace()
+        }
     }
 
 }
