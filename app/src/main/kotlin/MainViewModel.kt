@@ -98,7 +98,7 @@ class MainViewModel : ViewModel() {
                 Log.e("test", "${e.message} was occur at MainViewModel#loadItemFromSdcard")
             }
         }
-    }
+    }//削除
     private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
         val wrappedList = MutableList(rawList.size) { index -> FilteredToDoItem(index, rawList[index].copy()) }
         return if (isOnlyFirstItemShown) {
