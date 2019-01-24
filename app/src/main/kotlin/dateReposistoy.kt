@@ -44,7 +44,7 @@ fun isAfterByClock(targetTime: String, baseTime: String): Boolean {
     val (targetHour, targetMinute, targeSecond) = targetTimeMatch?.destructured
             ?: throw IllegalStateException("input was illegal at isAfter")
 
-    val baseTimeMatch = timeRegEx.find(targetTime)
+    val baseTimeMatch = timeRegEx.find(baseTime)
     val (baseHour, baseMinute, baseSecond) = baseTimeMatch!!.destructured
 
     when {

@@ -6,33 +6,35 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.junit.Assert.assertThat
 import org.assertj.core.api.Assertions.*
 import java.io.BufferedWriter
 import java.io.OutputStreamWriter
 
-
 @RunWith(RobolectricTestRunner::class)
 class SerializersTest : Throwable() {
 
-    fun getListFromContext(): MutableList<ToDoItem> {
+
+    private fun getListFromContext(): MutableList<ToDoItem> {
         val mockedContext = RuntimeEnvironment.systemContext
         return makeDefaultList(mockedContext)
     }
+
+
 
     @Test
     fun mergeTest() {
         val oneItem = loadListFromTextFile(RuntimeEnvironment.systemContext)
         val twoItem = getListFromContext()
-        val result1 = mergeItems(oneItem, twoItem)
+        val result1 = mergeItem(oneItem, twoItem)
         val result2 = MutableList(oneItem.size){ index-> oneItem[index].copy()}
         result2.addAll(twoItem)
 
         assertThat(result1).isIn(result2)
-        saveListToFileAs("test_result1",RuntimeEnvironment.systemContext,result1)
-        saveListToFileAs("test_result2",RuntimeEnvironment.systemContext,result2)
+        assertThat(oneItem).isIn(result1)
+        assertThat(twoItem).isIn(result1)
 
-
+        saveListToFileAs("test_result1.txt",RuntimeEnvironment.systemContext,result1)
+        saveListToFileAs("test_result2.txt",RuntimeEnvironment.systemContext,result2)
 
     }
 

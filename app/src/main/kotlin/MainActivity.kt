@@ -25,8 +25,7 @@ const val KEY_TAG_LIST = "tagList"
 
 const val REQUEST_CODE_SD_READ = 1
 const val REQUEST_CODE_SD_WRITE = 2
-const val REQUEST_CODE_DROPBOX_UPLOAD = 3
-const val REQUEST_CODE_DROPBOX_DOWNLOAD = 4
+
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -68,10 +67,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 model.saveItemsToSdCard(this, it)}
                 return
             }
-            REQUEST_CODE_DROPBOX_UPLOAD -> {
+            REQUEST_DROPBOX_UPLOAD -> {
                 return
             }
-            REQUEST_CODE_DROPBOX_DOWNLOAD -> {
+            REQUEST_DROPBOX_DOWNLOAD -> {
                 return
                 }
             }
@@ -133,7 +132,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.action_start_DropBox -> {
                 val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
-                startActivityForResult(intent, REQUEST_CODE_DROPBOX_UPLOAD)
+                startActivityForResult(intent, REQUEST_DROPBOX_UPLOAD)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

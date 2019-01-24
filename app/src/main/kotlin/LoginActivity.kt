@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.android.Auth
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.WriteMode
@@ -12,8 +13,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.io.FileInputStream
 
 const val DROPBOX_TOKEN = "dropbox_access_token"
+const val REQUEST_DROPBOX_UPLOAD = 3
+const val REQUEST_DROPBOX_DOWNLOAD = 4
+const val REQUEST_MERGE = 5
 
 //  TODO クラウド上のファイルの確認
 //　TODO　ストレージ上のファイルの確認
@@ -53,7 +58,6 @@ class LoginActivity : AppCompatActivity() {
             saveStringToPreference(DROPBOX_TOKEN, accessToken, this@LoginActivity.applicationContext)
             val currentUid = Auth.getUid()
             status_login.text = getString(R.string.status_login, currentUid)
-            Log.i("test", "$currentUid was logged in")
             storeIdIfUpdated(currentUid)
             }
         }
@@ -68,13 +72,15 @@ class LoginActivity : AppCompatActivity() {
     }
     private fun accessToDropBox(request: Int, client: DbxClientV2): Boolean {
         when (request) {
-            REQUEST_CODE_DROPBOX_UPLOAD -> uploadTextFile(client)
-            REQUEST_CODE_DROPBOX_DOWNLOAD -> downLoadTextFile(client)
+            REQUEST_DROPBOX_UPLOAD -> {
+                if(upload_mode.checkedRadioButtonId == radioOverWrite.id) uploadTextFile(client)
+                else mergeAndUploadTextFile(client)
+            }
+            REQUEST_DROPBOX_DOWNLOAD -> downLoadTextFile(client)
             else -> return false
         }
         return false
     }
-
     private fun canClientLinkedName(token: String) {
         try {
             val client = getDropBoxClient(token)
@@ -82,7 +88,6 @@ class LoginActivity : AppCompatActivity() {
                 val account = GlobalScope.async(Dispatchers.Default) {
                     client.users().currentAccount
                 }.await()
-
                 val displayName = account.name.displayName
                 displayName?.let { enableDropBoxConnection(it, token) }
             }
@@ -90,15 +95,14 @@ class LoginActivity : AppCompatActivity() {
             errorFinishActivity("client could not linked User name")
         }
     }
-
     private fun enableDropBoxConnection(displayName: String, token: String) {
         GlobalScope.launch(Dispatchers.Main) {
             status_login.text = getString(R.string.status_login, displayName)
             status_connection.text = getString(R.string.status_canConnect)
             upload_dropbox.isEnabled = true
-            upload_dropbox.setOnClickListener { validateAndBeginDropBox(token, displayName, REQUEST_CODE_DROPBOX_UPLOAD) }
+            upload_dropbox.setOnClickListener { validateAndBeginDropBox(token, displayName, REQUEST_DROPBOX_UPLOAD) }
             download_dropbox.isEnabled = true
-            download_dropbox.setOnClickListener { validateAndBeginDropBox(token, displayName, REQUEST_CODE_DROPBOX_DOWNLOAD) }
+            download_dropbox.setOnClickListener { validateAndBeginDropBox(token, displayName, REQUEST_DROPBOX_DOWNLOAD) }
         }
     }
     private fun uploadTextFile(_client: DbxClientV2) {
@@ -125,9 +129,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun mergeAndUploadTextFile(_client: DbxClientV2) {
         status_connection.text = getString(R.string.status_start_merge)
-        try {
+        var fileInputStream: FileInputStream? = null
+        try {    //　現状のファイルをhereItemsに読み込んだ後、クラウドよりアイテムをダウンロードして、ThereItemとする。
             val hereItems = loadListFromTextFile(this@LoginActivity.applicationContext)
-            //　現状のファイルをhereItemsに読み込んだ後、クラウドよりアイテムをダウンロードする。
+
             val jobDownLoad = GlobalScope.launch(Dispatchers.Default) {
                 _client.files().download("/$TODO_TEXT_FILE")
             }
@@ -135,22 +140,26 @@ class LoginActivity : AppCompatActivity() {
                 jobDownLoad.join()
                 status_connection.text = getString(R.string.status_complete_download, TODO_TEXT_FILE)
             }
-            val jobMergeAndUpload = GlobalScope.launch(Dispatchers.Default) {
+            val jobMerge = GlobalScope.launch(Dispatchers.Default) {
                 jobDownLoad.join()
-                //　クラウドからダウンロードが終われば、それをThereItemに読み込んで、マージする。
                 val thereItems = loadListFromTextFile(this@LoginActivity.applicationContext) //クラウド上のアイテム
-                val mergedItems = mergeItems(hereItems, thereItems)
-                saveListToTextFile(this@LoginActivity.applicationContext, mergedItems)
-
-                val fis = openFileInput(TODO_TEXT_FILE)
-                _client.files().uploadBuilder("/$TODO_TEXT_FILE")
-                        .withMode(WriteMode.OVERWRITE)
-                        .uploadAndFinish(fis)
-                fis.close()
+                val mergedItem = mergeItem(hereItems, thereItems)
+                saveListToTextFile(this@LoginActivity.applicationContext, mergedItem)
+            }
+            GlobalScope.launch(Dispatchers.Main) {
+                jobMerge.join()
+                status_connection.text = getString(R.string.status_complete_merge, TODO_TEXT_FILE)
             }
 
+            val jobUpload= GlobalScope.launch(Dispatchers.Default){
+                jobMerge.join()
+                fileInputStream = openFileInput(TODO_TEXT_FILE)
+                _client.files().uploadBuilder("/$TODO_TEXT_FILE")
+                        .withMode(WriteMode.OVERWRITE)
+                        .uploadAndFinish(fileInputStream)
+            }
             GlobalScope.launch(Dispatchers.Main) {
-                jobMergeAndUpload.join()
+                jobUpload.join()
                 status_connection.text = getString(R.string.status_complete_upload, TODO_TEXT_FILE)
             }
 
@@ -158,6 +167,8 @@ class LoginActivity : AppCompatActivity() {
             status_connection.text = getString(R.string.status_file_not_found, TODO_TEXT_FILE)
         } catch (e: Exception) {
             status_connection.text = getString(R.string.status_error_on_upload, e.message)
+        } finally {
+            fileInputStream?.close()
         }
 
     }
@@ -182,6 +193,11 @@ class LoginActivity : AppCompatActivity() {
         Log.w("test", message)
         setResult(Activity.RESULT_CANCELED)
         finish()
+    }
+    private fun getDropBoxClient(accessToken: String): DbxClientV2 {
+        val requestConfig = DbxRequestConfig.newBuilder("Name/Version")
+                .build()
+        return DbxClientV2(requestConfig, accessToken)
     }
 
     private fun storeIdIfUpdated(current: String?) {

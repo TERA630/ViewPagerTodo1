@@ -9,9 +9,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
 import kotlinx.android.synthetic.main.row_item.view.*
-
-
-const val ROW_HEIGHT_CLOSED = 174
 // TODO DiffUtilの実装
 
 class DiffCallback(private val oldList: List<FilteredToDoItem>,
