@@ -86,43 +86,7 @@
             app:layout_constraintTop_toTopOf="@id/detail_guideline1"
             tools:text="tags" />
 
-        <TextView
-            android:id="@+id/precedingLabel"
-            style="@style/nonSpecific_text16"
-            android:text="@string/item_preceding"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tagTxt"
-            tools:text="after" />
 
-        <AutoCompleteTextView
-            android:id="@+id/precedingTxt"
-            style="@style/nonSpecific_text16"
-            android:completionThreshold="1"
-            android:hint="@string/enter_preceding_item"
-            android:inputType="textAutoComplete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/precedingLabel"
-            app:layout_constraintTop_toBottomOf="@id/tagTxt" />
-
-        <TextView
-            android:id="@+id/succeedingLabel"
-            style="@style/nonSpecific_text16"
-            android:text="@string/item_preceding"
-            app:layout_constraintBottom_toTopOf="@id/guideline3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/precedingLabel"
-            tools:text="before" />
-
-        <AutoCompleteTextView
-            android:id="@+id/succeedingTxt"
-            style="@style/nonSpecific_text16"
-            android:completionThreshold="2"
-            android:hint="@string/enter_succeeding_item"
-            android:inputType="textAutoComplete"
-            app:layout_constraintBottom_toTopOf="@+id/guideline3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/succeedingLabel"
-            app:layout_constraintTop_toBottomOf="@+id/precedingTxt" />
 
         <TextView
             android:id="@+id/startDateTxt"

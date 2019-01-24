@@ -9,8 +9,6 @@ const val TODO_TEXT_FILE = "toDoItems.txt"
 data class ToDoItem constructor(
         var title: String = "thing to do",
         var tagString: String = "home",
-        var preceding: String = EMPTY_ITEM,
-        var succeeding: String = EMPTY_ITEM,
         var reward: Int = 1,
         var isDone: Boolean = false,
         var isRoutine: Boolean = false,
@@ -77,12 +75,6 @@ fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
 fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     val sb = StringBuilder(toDoItem.title)
             .append(",", toDoItem.tagString, ",")
-    if ((toDoItem.preceding != EMPTY_ITEM) and (toDoItem.preceding != "")) {
-        sb.append("preceding:", toDoItem.preceding, ",")
-    }
-    if ((toDoItem.succeeding != EMPTY_ITEM) and (toDoItem.succeeding != "")) {
-        sb.append("succeeding:", toDoItem.succeeding, ",")
-    }
 
     val periodText = buildPeriodText(toDoItem)
     sb.append(periodText)
@@ -151,10 +143,6 @@ fun saveStringToPreference(_key: String, _string: String, _context: Context) {
 
 
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
-    val precedingMatch = Regex("(,preceding:)(.+?)([,.*\n])").find(_text) // preceding は　preceding: .... の形式
-    precedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.preceding = data }
-    val succeedingMatch = Regex("(,succeeding:)(.+?)([,.*\n])").find(_text) // preceding は　succeeding: .... の形式
-    succeedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.succeeding = data }
     val memoMatch = Regex("(,memo:)(.+?)").find(_text)
     memoMatch?.destructured?.let { (_, data) -> _toDoItem.memo = data }
 
