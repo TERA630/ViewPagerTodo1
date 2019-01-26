@@ -27,11 +27,10 @@ class FilteredToDoItem constructor(
 )
 
 fun buildPeriodText(item: ToDoItem): String {
-    val stringBuilder = if (item.hasStartLine) {
-        StringBuilder(item.startLine + "～")
-    } else {
-        StringBuilder("～")
-    }
+    val stringBuilder =
+            if (item.hasStartLine) StringBuilder(item.startLine + "～")
+            else StringBuilder("～")
+
     if (item.hasDeadLine) stringBuilder.append(item.deadLine)
     return stringBuilder.toString()
 }
@@ -53,17 +52,14 @@ fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<St
     val result = rawTagList.distinct()
     return result.toMutableList()
 }
-
 fun loadIntFromPreference(_key: String, _context: Context): Int {
     val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
     return preferences?.getInt(_key, 0) ?: 0
 }
-
 fun loadStringFromPreference(_key: String, _context: Context): String? {
     val preferences = _context.getSharedPreferences(_key, Context.MODE_PRIVATE)
     return preferences?.getString(_key, null)
 }
-
 
 fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
     val res = _context.resources
