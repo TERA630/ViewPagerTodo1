@@ -90,36 +90,13 @@ fun makeListToCSV(_list: List<String>): String {
 fun mergeItem(oneItems: MutableList<ToDoItem>, otherItems: MutableList<ToDoItem>): MutableList<ToDoItem> {
 
     val resultItem = MutableList(0) { ToDoItem() }
-    for (i in otherItems.indices) {
-
-        val itemDuplicate = oneItems.find { it.title == otherItems[i].title }
-        if (itemDuplicate == null) {
-            // 一致するタイトルがなかった場合otherItemを結果に追加。
-            resultItem.add(otherItems[i].copy()) // こちらのアイテムを最終結果に追加
-        } else {
-            // 一致するタイトルがあれば、新しい方を結果に追加し、他方を削除
-            val item = returnNewerItem(otherItems[i], itemDuplicate)
-            oneItems.removeIf{it.title == oneItems[i].title}
-            resultItem.add(item)
-        }
-    }
-    for (i in oneItems.indices) {
-
-        val itemDuplicate = otherItems.find { it.title == oneItems[i].title }
-        if (itemDuplicate == null) {
-            // 一致するタイトルがなかった場合oneItemを結果に追加。
-            resultItem.add(oneItems[i].copy()) // こちらのアイテムを最終結果に追加
-        } else {
-            // 一致するタイトルがあれば、新しい方を結果に追加
-            val item = returnNewerItem(otherItems[i], itemDuplicate)
-            resultItem.add(item)
-        }
-    }
-
+    val workItems = MutableList(oneItems.size) { index -> oneItems[index].copy() }
+    val duplicateItem = MutableList(0) { ToDoItem() }
+    workItems.addAll(otherItems)
+    workItems.sortBy { it.title }
 
     return resultItem
-    // タイトルが重なるアイテムが複数ある場合の動作は　　MoreItemにあり、相手になければ複数追加される。
-    // FewerItemに複数ある場合は、先に検索された方のみ追加される。
+
 }
 
 fun returnNewerItem(item1: ToDoItem, item2: ToDoItem): ToDoItem {
