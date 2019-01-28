@@ -29,7 +29,7 @@ class MainViewModel : ViewModel() {
         notifyRawItemListUpdated()
     }
 
-    fun notifyRawItemListUpdated() {
+    private fun notifyRawItemListUpdated() {
         itemList.value = pickItemsToShow(rawItemList)
         tagList = getTagListFromItemList(getItemList())
     }

@@ -11,14 +11,13 @@ import com.dropbox.core.v2.files.WriteMode
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.FileInputStream
 
 const val DROPBOX_TOKEN = "dropbox_access_token"
 const val REQUEST_DROPBOX_UPLOAD = 3
 const val REQUEST_DROPBOX_DOWNLOAD = 4
-const val REQUEST_MERGE = 5
 
 //  TODO クラウド上のファイルの確認
 //　TODO　ストレージ上のファイルの確認
@@ -85,9 +84,9 @@ class LoginActivity : AppCompatActivity() {
         try {
             val client = getDropBoxClient(token)
             GlobalScope.launch {
-                val account = GlobalScope.async(Dispatchers.Default) {
+                val account = withContext(Dispatchers.Default) {
                     client.users().currentAccount
-                }.await()
+                }
                 val displayName = account.name.displayName
                 displayName?.let { enableDropBoxConnection(it, token) }
             }

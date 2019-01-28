@@ -30,7 +30,6 @@ fun buildPeriodText(item: ToDoItem): String {
     val stringBuilder =
             if (item.hasStartLine) StringBuilder(item.startLine + "～")
             else StringBuilder("～")
-
     if (item.hasDeadLine) stringBuilder.append(item.deadLine)
     return stringBuilder.toString()
 }
@@ -98,36 +97,35 @@ fun makeListToCSV(_list: List<String>): String {
 fun mergeItem(oneItems: MutableList<ToDoItem>, otherItems: MutableList<ToDoItem>): MutableList<ToDoItem> {
 
     val resultItem = MutableList(0) { ToDoItem() }
-    for (i in otherItems.indices) {
+    val workItems = MutableList(oneItems.size) { index -> oneItems[index].copy() }
+    val duplicateItem: MutableMap<String, String> = emptyMap<String, String>().toMutableMap()
 
-        val itemDuplicate = oneItems.find { it.title == otherItems[i].title }
-        if (itemDuplicate == null) {
-            // 一致するタイトルがなかった場合otherItemを結果に追加。
-            resultItem.add(otherItems[i].copy()) // こちらのアイテムを最終結果に追加
-        } else {
-            // 一致するタイトルがあれば、新しい方を結果に追加し、他方を削除
-            val item = returnNewerItem(otherItems[i], itemDuplicate)
-            oneItems.removeIf{it.title == oneItems[i].title}
-            resultItem.add(item)
+    workItems.addAll(otherItems)
+    workItems.sortBy { it.title }
+    for (i in workItems.indices) {
+        var isDuplicated = false
+        for (j in i + 1..workItems.lastIndex) {
+            if (workItems[i].title == workItems[j].title) {
+                isDuplicated = true
+                if (duplicateItem.containsKey(workItems[j].title)) {
+                    duplicateItem[workItems[j].title] += ",$j:${workItems[j].upDatetime}"
+                } else {
+                    duplicateItem[workItems[j].title] = "$i:${workItems[i].upDatetime},$j:${workItems[j].upDatetime}"
+
+                }
+                //  [title] =  index:date, index: date....
+            }
+        }
+        if (isDuplicated == false) {
+            //　タイトルの重複がないものは結果に追加OK
+            resultItem.add(workItems[i])
         }
     }
-    for (i in oneItems.indices) {
-
-        val itemDuplicate = otherItems.find { it.title == oneItems[i].title }
-        if (itemDuplicate == null) {
-            // 一致するタイトルがなかった場合oneItemを結果に追加。
-            resultItem.add(oneItems[i].copy()) // こちらのアイテムを最終結果に追加
-        } else {
-            // 一致するタイトルがあれば、新しい方を結果に追加
-            val item = returnNewerItem(otherItems[i], itemDuplicate)
-            resultItem.add(item)
-        }
-    }
+    for (i in duplicateItem)
 
 
-    return resultItem
-    // タイトルが重なるアイテムが複数ある場合の動作は　　MoreItemにあり、相手になければ複数追加される。
-    // FewerItemに複数ある場合は、先に検索された方のみ追加される。
+        return resultItem
+
 }
 
 fun returnNewerItem(item1: ToDoItem, item2: ToDoItem): ToDoItem {
@@ -145,7 +143,6 @@ fun saveStringToPreference(_key: String, _string: String, _context: Context) {
     preferenceEditor.putString(_key, _string).apply()
 }
 
-
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
     val precedingMatch = Regex("(,preceding:)(.+?)([,.*\n])").find(_text) // preceding は　preceding: .... の形式
     precedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.preceding = data }
@@ -157,12 +154,12 @@ fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
     val isDoneMatch = Regex(",isDone,").find(_text)
     isDoneMatch?.let { _toDoItem.isDone = true}
 
-    val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text) // startDate は　dddd/dd/dd～　の形式
+    val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text)
     if (startDateMatch != null) {
         _toDoItem.hasStartLine = true
         _toDoItem.startLine = (Regex("[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(startDateMatch.value))?.value ?: "1970/01/01"
     }
-    val deadDateMatch = Regex(" ～[0-9]{4}/[0-9]{1,2}/[0-9]{1,2} ").find(_text) // deadDate は　～dddd/dd/dd　の形式
+    val deadDateMatch = Regex(" ～[0-9]{4}/[0-9]{1,2}/[0-9]{1,2} ").find(_text)
     if (deadDateMatch != null) {
         _toDoItem.hasDeadLine = true
         _toDoItem.deadLine = (Regex(" [0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(deadDateMatch.value))?.value ?: "1970/01/01"
