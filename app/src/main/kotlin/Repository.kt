@@ -28,7 +28,6 @@ fun buildPeriodText(item: ToDoItem): String {
     val stringBuilder =
             if (item.hasStartLine) StringBuilder(item.startLine + "～")
             else StringBuilder("～")
-
     if (item.hasDeadLine) stringBuilder.append(item.deadLine)
     return stringBuilder.toString()
 }
@@ -91,12 +90,33 @@ fun mergeItem(oneItems: MutableList<ToDoItem>, otherItems: MutableList<ToDoItem>
 
     val resultItem = MutableList(0) { ToDoItem() }
     val workItems = MutableList(oneItems.size) { index -> oneItems[index].copy() }
-    val duplicateItem = MutableList(0) { ToDoItem() }
     workItems.addAll(otherItems)
     workItems.sortBy { it.title }
 
-    return resultItem
+    val duplicateItem: MutableMap<String, String> = emptyMap<String, String>().toMutableMap()
 
+    workItems.addAll(otherItems)
+    workItems.sortBy { it.title }
+    for (i in workItems.indices) {
+        var isDuplicated = false
+        for (j in i + 1..workItems.lastIndex) {
+            if (workItems[i].title == workItems[j].title) {
+                isDuplicated = true
+                if (duplicateItem.containsKey(workItems[j].title)) {
+                    duplicateItem[workItems[j].title] += ",$j:${workItems[j].upDatetime}"
+                } else {
+                    duplicateItem[workItems[j].title] = "$i:${workItems[i].upDatetime},$j:${workItems[j].upDatetime}"
+
+                }
+                //  [title] =  index:date, index: date....
+            }
+        }
+        if (isDuplicated == false) {
+            //　タイトルの重複がないものは結果に追加OK
+            resultItem.add(workItems[i])
+        }
+    }
+    return resultItem
 }
 
 fun returnNewerItem(item1: ToDoItem, item2: ToDoItem): ToDoItem {
@@ -122,12 +142,12 @@ fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
     val isDoneMatch = Regex(",isDone,").find(_text)
     isDoneMatch?.let { _toDoItem.isDone = true}
 
-    val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text) // startDate は　dddd/dd/dd～　の形式
+    val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text)
     if (startDateMatch != null) {
         _toDoItem.hasStartLine = true
         _toDoItem.startLine = (Regex("[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(startDateMatch.value))?.value ?: "1970/01/01"
     }
-    val deadDateMatch = Regex(" ～[0-9]{4}/[0-9]{1,2}/[0-9]{1,2} ").find(_text) // deadDate は　～dddd/dd/dd　の形式
+    val deadDateMatch = Regex(" ～[0-9]{4}/[0-9]{1,2}/[0-9]{1,2} ").find(_text)
     if (deadDateMatch != null) {
         _toDoItem.hasDeadLine = true
         _toDoItem.deadLine = (Regex(" [0-9]{4}/[0-9]{1,2}/[0-9]{1,2}").find(deadDateMatch.value))?.value ?: "1970/01/01"

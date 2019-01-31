@@ -16,14 +16,14 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 
 
-//　Fragementのイベント処理の責務
+//　Fragmentのイベント処理の責務
 //　ボタンクリックでなく､ロングタップへのイベント駆動へ組み替える
 
 
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
     private lateinit var mAdapter: MainRecyclerAdaptor
-    lateinit var mTag:String
+    private lateinit var mTag: String
     private var mPosition = 0
     companion object {
         // instance生成時に（今プロジェクトではViewPagerから）Fragment作成に必要な変数をセットしておく。

@@ -19,10 +19,19 @@ class MainViewModel : ViewModel() {
     fun initItems(_context: Context) {
         loadItem(_context)
         if (rawItemList.size == 0) rawItemList = makeDefaultList(_context)
+        notifyRawItemListUpdated()
         mReward = loadIntFromPreference(REWARD, _context)
     }
 
+    fun makeItemsDefault(_context: Context) {
+        rawItemList = makeDefaultList(_context)
+        notifyRawItemListUpdated()
+    }
 
+    fun notifyRawItemListUpdated() {
+        itemList.value = pickItemsToShow(rawItemList)
+        tagList = getTagListFromItemList(getItemList())
+    }
     fun deleteItem(index: Int, _context: Context) {
         val mList = getItemList()
         rawItemList.removeAt(mList[index].unFilter)
