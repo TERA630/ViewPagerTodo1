@@ -34,13 +34,11 @@ class DetailActivity : AppCompatActivity() {
         // make view from data
         binding.item = itemToEdit
         bindTagList(binding,tagListCSV)
-        setupViewRelatedToOtherItems(binding, itemToEdit)
         setupViewRelatedToCalender(binding, itemToEdit)
-
+        binding.rewardRate.rating = itemToEdit.reward.toFloat()
         // Set Event handler
         binding.applyBtn.setOnClickListener {
             // 編集したアイテムの保存
-            updateItemsRelated(itemToEdit)
             saveListToTextFile(this@DetailActivity.applicationContext, itemList)
             startMainActivity(itemToEdit.tagString)
         }
@@ -55,24 +53,6 @@ class DetailActivity : AppCompatActivity() {
         override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
             _textView.text = _textView.context.getString(R.string.date_format, year, month + 1, dayOfMonth)
         }
-    }
-
-    private fun setupViewRelatedToOtherItems(binding: ActivityDetailBinding, itemToEdit: ToDoItem) {
-
-        binding.succeedingTxt.setText(if (itemToEdit.succeeding == EMPTY_ITEM) {
-            ""
-        } else itemToEdit.succeeding
-        )
-        binding.precedingTxt.setText(if (itemToEdit.succeeding == EMPTY_ITEM) {
-            ""
-        } else itemToEdit.preceding
-        )
-        binding.rewardRate.rating = itemToEdit.reward.toFloat()
-        val itemTitleList = List(itemList.size) { index -> itemList[index].title }
-
-        val itemTitleListAdapter = ArrayAdapter<String>(this, R.layout.autocompletet_tag, itemTitleList)
-        binding.precedingTxt.setAdapter(itemTitleListAdapter)
-        binding.succeedingTxt.setAdapter(itemTitleListAdapter)
     }
 
     private fun bindTagList(binding: ActivityDetailBinding, tagListCSV: String) {
@@ -118,18 +98,5 @@ class DetailActivity : AppCompatActivity() {
         val intent = Intent(this@DetailActivity.applicationContext, MainActivity::class.java)
         intent.putExtra(KEY_TAG_STR, _tagString) // TODO new Item , exiting Item
         startActivity(intent, null)
-    }
-    private fun updateItemsRelated(_item:ToDoItem){
-        if(_item.succeeding != EMPTY_ITEM) {
-            for (i in itemList.indices) {
-                if (itemList[i].title == _item.succeeding) itemList[i].preceding = _item.title
-            }
-        }
-        if(_item.preceding != EMPTY_ITEM) {
-            for (i in itemList.indices) {
-                if (itemList[i].title == _item.preceding) itemList[i].succeeding = _item.title
-            }
-        }
-
     }
 }

@@ -87,44 +87,6 @@
             tools:text="tags" />
 
         <TextView
-            android:id="@+id/precedingLabel"
-            style="@style/nonSpecific_text16"
-            android:text="@string/item_preceding"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tagTxt"
-            tools:text="after" />
-
-        <AutoCompleteTextView
-            android:id="@+id/precedingTxt"
-            style="@style/nonSpecific_text16"
-            android:completionThreshold="1"
-            android:hint="@string/enter_preceding_item"
-            android:inputType="textAutoComplete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/precedingLabel"
-            app:layout_constraintTop_toBottomOf="@id/tagTxt" />
-
-        <TextView
-            android:id="@+id/succeedingLabel"
-            style="@style/nonSpecific_text16"
-            android:text="@string/item_preceding"
-            app:layout_constraintBottom_toTopOf="@id/guideline3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/precedingLabel"
-            tools:text="before" />
-
-        <AutoCompleteTextView
-            android:id="@+id/succeedingTxt"
-            style="@style/nonSpecific_text16"
-            android:completionThreshold="2"
-            android:hint="@string/enter_succeeding_item"
-            android:inputType="textAutoComplete"
-            app:layout_constraintBottom_toTopOf="@+id/guideline3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/succeedingLabel"
-            app:layout_constraintTop_toBottomOf="@+id/precedingTxt" />
-
-        <TextView
             android:id="@+id/startDateTxt"
             android:layout_width="128dp"
             android:layout_height="32dp"
@@ -193,26 +155,14 @@
             android:layout_width="360dp"
             android:layout_height="280dp"
             android:layout_margin="8dp"
-            android:contentDescription="覚え書き"
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine"
             android:singleLine="false"
             android:text="@{item.memo}"
-            app:layout_constraintBottom_toTopOf="@id/upDateTimeLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rewardRate" />
 
-        <TextView
-            android:id="@+id/upDateTimeLabel"
-            style="@style/nonSpecific_text18"
-            android:layout_marginBottom="8dp"
-            android:text="@{item.upDatetime}"
-            app:layout_constraintBottom_toBottomOf="@+id/memo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/memo"
-            tools:text="@string/undefinedDate" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -9,18 +9,16 @@ const val TODO_TEXT_FILE = "toDoItems.txt"
 data class ToDoItem constructor(
         var title: String = "thing to do",
         var tagString: String = "home",
-        var preceding: String = EMPTY_ITEM,
-        var succeeding: String = EMPTY_ITEM,
         var reward: Int = 1,
         var isDone: Boolean = false,
-        var isRoutine: Boolean = false,
         var hasStartLine: Boolean = true,
         var startLine: String = "----/--/--",
         var hasDeadLine: Boolean = false,
         var deadLine: String = "----/--/--",
         var memo: String = EMPTY_ITEM,
-        var upDatetime: String = "1970/01/01/00:00:00"
+        var upDatetime: Long = 19700101000000L
         )
+
 class FilteredToDoItem constructor(
         var unFilter: Int = 0,
         var item: ToDoItem = ToDoItem()
@@ -72,13 +70,6 @@ fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
 fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     val sb = StringBuilder(toDoItem.title)
             .append(",", toDoItem.tagString, ",")
-    if ((toDoItem.preceding != EMPTY_ITEM) and (toDoItem.preceding != "")) {
-        sb.append("preceding:", toDoItem.preceding, ",")
-    }
-    if ((toDoItem.succeeding != EMPTY_ITEM) and (toDoItem.succeeding != "")) {
-        sb.append("succeeding:", toDoItem.succeeding, ",")
-    }
-
     val periodText = buildPeriodText(toDoItem)
     sb.append(periodText)
     sb.append(",reward:", toDoItem.reward)
@@ -98,39 +89,27 @@ fun mergeItem(oneItems: MutableList<ToDoItem>, otherItems: MutableList<ToDoItem>
 
     val resultItem = MutableList(0) { ToDoItem() }
     val workItems = MutableList(oneItems.size) { index -> oneItems[index].copy() }
-    val duplicateItem: MutableMap<String, String> = emptyMap<String, String>().toMutableMap()
+    val duplicateItemTitle = emptyList<ToDoItem>().toMutableList()
 
     workItems.addAll(otherItems)
     workItems.sortBy { it.title }
+
     for (i in workItems.indices) {
         var isDuplicated = false
-        for (j in i + 1..workItems.lastIndex) {
-            if (workItems[i].title == workItems[j].title) {
-                isDuplicated = true
-                if (duplicateItem.containsKey(workItems[j].title)) {
-                    duplicateItem[workItems[j].title] += ",$j:${workItems[j].upDatetime}"
-                } else {
-                    duplicateItem[workItems[j].title] = "$i:${workItems[i].upDatetime},$j:${workItems[j].upDatetime}"
-
-                }
-                //  [title] =  index:date, index: date....
-            }
-        }
-        if (isDuplicated == false) {
-            //　タイトルの重複がないものは結果に追加OK
+        val itemHasSameTitle = workItems.filter { it.title == workItems[i].title }
+        if (itemHasSameTitle.size == 1) {      //　タイトルの重複がないものは結果にそのまま追加
             resultItem.add(workItems[i])
+        } else {
+            duplicateItemTitle.add(workItems[i].copy())
+            resultItem.add(getNewestItem(duplicateItemTitle))
         }
     }
-    for (i in duplicateItem)
-
-
-        return resultItem
-
+    return resultItem
 }
 
-fun returnNewerItem(item1: ToDoItem, item2: ToDoItem): ToDoItem {
-    return if (isAfterByDate(item1.upDatetime, item2.upDatetime)) item1
-    else item2
+fun getNewestItem(_list: MutableList<ToDoItem>): ToDoItem {
+    _list.sortBy { it.upDatetime }
+    return _list[0]
 }
 fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
     val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
@@ -144,10 +123,6 @@ fun saveStringToPreference(_key: String, _string: String, _context: Context) {
 }
 
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
-    val precedingMatch = Regex("(,preceding:)(.+?)([,.*\n])").find(_text) // preceding は　preceding: .... の形式
-    precedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.preceding = data }
-    val succeedingMatch = Regex("(,succeeding:)(.+?)([,.*\n])").find(_text) // preceding は　succeeding: .... の形式
-    succeedingMatch?.destructured?.let { (_, data, _) -> _toDoItem.succeeding = data }
     val memoMatch = Regex("(,memo:)(.+?)").find(_text)
     memoMatch?.destructured?.let { (_, data) -> _toDoItem.memo = data }
 

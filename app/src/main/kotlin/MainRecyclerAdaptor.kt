@@ -1,14 +1,13 @@
 package com.example.yoshi.viewpagertodo1
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
 import kotlinx.android.synthetic.main.row_item.view.*
+
 // TODO DiffUtilの実装
 
 class DiffCallback(private val oldList: List<FilteredToDoItem>,
@@ -40,7 +39,6 @@ class MainRecyclerAdaptor(
         val ivh = holder as ItemViewHolder
         ivh.mBinding.item = mList[position].item
         ivh.mBinding.periodViewer.text = buildPeriodText(mList[position].item)
-        if(mList[position].item.succeeding == EMPTY_ITEM) ivh.mBinding.openChildToggle.visibility = View.GONE
 
         ivh.mBinding.itemTitle.setOnCheckedChangeListener { _, boolean ->
             mList[position].item.isDone = boolean
@@ -61,15 +59,10 @@ class MainRecyclerAdaptor(
             if (ivh.isItemOpened) {
                 ivh.isItemOpened = false
                 ivh.itemView.childViewer.visibility = View.GONE
-                Log.i("test", " row height is ${ivh.itemView.height}: ")
                 ivh.mBinding.rowFrame.layoutParams.height = 158
                 notifyItemChanged(position)
             } else {
                 ivh.isItemOpened = true
-                ivh.mBinding.childViewer.adapter = ArrayAdapter(ivh.itemView.context, R.layout.list_plaintext, model.findSucceedingItems(mList[position].item.title))
-                ivh.mBinding.childViewer.visibility = View.VISIBLE
-                ivh.mBinding.rowFrame.layoutParams.height = 158+  ivh.itemView.childViewer.height
-                Log.i("test", "row height is ${ivh.itemView.height} by ${ivh.itemView.childViewer.height} ")
                 notifyItemRangeChanged(position,mList.size-position)
             }
 

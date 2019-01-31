@@ -67,9 +67,15 @@ fun getToday(): String {
     return "${cal.get(Calendar.YEAR)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.DAY_OF_MONTH)}"
 }
 
-fun getCurrentTime(): String {
-    var string = getToday()
+fun getCurrentTime(): Long {
     val cal = Calendar.getInstance(Locale.JAPAN)
-    string += "/${cal.get(Calendar.HOUR)}:${cal.get(Calendar.MINUTE)}:${cal.get(Calendar.SECOND)}"
-    return string
+    val year = cal.get(Calendar.YEAR)
+    val month = cal.get(Calendar.MONTH + 1)
+    val day = cal.get(Calendar.DAY_OF_MONTH)
+    val hour = cal.get(Calendar.HOUR)
+    val minute = cal.get(Calendar.MINUTE)
+    val second = cal.get(Calendar.SECOND)
+    val time = year * 10000000000 + month * 100000000 + day * 1000000 + hour * 10000 + minute * 100 + second
+
+    return time
 }
