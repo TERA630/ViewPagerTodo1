@@ -89,19 +89,19 @@ fun mergeItem(oneItems: MutableList<ToDoItem>, otherItems: MutableList<ToDoItem>
 
     val resultItem = MutableList(0) { ToDoItem() }
     val workItems = MutableList(oneItems.size) { index -> oneItems[index].copy() }
-    val duplicateItemTitle = emptyList<ToDoItem>().toMutableList()
+    val duplicateItemTitle = emptyList<String>().toMutableList()
 
     workItems.addAll(otherItems)
-    workItems.sortBy { it.title }
 
     for (i in workItems.indices) {
-        var isDuplicated = false
+        if (duplicateItemTitle.contains(workItems[i].title)) continue
+
         val itemHasSameTitle = workItems.filter { it.title == workItems[i].title }
         if (itemHasSameTitle.size == 1) {      //　タイトルの重複がないものは結果にそのまま追加
             resultItem.add(workItems[i])
         } else {
-            duplicateItemTitle.add(workItems[i].copy())
-            resultItem.add(getNewestItem(duplicateItemTitle))
+            duplicateItemTitle.add(workItems[i].title)
+            resultItem.add(getNewestItem(itemHasSameTitle.toMutableList()))
         }
     }
     return resultItem
@@ -109,7 +109,7 @@ fun mergeItem(oneItems: MutableList<ToDoItem>, otherItems: MutableList<ToDoItem>
 
 fun getNewestItem(_list: MutableList<ToDoItem>): ToDoItem {
     _list.sortBy { it.upDatetime }
-    return _list[0]
+    return _list[_list.lastIndex]
 }
 fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
     val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
