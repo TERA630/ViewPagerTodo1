@@ -69,7 +69,7 @@ class MainViewModel : ViewModel() {
         this.itemList.value = pickItemsToShow(notYetList)
     }
     fun loadItem(_context: Context) {
-        rawItemList = loadListFromTextFile(_context)
+        rawItemList = loadListFromTextFile(_context, TODO_TEXT_FILE)
     }
     fun loadItemsFromSdCard(_context: Context, uri: Uri) {
         _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
