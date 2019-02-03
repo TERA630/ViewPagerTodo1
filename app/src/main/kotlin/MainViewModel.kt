@@ -41,6 +41,7 @@ class MainViewModel : ViewModel() {
 
     fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
             ?: mutableListOf(FilteredToDoItem(INDEX_WHEN_TO_MAKE_NEW_ITEM, ToDoItem(EMPTY_ITEM)))
+
     fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
         val filteredList = getItemList().filter { it.item.tagString.contains(filterStr) }
         return filteredList.toMutableList()
@@ -59,6 +60,7 @@ class MainViewModel : ViewModel() {
             getReward += achievedList[i].reward
         }
         this.mReward += getReward
+
         saveIntToPreference(REWARD, this.mReward, _context = _context)
         val notYetList = rawList.filterNot { it.isDone }
         rawItemList = notYetList.toMutableList()

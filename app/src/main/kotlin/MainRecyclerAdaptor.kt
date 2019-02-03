@@ -1,6 +1,5 @@
 package com.example.yoshi.viewpagertodo1
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +59,6 @@ class MainRecyclerAdaptor(
             if (ivh.isItemOpened) {
                 ivh.isItemOpened = false
                 ivh.itemView.childViewer.visibility = View.GONE
-                Log.i("test", " row height is ${ivh.itemView.height}: ")
                 ivh.mBinding.rowFrame.layoutParams.height = 158
                 notifyItemChanged(position)
             } else {

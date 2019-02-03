@@ -34,13 +34,11 @@ class DetailActivity : AppCompatActivity() {
         // make view from data
         binding.item = itemToEdit
         bindTagList(binding,tagListCSV)
-        setupViewRelatedToOtherItems(binding, itemToEdit)
         setupViewRelatedToCalender(binding, itemToEdit)
-
+        binding.rewardRate.rating = itemToEdit.reward.toFloat()
         // Set Event handler
         binding.applyBtn.setOnClickListener {
             // 編集したアイテムの保存
-
             saveListToTextFile(this@DetailActivity.applicationContext, itemList)
             startMainActivity(itemToEdit.tagString)
         }
@@ -55,13 +53,6 @@ class DetailActivity : AppCompatActivity() {
         override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
             _textView.text = _textView.context.getString(R.string.date_format, year, month + 1, dayOfMonth)
         }
-    }
-
-    private fun setupViewRelatedToOtherItems(binding: ActivityDetailBinding, itemToEdit: ToDoItem) {
-
-
-        binding.rewardRate.rating = itemToEdit.reward.toFloat()
-
     }
 
     private fun bindTagList(binding: ActivityDetailBinding, tagListCSV: String) {

@@ -11,14 +11,14 @@ data class ToDoItem constructor(
         var tagString: String = "home",
         var reward: Int = 1,
         var isDone: Boolean = false,
-        var isRoutine: Boolean = false,
         var hasStartLine: Boolean = true,
         var startLine: String = "----/--/--",
         var hasDeadLine: Boolean = false,
         var deadLine: String = "----/--/--",
         var memo: String = EMPTY_ITEM,
-        var upDatetime: String = "1970/01/01/00:00:00"
+        var upDatetime: Long = 19700101000000L
         )
+
 class FilteredToDoItem constructor(
         var unFilter: Int = 0,
         var item: ToDoItem = ToDoItem()
@@ -90,38 +90,27 @@ fun mergeItem(oneItems: MutableList<ToDoItem>, otherItems: MutableList<ToDoItem>
 
     val resultItem = MutableList(0) { ToDoItem() }
     val workItems = MutableList(oneItems.size) { index -> oneItems[index].copy() }
-    workItems.addAll(otherItems)
-    workItems.sortBy { it.title }
-
-    val duplicateItem: MutableMap<String, String> = emptyMap<String, String>().toMutableMap()
+    val duplicateItemTitle = emptyList<ToDoItem>().toMutableList()
 
     workItems.addAll(otherItems)
     workItems.sortBy { it.title }
+
     for (i in workItems.indices) {
         var isDuplicated = false
-        for (j in i + 1..workItems.lastIndex) {
-            if (workItems[i].title == workItems[j].title) {
-                isDuplicated = true
-                if (duplicateItem.containsKey(workItems[j].title)) {
-                    duplicateItem[workItems[j].title] += ",$j:${workItems[j].upDatetime}"
-                } else {
-                    duplicateItem[workItems[j].title] = "$i:${workItems[i].upDatetime},$j:${workItems[j].upDatetime}"
-
-                }
-                //  [title] =  index:date, index: date....
-            }
-        }
-        if (isDuplicated == false) {
-            //　タイトルの重複がないものは結果に追加OK
+        val itemHasSameTitle = workItems.filter { it.title == workItems[i].title }
+        if (itemHasSameTitle.size == 1) {      //　タイトルの重複がないものは結果にそのまま追加
             resultItem.add(workItems[i])
+        } else {
+            duplicateItemTitle.add(workItems[i].copy())
+            resultItem.add(getNewestItem(duplicateItemTitle))
         }
     }
     return resultItem
 }
 
-fun returnNewerItem(item1: ToDoItem, item2: ToDoItem): ToDoItem {
-    return if (isAfterByDate(item1.upDatetime, item2.upDatetime)) item1
-    else item2
+fun getNewestItem(_list: MutableList<ToDoItem>): ToDoItem {
+    _list.sortBy { it.upDatetime }
+    return _list[0]
 }
 fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
     val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
@@ -133,7 +122,6 @@ fun saveStringToPreference(_key: String, _string: String, _context: Context) {
     val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
     preferenceEditor.putString(_key, _string).apply()
 }
-
 
 fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
     val memoMatch = Regex("(,memo:)(.+?)").find(_text)
