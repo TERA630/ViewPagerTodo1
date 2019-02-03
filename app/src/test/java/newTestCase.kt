@@ -52,9 +52,8 @@ class testCase : Throwable() {
         val minute = getRandomInt(60) - 1
         val second = getRandomInt(60) - 1
 
-        val result = year * 10000000000 + month * 100000000 + day * 1000000 + hour * 10000 + minute * 100 + second
+        return year * 10000000000 + month * 100000000 + day * 1000000 + hour * 10000 + minute * 100 + second
 
-        return result
     }
 
     private fun getRandomInt(limit: Int): Int {
