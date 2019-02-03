@@ -27,7 +27,6 @@ const val REQUEST_CODE_SD_READ = 1
 const val REQUEST_CODE_SD_WRITE = 2
 
 
-
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var model: MainViewModel
 
