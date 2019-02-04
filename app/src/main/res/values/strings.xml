@@ -1,22 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="action_settings">Settings</string>
     <string name="achievement">達成数:</string>
-    <string name="apply">決定</string>
     <string name="cancel">元に戻す</string>
+    <string name="apply">適応</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
     <string name="newItem">新しいアイテム</string>
-    <string name="filterCondition">表示条件</string>
-    <string name="undefinedDate">----/--/--</string>
     <string name="date_format">%1$d/%2$d/%3$d</string>
-
     <string name="enterNewItem">新しいアイテムを入力</string>
     <string name="please_enter">%1$を入力して下さい</string>
     <string name="enter_Tag">タグを入力して下さい</string>
-    <string name="enter_preceding_item">先行するアイテムを入力ください</string>
-    <string name="enter_succeeding_item">この次のアイテムを入力ください</string>
-    <string name="action_movetoMainActivity">リストへ戻ります｡</string>
+    <string name="action_move_MainActivity">リストへ戻ります</string>
     <string name="getPoint">完了クリアし達成確認</string>
-    <string name="item_preceding">先行アイテム</string>
-    <string name="item_succeeding">後続アイテム</string>
     <string name="menu_start_dropbox">アイテムをDROPBOXで共有</string>
     <string name="merge">マージ</string>
     <string name="overwrite">上書き</string>
@@ -25,10 +22,11 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="showOnlyFirstItem">最初に行うアクションのみ表示</string>
     <string name="saveItem">現在のアイテムを保存</string>
     <string name="saveItem_ToSdCard">アイテムをSDカードに書き込み</string>
     <string name="status_canConnect">DROPBOXファイル操作が可能です。</string>
+    <string name="make_default">アイテムをテストデータにします。</string>
+    <string name="communicate">Communicate</string>
 
     <string name="loadItem">アイテムの読込み</string>
     <string name="loadItem_FromSdCard">アイテムをSDカードから読込み</string>
@@ -57,7 +55,6 @@
 
     <string-array name="default_todoItem_title">
         <item>個人番号カード市役所に提出</item>
-        <item>不動産収支まとめ続き</item>
         <item>子供部屋のコンテナ注文</item>
         <item>HDD処理</item>
         <item>第108回消化器内視鏡学会関東支部例会ハンズオン</item>
@@ -66,11 +63,10 @@
         <item>年賀状整理</item>
         <item>サドルバック</item>
         <item>幅13cmのちりとり</item>
-        <item>ロングモニターアーム</item>
     </string-array>
+
     <string-array name="default_todoItem_tag">
         <item>書類提出</item>
-        <item>財務</item>
         <item>整理</item>
         <item>整理</item>
         <item>学会</item>
@@ -79,10 +75,6 @@
         <item>挨拶</item>
         <item>購入検討</item>
         <item>購入検討</item>
-        <item>購入検討</item>
     </string-array>
-    <string-array name="menu_items">
-        <item>make item default</item>
-        <item>save current item</item>
-    </string-array>
+
 </resources>

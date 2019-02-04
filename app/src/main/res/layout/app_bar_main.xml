@@ -33,7 +33,6 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="32dp"
             android:src="@android:drawable/ic_input_add"
-            app:elevation="@dimen/activity_horizontal_margin"
             tools:src="@android:drawable/ic_input_add" />
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/main_viewpager"

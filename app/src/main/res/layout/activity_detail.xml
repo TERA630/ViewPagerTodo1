@@ -2,8 +2,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
-    tools:context=".DetailFragment">
+    tools:context=".DetailFragment"
+    tools:targetapi="N">
     <data>
 
         <variable
@@ -37,31 +37,28 @@
             android:inputType="text"
             android:nextFocusDown="@id/tagTxt"
             android:text="@={item.title}"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/detail_guideline1"
             app:layout_constraintStart_toEndOf="@id/doneChkBox"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/enterNewItem" />
+            tools:targetApi="N" />
 
         <ImageButton
             android:id="@+id/applyBtn"
-            android:layout_width="@dimen/imgBtn_size"
-            android:layout_height="48dp"
-            android:layout_margin="8dp"
+            style="@style/nonSpecific_imageButton"
             android:src="@android:drawable/ic_media_play"
             app:layout_constraintEnd_toStartOf="@id/cancelBtn"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@android:drawable/ic_media_play" />
+            tools:src="@android:drawable/ic_media_play"
+            android:contentDescription="@string/apply" />
 
         <ImageButton
             android:id="@+id/cancelBtn"
-            android:layout_width="@dimen/imgBtn_size"
-            android:layout_height="@dimen/imgBtn_size"
-            android:layout_margin="8dp"
+            style="@style/nonSpecific_imageButton"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             app:layout_constraintBottom_toTopOf="@id/detail_guideline1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@android:drawable/ic_menu_close_clear_cancel" />
+            android:contentDescription="@string/cancel" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/detail_guideline1"
@@ -70,7 +67,7 @@
 
         <AutoCompleteTextView
             android:id="@+id/tagTxt"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/portrait_width"
             android:layout_height="36dp"
             android:layout_margin="8dp"
             android:completionHint="enter tag"
@@ -84,16 +81,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/detail_guideline1"
-            tools:text="tags" />
-
-
+            tools:text="tags"
+            tools:targetApi="N" />
 
         <TextView
             android:id="@+id/startDateTxt"
+            style="@style/nonSpecific_text24"
             android:layout_width="128dp"
-            android:layout_height="32dp"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="255dp"
             android:layout_marginBottom="8dp"
             android:background="@{item.hasDeadLine ? @drawable/frame_elevate : @drawable/frame_depress}"
@@ -103,8 +98,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline3"
-            tools:text="@string/undefinedDate" />
+            app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
         <TextView
             android:id="@+id/deadDateTxt"
@@ -115,9 +109,7 @@
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/startDateTxt"
-            app:layout_constraintTop_toTopOf="@+id/guideline3"
-            tools:text="@string/undefinedDate" />
-
+            app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
         <RatingBar
             android:id="@+id/rewardRate"
@@ -129,7 +121,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline" />
-
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
@@ -153,7 +144,6 @@
 
         <EditText
             android:id="@+id/memo"
-            style="@style/nonSpecific_text18"
             android:layout_width="360dp"
             android:layout_height="280dp"
             android:layout_margin="8dp"
@@ -164,7 +154,8 @@
             android:text="@{item.memo}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rewardRate" />
+            app:layout_constraintTop_toBottomOf="@id/rewardRate"
+            tools:targetApi="N" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

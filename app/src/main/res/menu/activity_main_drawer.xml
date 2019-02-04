@@ -7,20 +7,15 @@
         <item
             android:id="@+id/make_defaultData"
             android:icon="@drawable/ic_menu_camera"
-            android:title="make data default" />
-
+            android:title="@string/make_default" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="@string/menu_start_dropbox" />
         </menu>
     </item>
 

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
@@ -16,7 +17,7 @@
     <style name="nonSpecific_text28">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">28dp</item>
+        <item name="android:textSize">28sp</item>
         <item name="android:layout_margin">8dp</item>
     </style>
 
@@ -45,5 +46,11 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="nonSpecific_imageButton">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">8dp</item>
     </style>
 </resources>

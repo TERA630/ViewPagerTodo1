@@ -24,9 +24,10 @@ fun inputStreamToLines(_inputStream: java.io.InputStream): List<String> {
         emptyList()
     }
 }
-fun loadListFromTextFile(_context: Context): MutableList<ToDoItem> {
+
+fun loadListFromTextFile(_context: Context, _fileName: String): MutableList<ToDoItem> {
     return try {
-        val allLine = inputStreamToLines(_context.openFileInput(TODO_TEXT_FILE))
+        val allLine = inputStreamToLines(_context.openFileInput(_fileName))
         convertTextListToItems(_lines = allLine)
     } catch (e: Exception) {
         Log.w("test", "${e.cause} bring {${e.message} at LoadListFromTextFile")
@@ -46,7 +47,7 @@ fun loadListFromTextFileAtSdcard(_context: Context, _documentDir: DocumentFile):
 
     } catch (e: FileNotFoundException) {
         Log.i("test", "$TODO_TEXT_FILE was not found at sdcard, so load it at internal storage")
-        loadListFromTextFile(_context)
+        loadListFromTextFile(_context, TODO_TEXT_FILE)
     } catch (e: Exception) {
         Log.e("test", "${e.cause} by ${e.cause} loadListFromTextFileAtSdcard")
         emptyList<ToDoItem>().toMutableList()

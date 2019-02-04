@@ -1,6 +1,7 @@
 package com.example.yoshi.viewpagertodo1
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -16,11 +17,10 @@ import kotlinx.coroutines.withContext
 import java.io.FileInputStream
 
 const val DROPBOX_TOKEN = "dropbox_access_token"
+const val DOWNLOAD_WORK_FILE = "downloadWork.txt"
 const val REQUEST_DROPBOX_UPLOAD = 3
 const val REQUEST_DROPBOX_DOWNLOAD = 4
 
-//  TODO クラウド上のファイルの確認
-//　TODO　ストレージ上のファイルの確認
 //　TODO ネットにつながっていないときどする？
 
 class LoginActivity : AppCompatActivity() {
@@ -28,29 +28,34 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        val token = loadStringFromPreference(DROPBOX_TOKEN, this@LoginActivity.applicationContext)
-        val signInButton = sign_in_button
+
         comeBack_MainActivity.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
+        val token = loadStringFromPreference(DROPBOX_TOKEN, this@LoginActivity.applicationContext)
+
         if (token == null) {
-            // tokenが未取得であれば、AuthActivityへ遷移する。
-            signInButton.isEnabled = true
-            upload_dropbox.isEnabled = false
-            download_dropbox.isEnabled = false
-            signInButton.setOnClickListener { Auth.startOAuth2Authentication(applicationContext, getString(com.example.yoshi.viewpagertodo1.R.string.DROPBOX_APP_KEY)) }
-            status_login.text = getString(R.string.status_not_login)
-            status_connection.text = getString(R.string.status_not_login)
+            disableFileAccessUntilLogin()
         } else { // Tokenが取得されていれば、ユーザー名とリンクされているかを確認する。
             canClientLinkedName(token)
-            signInButton.isEnabled = false
+            sign_in_button.isEnabled = false
         }
     }
     override fun onResume() {
         super.onResume()
         startAccessDBxWithAuth()
     }
+
+    private fun disableFileAccessUntilLogin() {
+        sign_in_button.isEnabled = true
+        upload_dropbox.isEnabled = false
+        download_dropbox.isEnabled = false
+        status_login.text = getString(R.string.status_not_login)
+        status_connection.text = getString(R.string.status_not_login)
+        sign_in_button.setOnClickListener { Auth.startOAuth2Authentication(applicationContext, getString(com.example.yoshi.viewpagertodo1.R.string.DROPBOX_APP_KEY)) }
+    }
+
     private fun startAccessDBxWithAuth() {
         val accessToken = Auth.getOAuth2Token() //generate Access Token
         if (accessToken != null) { // Tokenが得られていればPreferenceに保存する。
@@ -130,21 +135,17 @@ class LoginActivity : AppCompatActivity() {
         status_connection.text = getString(R.string.status_start_merge)
         var fileInputStream: FileInputStream? = null
         try {    //　現状のファイルをhereItemsに読み込んだ後、クラウドよりアイテムをダウンロードして、ThereItemとする。
-            val hereItems = loadListFromTextFile(this@LoginActivity.applicationContext)
+            val hereItems = loadListFromTextFile(this@LoginActivity.applicationContext, TODO_TEXT_FILE)
 
-            val jobDownLoad = GlobalScope.launch(Dispatchers.Default) {
-                _client.files().download("/$TODO_TEXT_FILE")
-            }
-            GlobalScope.launch(Dispatchers.Main) {
-                jobDownLoad.join()
-                status_connection.text = getString(R.string.status_complete_download, TODO_TEXT_FILE)
-            }
             val jobMerge = GlobalScope.launch(Dispatchers.Default) {
-                jobDownLoad.join()
-                val thereItems = loadListFromTextFile(this@LoginActivity.applicationContext) //クラウド上のアイテム
+                val fileMeta = _client.files().download("/$TODO_TEXT_FILE")
+                val os = openFileOutput(DOWNLOAD_WORK_FILE, Context.MODE_PRIVATE)
+                fileMeta.download(os)
+                val thereItems = loadListFromTextFile(this@LoginActivity.applicationContext, DOWNLOAD_WORK_FILE)
                 val mergedItem = mergeItem(hereItems, thereItems)
                 saveListToTextFile(this@LoginActivity.applicationContext, mergedItem)
             }
+
             GlobalScope.launch(Dispatchers.Main) {
                 jobMerge.join()
                 status_connection.text = getString(R.string.status_complete_merge, TODO_TEXT_FILE)
@@ -158,6 +159,7 @@ class LoginActivity : AppCompatActivity() {
                         .uploadAndFinish(fileInputStream)
             }
             GlobalScope.launch(Dispatchers.Main) {
+                jobMerge.join()
                 jobUpload.join()
                 status_connection.text = getString(R.string.status_complete_upload, TODO_TEXT_FILE)
             }

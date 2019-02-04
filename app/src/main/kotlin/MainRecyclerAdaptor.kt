@@ -55,27 +55,13 @@ class MainRecyclerAdaptor(
             listener.onClick(v, mList[position].unFilter)
             notifyItemRemoved(position)
         }
-        ivh.itemView.openChildToggle.setOnClickListener {
-            if (ivh.isItemOpened) {
-                ivh.isItemOpened = false
-                ivh.itemView.childViewer.visibility = View.GONE
-                ivh.mBinding.rowFrame.layoutParams.height = 158
-                notifyItemChanged(position)
-            } else {
-                ivh.isItemOpened = true
-                ivh.mBinding.rowFrame.layoutParams.height = 158+  ivh.itemView.childViewer.height
-                Log.i("test", "row height is ${ivh.itemView.height} by ${ivh.itemView.childViewer.height} ")
-                notifyItemRangeChanged(position,mList.size-position)
-            }
-
-        }
 
     }
 
     override fun getItemCount(): Int = mList.size
+
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mBinding: RowItemBinding = RowItemBinding.bind(itemView)
-        var isItemOpened:Boolean = false
     }
     interface OnItemClickListener {
         fun onClick(view: View, numberToCall: Int)

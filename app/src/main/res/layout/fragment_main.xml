@@ -5,15 +5,6 @@
     android:id="@+id/fragment_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <!--  <Spinner
-        android:id="@+id/filterByDateSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginEnd="8dp"
-        android:entries="@array/date_array"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
 
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/recycler_view"

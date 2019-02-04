@@ -3,8 +3,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".DetailFragment"
-    tools:ignore="ContentDescription">
+    tools:context=".DetailFragment">
 
     <data>
 
@@ -54,33 +53,20 @@
 
         <ImageButton
             android:id="@+id/delBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            style="@style/nonSpecific_imageButton"
             android:src="@android:drawable/ic_menu_delete"
             app:layout_constraintEnd_toStartOf="@id/editBtn"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@android:drawable/ic_menu_delete" />
+            tools:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="@string/delete" />
 
         <ImageButton
             android:id="@+id/editBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/nonSpecific_imageButton"
+            android:contentDescription="@string/edit"
             android:src="@android:drawable/ic_menu_edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout_marginEnd="8dp"
             tools:src="@android:drawable/ic_menu_edit" />
-
-        <ToggleButton
-            android:id="@+id/openChildToggle"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/style_toggle_triangle"
-            android:textOff=""
-            android:textOn=""
-            app:layout_constraintEnd_toStartOf="@id/delBtn"
-            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
