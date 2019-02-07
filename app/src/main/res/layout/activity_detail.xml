@@ -125,7 +125,7 @@
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
             style="@style/nonspecific_row"
-            app:layout_constraintGuide_begin="228dp" />
+            app:layout_constraintGuide_begin="135dp" />
 
         <TextView
             android:id="@+id/periodLbl"
@@ -140,7 +140,7 @@
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             style="@style/nonspecific_row"
-            app:layout_constraintGuide_begin="288dp" />
+            app:layout_constraintGuide_begin="195dp" />
 
         <EditText
             android:id="@+id/memo"

@@ -12,8 +12,6 @@ class MainViewModel : ViewModel() {
     private var rawItemList = MutableList(1) { ToDoItem() }
     val itemList = MutableLiveData<MutableList<FilteredToDoItem>>()
     lateinit var tagList: MutableList<String>
-
-
     var mReward: Int = 0
 
     fun initItems(_context: Context) {
@@ -28,7 +26,7 @@ class MainViewModel : ViewModel() {
         notifyRawItemListUpdated()
     }
 
-    fun notifyRawItemListUpdated() {
+    private fun notifyRawItemListUpdated() {
         itemList.value = pickItemsToShow(rawItemList)
         tagList = getTagListFromItemList(getItemList())
     }
@@ -40,7 +38,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
-            ?: mutableListOf(FilteredToDoItem(INDEX_WHEN_TO_MAKE_NEW_ITEM, ToDoItem(EMPTY_ITEM)))
+            ?: emptyList<FilteredToDoItem>().toMutableList()
 
     fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
         val filteredList = getItemList().filter { it.item.tagString.contains(filterStr) }
@@ -66,7 +64,7 @@ class MainViewModel : ViewModel() {
         rawItemList = notYetList.toMutableList()
         saveRawItemList(_context)
         this.tagList = getTagListFromItemList(getItemList())
-        this.itemList.value = pickItemsToShow(notYetList)
+        this.itemList.value = pickItemsToShow(this.rawItemList)
     }
     fun loadItem(_context: Context) {
         rawItemList = loadListFromTextFile(_context, TODO_TEXT_FILE)
@@ -83,7 +81,8 @@ class MainViewModel : ViewModel() {
                 Log.e("test", "${e.message} was occur at MainViewModel#loadItemFromSdcard")
             }
         }
-    }//削除
+    }
+
     private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
         return MutableList(rawList.size) { index -> FilteredToDoItem(index, rawList[index].copy()) }
     }
