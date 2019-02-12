@@ -2,11 +2,13 @@ package com.example.yoshi.viewpagertodo1
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
+class TestCase : Throwable() {
 
-class testCase : Throwable() {
-
-    val titleList = listOf("クランチ"
+    private val titleList = listOf("クランチ"
             , "フロントプランク", "バイシクルクランチ", "ニートゥチェスト", "リバースクランチ"
             , "ドラゴンフラッグ", "プッシュアップ", "ヒップスラスト", "ピークタッチ", "スクワット", "ゴーバック"
             , "ニーレイズ", "レッグレイズ", "グッドモーニング", "ランジ", "サイドプランク")
@@ -33,9 +35,15 @@ class testCase : Throwable() {
         }
 
         val list3 = mergeItem(list1, list2)
-
         assertThat(list3).doesNotHaveDuplicates()
 
+
+    }
+
+    @Test
+    fun tryingToMakeId() {
+        val id = makeIDFromDate()
+        assertThat(id).isGreaterThan(180206)
     }
 
     private fun getRandomTitle(): String {

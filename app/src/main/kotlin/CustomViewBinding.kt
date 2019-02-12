@@ -1,12 +1,18 @@
 package com.example.yoshi.viewpagertodo1
 
+import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
 import android.util.Log
+import android.util.TypedValue
 import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.CheckBox
+import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
@@ -41,4 +47,20 @@ fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean
             false
         }
     }
+
+    class subContextWindow() {
+        fun create(_context: Context): PopupWindow {
+            val window = PopupWindow(_context)
+            val content = LayoutInflater.from(_context).inflate(R.layout.recycerview_menu, null)
+            window.contentView = content
+            val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 140f, _context.resources.displayMetrics)
+            window.setWindowLayoutMode(width.toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
+            window.width = width.toInt()
+            window.isOutsideTouchable = true
+            window.isFocusable = true
+            window.isTouchable = true
+            val colorDrawable = ColorDrawable(_context.resources.getColor(android.R.color.transparent))
+            window.setBackgroundDrawable(colorDrawable)
+            return window
+        }
 }

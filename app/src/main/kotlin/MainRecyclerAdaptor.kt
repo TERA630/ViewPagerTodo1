@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
 import kotlinx.android.synthetic.main.row_item.view.*
 
-// TODO DiffUtilの実装
 
 class DiffCallback(private val oldList: List<FilteredToDoItem>,
                    private val newList: List<FilteredToDoItem>) : DiffUtil.Callback() {
@@ -36,17 +35,19 @@ class MainRecyclerAdaptor(
     private lateinit var listener: OnItemClickListener
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        // 各々のセルの表示、イベントの設定
         val ivh = holder as ItemViewHolder
+        ivh.mPosition = position
+
         ivh.mBinding.item = mList[position].item
         ivh.mBinding.periodViewer.text = buildPeriodText(mList[position].item)
 
         ivh.mBinding.itemTitle.setOnCheckedChangeListener { _, boolean ->
             mList[position].item.isDone = boolean
             val indexOfRawList = mList[position].unFilter
-            model.getItemList()[indexOfRawList].item.isDone = boolean
+            model.rawItemList[indexOfRawList].isDone = boolean
             notifyItemChanged(position)
         }
-
 
         ivh.itemView.editBtn.setOnClickListener { v: View ->
             listener.onClick(v, mList[position].unFilter)
@@ -56,11 +57,13 @@ class MainRecyclerAdaptor(
             notifyItemRemoved(position)
         }
 
-    }
 
+    }
     override fun getItemCount(): Int = mList.size
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        // 各々のセル固有のデータ
+        var mPosition: Int = 0
         val mBinding: RowItemBinding = RowItemBinding.bind(itemView)
     }
     interface OnItemClickListener {

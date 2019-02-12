@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun appBarUpdate(context: Context){
         val sb = StringBuilder(context.resources.getString(R.string.achievement))
-        sb.append(model.mReward)
+        sb.append(model.loadCurrentReward(_context = context))
         this.title = sb.toString()
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

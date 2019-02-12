@@ -19,18 +19,15 @@ import kotlinx.android.synthetic.main.fragment_main.*
 //　Fragmentのイベント処理の責務
 //　ボタンクリックでなく､ロングタップへのイベント駆動へ組み替える
 
-
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
     private lateinit var mAdapter: MainRecyclerAdaptor
-    private lateinit var mTag: String
     private var mPosition = 0
     companion object {
         // instance生成時に（今プロジェクトではViewPagerから）Fragment作成に必要な変数をセットしておく。
-        fun newInstance(tagString: String, position: Int): MainFragment {
+        fun newInstance(position: Int): MainFragment {
             val bundle = Bundle()
             val newFragment = MainFragment()
-            bundle.putString("tagString", tagString)
             bundle.putInt("pagePosition", position)
             newFragment.arguments = bundle
             return newFragment
@@ -39,13 +36,11 @@ class MainFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         model = ViewModelProviders.of(this.activity!!).get()
-        mTag = this.arguments?.getString("tagString") ?: model.tagList[0]
         mPosition = this.arguments?.getInt("pagePosition") ?: 0
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val filterStr = mTag
-        val list = model.getItemListWithTag(filterStr)
+        val list = model.getItemListByPosition(mPosition)
         mAdapter = MainRecyclerAdaptor(list, model)
         recycler_view.adapter = mAdapter
         runAnimation(recycler_view)
@@ -59,9 +54,14 @@ class MainFragment : Fragment() {
                     R.id.delBtn -> {
                         model.deleteItem(numberToCall, view.context)
                     }
+                    R.id.recyclerViewMenu -> {
+                        val window = subContextWindow().create(this@MainFragment.context!!)
+
+                    }
                 }
             }
         })
+
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, fragment_frame)
@@ -71,8 +71,7 @@ class MainFragment : Fragment() {
         super.onStart()
         // itemList 更新時に実行される。
         model.itemList.observe(this, Observer {
-            val filterStr = this.arguments!!.getString("tagString") ?: ""
-            val list = model.getItemListWithTag(filterStr)
+            val list = model.getItemListByPosition(mPosition)
             val diff = DiffUtil.calculateDiff((DiffCallback(mAdapter.mList, list)), false)
             mAdapter.setListOfAdapter(list)
             diff.dispatchUpdatesTo(mAdapter)

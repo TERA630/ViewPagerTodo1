@@ -9,16 +9,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
-    private var rawItemList = MutableList(1) { ToDoItem() }
+    var rawItemList = MutableList(1) { ToDoItem() }
     val itemList = MutableLiveData<MutableList<FilteredToDoItem>>()
     lateinit var tagList: MutableList<String>
-    var mReward: Int = 0
 
     fun initItems(_context: Context) {
         loadItem(_context)
         if (rawItemList.size == 0) rawItemList = makeDefaultList(_context)
+        pickItemsToShow(rawItemList)
         notifyRawItemListUpdated()
-        mReward = loadIntFromPreference(REWARD, _context)
     }
 
     fun makeItemsDefault(_context: Context) {
@@ -37,10 +36,15 @@ class MainViewModel : ViewModel() {
         itemList.value = pickItemsToShow(rawItemList)
     }
 
+
+    fun loadCurrentReward(_context: Context): Int {
+        return loadIntFromPreference(REWARD, _context)
+    }
     fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
             ?: emptyList<FilteredToDoItem>().toMutableList()
 
-    fun getItemListWithTag(filterStr: String): MutableList<FilteredToDoItem> {
+    fun getItemListByPosition(_position: Int): MutableList<FilteredToDoItem> {
+        val filterStr = tagList[_position]
         val filteredList = getItemList().filter { it.item.tagString.contains(filterStr) }
         return filteredList.toMutableList()
     }
@@ -53,13 +57,11 @@ class MainViewModel : ViewModel() {
         val rawList = getRawList()
         val achievedList = rawList.filter { it.isDone }
 
-        var getReward = 0
+        var reward = loadCurrentReward(_context)
         for (i in achievedList.indices) {
-            getReward += achievedList[i].reward
+            reward += achievedList[i].reward
         }
-        this.mReward += getReward
-
-        saveIntToPreference(REWARD, this.mReward, _context = _context)
+        saveIntToPreference(REWARD, reward, _context = _context)
         val notYetList = rawList.filterNot { it.isDone }
         rawItemList = notYetList.toMutableList()
         saveRawItemList(_context)
