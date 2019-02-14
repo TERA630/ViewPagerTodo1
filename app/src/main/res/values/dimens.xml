@@ -6,7 +6,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
-    <dimen name="imgBtn_size">48dp</dimen>
     <dimen name="titleText_size">244dp</dimen>
     <dimen name="portrait_width">350dp</dimen>
 </resources>

@@ -47,20 +47,23 @@ fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean
             false
         }
     }
+}
 
-    class subContextWindow() {
-        fun create(_context: Context): PopupWindow {
-            val window = PopupWindow(_context)
-            val content = LayoutInflater.from(_context).inflate(R.layout.recycerview_menu, null)
-            window.contentView = content
-            val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 140f, _context.resources.displayMetrics)
-            window.setWindowLayoutMode(width.toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
-            window.width = width.toInt()
-            window.isOutsideTouchable = true
-            window.isFocusable = true
-            window.isTouchable = true
-            val colorDrawable = ColorDrawable(_context.resources.getColor(android.R.color.transparent))
-            window.setBackgroundDrawable(colorDrawable)
-            return window
-        }
+class SubContextWindow {
+
+    fun create(_context: Context): PopupWindow {
+
+        val window = PopupWindow(_context)
+        val content = LayoutInflater.from(_context).inflate(R.layout.recyclerview_menu, null)
+        window.contentView = content
+        val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 140f, _context.resources.displayMetrics)
+        window.height = WindowManager.LayoutParams.WRAP_CONTENT
+        window.width = width.toInt()
+        window.isOutsideTouchable = true
+        window.isFocusable = true
+        window.isTouchable = true
+        val colorDrawable = ColorDrawable(_context.resources.getColor(android.R.color.transparent))
+        window.setBackgroundDrawable(colorDrawable)
+        return window
+    }
 }

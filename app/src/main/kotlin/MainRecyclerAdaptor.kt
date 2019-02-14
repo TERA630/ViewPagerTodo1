@@ -29,6 +29,7 @@ class DiffCallback(private val oldList: List<FilteredToDoItem>,
                 (oldItem.isDone == newItem.isDone)
     }
 }
+
 class MainRecyclerAdaptor(
         var mList: MutableList<FilteredToDoItem>,
         private val model: MainViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -51,13 +52,16 @@ class MainRecyclerAdaptor(
 
         ivh.itemView.editBtn.setOnClickListener { v: View ->
             listener.onClick(v, mList[position].unFilter)
+            notifyItemChanged(position)
         }
         ivh.itemView.delBtn.setOnClickListener { v: View ->
             listener.onClick(v, mList[position].unFilter)
             notifyItemRemoved(position)
         }
-
-
+        ivh.itemView.recyclerViewMenu.setOnClickListener { v:View->
+            listener.onClick(v,position)
+            notifyItemChanged(position)
+        }
     }
     override fun getItemCount(): Int = mList.size
 

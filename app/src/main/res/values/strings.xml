@@ -5,12 +5,11 @@
     <string name="achievement">達成数:</string>
     <string name="cancel">元に戻す</string>
     <string name="apply">適応</string>
+    <string name="childMenu">子メニュー</string>
     <string name="edit">編集</string>
     <string name="delete">削除</string>
-    <string name="newItem">新しいアイテム</string>
     <string name="date_format">%1$d/%2$d/%3$d</string>
     <string name="enterNewItem">新しいアイテムを入力</string>
-    <string name="please_enter">%1$を入力して下さい</string>
     <string name="enter_Tag">タグを入力して下さい</string>
     <string name="action_move_MainActivity">リストへ戻ります</string>
     <string name="getPoint">完了クリアし達成確認</string>
@@ -19,7 +18,6 @@
     <string name="overwrite">上書き</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="saveItem">現在のアイテムを保存</string>
@@ -33,9 +31,8 @@
     <string name="uploadItems_ToDropBox">アイテムをDropBoxにアップロード</string>
     <string name="downloadItems_FromDropBox">アイテムをDropBoxからダウンロード</string>
     <string name="deleteFile">保存したアイテムのクリア</string>
-    <string name="press_login">ボタンを押すとDropboxログイン画面に遷移します</string>>
-    <string name="press_start_connection">行う処理を押してください</string>
-    <string name="setting_visible_item">表示アイテムの設定</string>
+    <string name="press_login">ボタンを押すとDropboxログイン画面に遷移します</string><![CDATA[>
+    ]]>
     <string name="status_login">%1$sでログイン中</string>
     <string name="status_not_login">未ログイン</string>
     <string name="status_complete_download">%1$sのダウンロード完了</string>
@@ -46,11 +43,9 @@
     <string name="status_start_merge">マージを始めます</string>
     <string name="status_file_not_found">ファイル%1$sが見つかりません。</string>
     <string name="status_error_on_upload">アップロード時に%1$sが発生しました。</string>
-    <string name="status_existOrNot">クラウド上にファイルが存在するかどうか確かめています</string>
     <string name="tilda">～</string>
 
     <string name="DROPBOX_APP_KEY">obxt63d1h0c2d3e</string>
-    <string name="DROPBOX_APP_SECRET">dktusfcbh5rxd9r</string>
     <string name="sign_in">Sign in to DropBox</string>
 
     <string-array name="default_todoItem_title">

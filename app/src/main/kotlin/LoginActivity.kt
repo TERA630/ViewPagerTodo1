@@ -41,6 +41,7 @@ class LoginActivity : AppCompatActivity() {
             canClientLinkedName(token)
             sign_in_button.isEnabled = false
         }
+
     }
     override fun onResume() {
         super.onResume()

@@ -15,9 +15,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 
-
 //　Fragmentのイベント処理の責務
-//　ボタンクリックでなく､ロングタップへのイベント駆動へ組み替える
 
 class MainFragment : Fragment() {
     private lateinit var model: MainViewModel
@@ -55,7 +53,9 @@ class MainFragment : Fragment() {
                         model.deleteItem(numberToCall, view.context)
                     }
                     R.id.recyclerViewMenu -> {
-                        val window = subContextWindow().create(this@MainFragment.context!!)
+
+                        val window = SubContextWindow()
+                        window.create(this@MainFragment.context!!)
 
                     }
                 }

@@ -66,13 +66,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 model.saveItemsToSdCard(this, it)}
                 return
             }
-            REQUEST_DROPBOX_UPLOAD -> {
+            else->
                 return
-            }
-            REQUEST_DROPBOX_DOWNLOAD -> {
-                return
+
                 }
-            }
         }
     override fun onBackPressed() {
         model.saveRawItemList(this.applicationContext)
