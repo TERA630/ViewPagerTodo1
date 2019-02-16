@@ -14,6 +14,7 @@ import androidx.lifecycle.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.recyclerview_menu.view.*
 
 //　Fragmentのイベント処理の責務
 
@@ -31,7 +32,7 @@ class MainFragment : Fragment() {
             return newFragment
         }
     }
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         model = ViewModelProviders.of(this.activity!!).get()
         mPosition = this.arguments?.getInt("pagePosition") ?: 0
@@ -41,6 +42,9 @@ class MainFragment : Fragment() {
         val list = model.getItemListByPosition(mPosition)
         mAdapter = MainRecyclerAdaptor(list, model)
         recycler_view.adapter = mAdapter
+        val diff = DiffUtil.calculateDiff((DiffCallback(mAdapter.mList, list)), false)
+        diff.dispatchUpdatesTo(mAdapter)
+
         runAnimation(recycler_view)
 
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
@@ -55,7 +59,8 @@ class MainFragment : Fragment() {
                     R.id.recyclerViewMenu -> {
                         val window = SubContextWindow(view)
                         window.create(this@MainFragment.context!!)
-
+                        window.numberToCall = numberToCall
+                        window.menuPositon = mPosition
                     }
                 }
             }

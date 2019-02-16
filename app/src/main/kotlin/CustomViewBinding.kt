@@ -11,10 +11,12 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import kotlinx.android.synthetic.main.recyclerview_menu.view.*
 
 @BindingAdapter("android:checked", "android:text", requireAll = true)
 fun CheckBox.setSpannableText(doneChecked: Boolean, _text: String) {
@@ -49,15 +51,16 @@ fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean
     }
 }
 
-class SubContextWindow(val _view: View) {
-
+class SubContextWindow(private val _view: View) {
+    var numberToCall:Int = 0
+    var menuPositon:Int =0
     fun create(_context: Context): PopupWindow {
 
         val window = PopupWindow(_context)
         val content = LayoutInflater.from(_context).inflate(R.layout.recyclerview_menu, null)
         window.contentView = content
 
-        val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150f, _context.resources.displayMetrics)
+        val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, _context.resources.displayMetrics)
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, _context.resources.displayMetrics)
         window.width = width.toInt()
         window.height = height.toInt()
@@ -65,7 +68,14 @@ class SubContextWindow(val _view: View) {
         window.isFocusable = true
         window.isTouchable = true
 
-        window.showAtLocation(_view, Gravity.CENTER, 0, 0)
+        window.showAsDropDown(_view,0,0,Gravity.NO_GRAVITY)
+        val menu1 = content.findViewById(R.id.view_contextMenu1)
+        (menu1 as View).setOnClickListener{
+
+
+        }
+        val menu2 = content.findViewById(R.Id.view_contextMenu2)
+        (menu2 as View).setOnClickListener{}
         return window
     }
 }
