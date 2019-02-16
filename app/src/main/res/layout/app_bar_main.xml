@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="48dp"
         android:fitsSystemWindows="true" />
 
     <com.google.android.material.tabs.TabLayout
@@ -31,9 +31,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="32dp"
-            android:src="@android:drawable/ic_input_add"
-            tools:src="@android:drawable/ic_input_add" />
-    <androidx.viewpager.widget.ViewPager
+            android:src="@android:drawable/ic_input_add" />
+
+        <androidx.viewpager.widget.ViewPager
         android:id="@+id/main_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

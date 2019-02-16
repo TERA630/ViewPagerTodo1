@@ -18,9 +18,7 @@
         android:id="@+id/row_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@color/linen"
-        android:orientation="vertical">
+        android:background="@color/linen">
 
         <CheckBox
             android:id="@+id/itemTitle"
@@ -34,10 +32,7 @@
 
         <TextView
             android:id="@+id/periodViewer"
-            android:layout_width="wrap_content"
-            android:layout_height="18dp"
-            android:layout_marginBottom="8dp"
-            android:singleLine="true"
+            style="@style/nonSpecific_text18"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/itemTitle"
             tools:text="2018/08/27～2018/08/28" />

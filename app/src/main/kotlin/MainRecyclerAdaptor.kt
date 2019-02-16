@@ -59,7 +59,7 @@ class MainRecyclerAdaptor(
             notifyItemRemoved(position)
         }
         ivh.itemView.recyclerViewMenu.setOnClickListener { v:View->
-            listener.onClick(v,position)
+            listener.onClick(v, mList[position].unFilter)
             notifyItemChanged(position)
         }
     }

@@ -1,15 +1,15 @@
 package com.example.yoshi.viewpagertodo1
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
-import android.view.WindowManager
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.CheckBox
 import android.widget.PopupWindow
@@ -49,21 +49,23 @@ fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean
     }
 }
 
-class SubContextWindow {
+class SubContextWindow(val _view: View) {
 
     fun create(_context: Context): PopupWindow {
 
         val window = PopupWindow(_context)
         val content = LayoutInflater.from(_context).inflate(R.layout.recyclerview_menu, null)
         window.contentView = content
-        val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 140f, _context.resources.displayMetrics)
-        window.height = WindowManager.LayoutParams.WRAP_CONTENT
+
+        val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150f, _context.resources.displayMetrics)
+        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, _context.resources.displayMetrics)
         window.width = width.toInt()
+        window.height = height.toInt()
         window.isOutsideTouchable = true
         window.isFocusable = true
         window.isTouchable = true
-        val colorDrawable = ColorDrawable(_context.resources.getColor(android.R.color.transparent))
-        window.setBackgroundDrawable(colorDrawable)
+
+        window.showAtLocation(_view, Gravity.CENTER, 0, 0)
         return window
     }
 }

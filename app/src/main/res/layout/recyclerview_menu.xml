@@ -4,18 +4,21 @@
     tools:context=".MainFragment"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
-    android:orientation="vertical"
-    android:background="@android:color/transparent">
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/view_contextMenu1"
+        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:padding="8dp"
+        android:text="@string/delete" />
 
     <Button
         android:id="@+id/view_contextMenu2"
+        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:padding="8dp"
+        android:text="@string/edit" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
 

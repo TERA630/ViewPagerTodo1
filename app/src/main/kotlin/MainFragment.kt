@@ -53,8 +53,7 @@ class MainFragment : Fragment() {
                         model.deleteItem(numberToCall, view.context)
                     }
                     R.id.recyclerViewMenu -> {
-
-                        val window = SubContextWindow()
+                        val window = SubContextWindow(view)
                         window.create(this@MainFragment.context!!)
 
                     }
