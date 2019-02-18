@@ -14,7 +14,6 @@ import androidx.lifecycle.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.recyclerview_menu.view.*
 
 //　Fragmentのイベント処理の責務
 
@@ -58,9 +57,25 @@ class MainFragment : Fragment() {
                     }
                     R.id.recyclerViewMenu -> {
                         val window = SubContextWindow(view)
-                        window.create(this@MainFragment.context!!)
-                        window.numberToCall = numberToCall
-                        window.menuPositon = mPosition
+                        val popUp = window.create(this@MainFragment.context!!)
+                        val listener = object : View.OnClickListener {
+                            override fun onClick(view: View?) {
+                                when (view!!.id) {
+                                    R.id.view_contextMenu1 -> {
+                                        model.deleteItem(numberToCall, view.context)
+                                        popUp.dismiss()
+                                        return
+                                    }
+                                    R.id.view_contextMenu2 -> {
+                                        (this@MainFragment.activity as MainActivity).startDetailActivity(mPosition, numberToCall)
+                                        popUp.dismiss()
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                        window.setClickListener(listener)
+
                     }
                 }
             }

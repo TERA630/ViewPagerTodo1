@@ -11,12 +11,10 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import kotlinx.android.synthetic.main.recyclerview_menu.view.*
 
 @BindingAdapter("android:checked", "android:text", requireAll = true)
 fun CheckBox.setSpannableText(doneChecked: Boolean, _text: String) {
@@ -50,17 +48,15 @@ fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean
         }
     }
 }
-
 class SubContextWindow(private val _view: View) {
-    var numberToCall:Int = 0
-    var menuPositon:Int =0
+    lateinit var mInflatedView: View
+
     fun create(_context: Context): PopupWindow {
-
         val window = PopupWindow(_context)
-        val content = LayoutInflater.from(_context).inflate(R.layout.recyclerview_menu, null)
-        window.contentView = content
+        mInflatedView = LayoutInflater.from(_context).inflate(R.layout.recyclerview_menu, null)
+        window.contentView = mInflatedView
 
-        val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, _context.resources.displayMetrics)
+        val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96f, _context.resources.displayMetrics)
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, _context.resources.displayMetrics)
         window.width = width.toInt()
         window.height = height.toInt()
@@ -69,13 +65,13 @@ class SubContextWindow(private val _view: View) {
         window.isTouchable = true
 
         window.showAsDropDown(_view,0,0,Gravity.NO_GRAVITY)
-        val menu1 = content.findViewById(R.id.view_contextMenu1)
-        (menu1 as View).setOnClickListener{
-
-
-        }
-        val menu2 = content.findViewById(R.Id.view_contextMenu2)
-        (menu2 as View).setOnClickListener{}
         return window
+    }
+
+    fun setClickListener(_listener: View.OnClickListener) {
+        val menu1 = mInflatedView.findViewById<View>(R.id.view_contextMenu1)
+        (menu1 as View).setOnClickListener(_listener)
+        val menu2 = mInflatedView.findViewById<View>(R.id.view_contextMenu2)
+        (menu2 as View).setOnClickListener(_listener)
     }
 }
