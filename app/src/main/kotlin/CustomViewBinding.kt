@@ -49,7 +49,7 @@ fun onEditorActionDone(edit: TextView, actionId: Int, event: KeyEvent?): Boolean
     }
 }
 class SubContextWindow(private val _view: View) {
-    lateinit var mInflatedView: View
+    private lateinit var mInflatedView: View
 
     fun create(_context: Context): PopupWindow {
         val window = PopupWindow(_context)

@@ -38,29 +38,11 @@
             tools:text="2018/08/27～2018/08/28" />
 
         <ImageButton
-            android:id="@+id/delBtn"
-            style="@style/nonSpecific_imageButton"
-            android:src="@android:drawable/ic_menu_delete"
-            app:layout_constraintEnd_toStartOf="@id/editBtn"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@android:drawable/ic_menu_delete"
-            android:contentDescription="@string/delete" />
-
-        <ImageButton
-            android:id="@+id/editBtn"
-            style="@style/nonSpecific_imageButton"
-            android:contentDescription="@string/edit"
-            android:src="@android:drawable/ic_menu_edit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@android:drawable/ic_menu_edit" />
-
-        <ImageButton
             android:id="@+id/recyclerViewMenu"
             style="@style/nonSpecific_imageButton"
             android:contentDescription="@string/childMenu"
             android:src="@android:drawable/ic_dialog_email"
-            app:layout_constraintEnd_toStartOf="@+id/delBtn"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,8 +21,6 @@ const val DOWNLOAD_WORK_FILE = "downloadWork.txt"
 const val REQUEST_DROPBOX_UPLOAD = 3
 const val REQUEST_DROPBOX_DOWNLOAD = 4
 
-//　TODO ネットにつながっていないときどする？
-
 class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

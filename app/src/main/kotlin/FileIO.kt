@@ -1,5 +1,4 @@
 package com.example.yoshi.viewpagertodo1
-
 import android.content.Context
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
@@ -68,6 +67,7 @@ fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
         e.printStackTrace()
     }
 }
+
 fun saveListToTextFileAtSdcard(_context: Context, _documentDir: DocumentFile, _list: MutableList<ToDoItem>) {
 
     val file = _documentDir.findFile(TODO_TEXT_FILE)

@@ -43,44 +43,31 @@ class MainFragment : Fragment() {
         recycler_view.adapter = mAdapter
         val diff = DiffUtil.calculateDiff((DiffCallback(mAdapter.mList, list)), false)
         diff.dispatchUpdatesTo(mAdapter)
-
         runAnimation(recycler_view)
 
         mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
-            override fun onClick(view: View, numberToCall: Int) {
-                when (view.id) {
-                    R.id.editBtn -> {
-                        (this@MainFragment.activity as MainActivity).startDetailActivity(mPosition, numberToCall)
-                    }
-                    R.id.delBtn -> {
-                        model.deleteItem(numberToCall, view.context)
-                    }
-                    R.id.recyclerViewMenu -> {
-                        val window = SubContextWindow(view)
-                        val popUp = window.create(this@MainFragment.context!!)
-                        val listener = object : View.OnClickListener {
-                            override fun onClick(view: View?) {
-                                when (view!!.id) {
-                                    R.id.view_contextMenu1 -> {
-                                        model.deleteItem(numberToCall, view.context)
-                                        popUp.dismiss()
-                                        return
-                                    }
-                                    R.id.view_contextMenu2 -> {
-                                        (this@MainFragment.activity as MainActivity).startDetailActivity(mPosition, numberToCall)
-                                        popUp.dismiss()
-                                        return
-                                    }
-                                }
+            override fun onClick(view: View, _numberToDeal: Int) {
+                val window = SubContextWindow(view)
+                val popUp = window.create(this@MainFragment.context!!)
+                val listener = object : View.OnClickListener {
+                    override fun onClick(view: View?) {
+                        when (view!!.id) {
+                            R.id.view_contextMenu1 -> {
+                                model.deleteItem(_numberToDeal)
+                                popUp.dismiss()
+                                return
+                            }
+                            R.id.view_contextMenu2 -> {
+                                (this@MainFragment.activity as MainActivity).startDetailActivity(mPosition, _numberToDeal)
+                                popUp.dismiss()
+                                return
                             }
                         }
-                        window.setClickListener(listener)
-
                     }
                 }
+                window.setClickListener(listener)
             }
         })
-
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, fragment_frame)
@@ -88,7 +75,7 @@ class MainFragment : Fragment() {
     // リスト更新時にアダプターへ通知する部分の設定
     override fun onStart() {
         super.onStart()
-        // itemList 更新時に実行される。
+        // itemList 更新時の実行スペニットを設定します。
         model.itemList.observe(this, Observer {
             val list = model.getItemListByPosition(mPosition)
             val diff = DiffUtil.calculateDiff((DiffCallback(mAdapter.mList, list)), false)

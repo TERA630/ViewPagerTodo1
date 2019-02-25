@@ -11,12 +11,13 @@ data class ToDoItem constructor(
         var tagString: String = "home",
         var reward: Int = 1,
         var isDone: Boolean = false,
+        var isDeleted: Boolean = false,
         var hasStartLine: Boolean = true,
         var startLine: String = "----/--/--",
         var hasDeadLine: Boolean = false,
         var deadLine: String = "----/--/--",
         var memo: String = EMPTY_ITEM,
-        var upDatetime: Long = 19700101000000L
+        var upDatetime: Long = 19700101125930L
         )
 
 class FilteredToDoItem constructor(
@@ -38,7 +39,7 @@ fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
         titleAndTagMatcher.matchEntire(_lines[i])
                 ?.destructured
                 ?.let { (titleStr, tag, subProperty) ->
-                    result.add(subPropertyExtract(ToDoItem(title = titleStr, tagString = tag), subProperty))
+                    result.add(setPropertyFromString(ToDoItem(title = titleStr, tagString = tag), subProperty))
                 }
     }
     return result
@@ -70,12 +71,14 @@ fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
 fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     val sb = StringBuilder(toDoItem.title)
             .append(",", toDoItem.tagString, ",")
+            .append(",", toDoItem.upDatetime, ",")
 
     val periodText = buildPeriodText(toDoItem)
     sb.append(periodText)
     sb.append(",reward:", toDoItem.reward)
 
     if ((toDoItem.isDone)) sb.append(",isDone")
+    if ((toDoItem.isDone)) sb.append(",isDeleted")
     if ((toDoItem.memo) != EMPTY_ITEM) sb.append(",memo:", toDoItem.memo)
 
     return sb.toString()
@@ -101,7 +104,7 @@ fun mergeItem(oneItems: MutableList<ToDoItem>, otherItems: MutableList<ToDoItem>
         if (itemHasSameTitle.size == 1) {      //　タイトルの重複がないものは結果にそのまま追加
             resultItem.add(workItems[i])
         } else {
-            duplicateItemTitle.add(workItems[i].title)
+            duplicateItemTitle.add(workItems[i].title) // タイトルが重複しているものは、タイトル重複リストに加え2回目以降は結果リストに追加されない。
             resultItem.add(getNewestItem(itemHasSameTitle.toMutableList()))
         }
     }
@@ -123,12 +126,21 @@ fun saveStringToPreference(_key: String, _string: String, _context: Context) {
     preferenceEditor.putString(_key, _string).apply()
 }
 
-fun subPropertyExtract(_toDoItem: ToDoItem, _text: String): ToDoItem {
+fun setPropertyFromString(_toDoItem: ToDoItem, _text: String): ToDoItem {
     val memoMatch = Regex("(,memo:)(.+?)").find(_text)
     memoMatch?.destructured?.let { (_, data) -> _toDoItem.memo = data }
 
     val isDoneMatch = Regex(",isDone,").find(_text)
     isDoneMatch?.let { _toDoItem.isDone = true}
+
+    val isDeletedMatch = Regex(",isDeleted,").find(_text)
+    isDeletedMatch?.let { _toDoItem.isDeleted = true }
+
+    val upDateTimeMatch = Regex(",update:([0-9]+)").find(_text)
+    upDateTimeMatch?.let {
+        _toDoItem.upDatetime = Regex("[0-9]+").find(upDateTimeMatch.value)?.value?.toLong()
+                ?: 197001011259L
+    }
 
     val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text)
     if (startDateMatch != null) {

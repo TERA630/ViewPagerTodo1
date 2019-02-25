@@ -49,15 +49,6 @@ class MainRecyclerAdaptor(
             model.rawItemList[indexOfRawList].isDone = boolean
             notifyItemChanged(position)
         }
-
-        ivh.itemView.editBtn.setOnClickListener { v: View ->
-            listener.onClick(v, mList[position].unFilter)
-            notifyItemChanged(position)
-        }
-        ivh.itemView.delBtn.setOnClickListener { v: View ->
-            listener.onClick(v, mList[position].unFilter)
-            notifyItemRemoved(position)
-        }
         ivh.itemView.recyclerViewMenu.setOnClickListener { v:View->
             listener.onClick(v, mList[position].unFilter)
             notifyItemChanged(position)
@@ -71,7 +62,7 @@ class MainRecyclerAdaptor(
         val mBinding: RowItemBinding = RowItemBinding.bind(itemView)
     }
     interface OnItemClickListener {
-        fun onClick(view: View, numberToCall: Int)
+        fun onClick(view: View, numberToDeal: Int)
     }
     fun setListOfAdapter(list : MutableList<FilteredToDoItem>){
         this.mList = list

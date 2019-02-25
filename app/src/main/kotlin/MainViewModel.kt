@@ -19,57 +19,48 @@ class MainViewModel : ViewModel() {
         pickItemsToShow(rawItemList)
         notifyRawItemListUpdated()
     }
-
-    fun makeItemsDefault(_context: Context) {
-        rawItemList = makeDefaultList(_context)
-        notifyRawItemListUpdated()
-    }
-
     private fun notifyRawItemListUpdated() {
         itemList.value = pickItemsToShow(rawItemList)
         tagList = getTagListFromItemList(getItemList())
     }
-    fun deleteItem(index: Int, _context: Context) {
-        val mList = getItemList()
-        rawItemList.removeAt(mList[index].unFilter)
-        saveRawItemList(_context)
+
+    fun deleteItem(index: Int) {
+        rawItemList[index].isDeleted = true
         itemList.value = pickItemsToShow(rawItemList)
     }
-
-
     fun loadCurrentReward(_context: Context): Int {
         return loadIntFromPreference(REWARD, _context)
     }
-    fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
-            ?: emptyList<FilteredToDoItem>().toMutableList()
+
+    private fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
+            ?: throw IllegalArgumentException("itemList was null.")
 
     fun getItemListByPosition(_position: Int): MutableList<FilteredToDoItem> {
         val filterStr = tagList[_position]
         val filteredList = getItemList().filter { it.item.tagString.contains(filterStr) }
         return filteredList.toMutableList()
     }
-    private fun getRawList(): MutableList<ToDoItem> {
-        return rawItemList
-    }
 
     fun calculateReward(_context: Context) {
 
-        val rawList = getRawList()
-        val achievedList = rawList.filter { it.isDone }
-
+        val achievedList = rawItemList.filter { it.isDone }
         var reward = loadCurrentReward(_context)
+        // 完了したアイテムのRewardを加算し、isDeletedをチェックする。
         for (i in achievedList.indices) {
             reward += achievedList[i].reward
+            achievedList[i].isDeleted = true
         }
         saveIntToPreference(REWARD, reward, _context = _context)
-        val notYetList = rawList.filterNot { it.isDone }
+
+        val notYetList = rawItemList.filterNot { it.isDone }
         rawItemList = notYetList.toMutableList()
         saveRawItemList(_context)
         this.tagList = getTagListFromItemList(getItemList())
         this.itemList.value = pickItemsToShow(this.rawItemList)
     }
     fun loadItem(_context: Context) {
-        rawItemList = loadListFromTextFile(_context, TODO_TEXT_FILE)
+        val listContainingDeleted = loadListFromTextFile(_context, TODO_TEXT_FILE)
+        rawItemList = listContainingDeleted.filterNot { it.isDeleted }.toMutableList()
     }
     fun loadItemsFromSdCard(_context: Context, uri: Uri) {
         _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -86,7 +77,8 @@ class MainViewModel : ViewModel() {
     }
 
     private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
-        return MutableList(rawList.size) { index -> FilteredToDoItem(index, rawList[index].copy()) }
+        val listNotDeleted = rawList.filterNot { it.isDeleted }
+        return MutableList(listNotDeleted.size) { index -> FilteredToDoItem(index, listNotDeleted[index].copy()) }
     }
 
     fun saveRawItemList(_context: Context) {
