@@ -18,13 +18,13 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         this.title = " "
-        binding.setLifecycleOwner(this@DetailActivity)
+        binding.lifecycleOwner = this@DetailActivity
         val number = intent.extras?.getInt("parentID") ?: 0
         val tagSting = intent.extras?.getString(KEY_TAG_STR) ?: ""
         itemList = loadListFromTextFile(this@DetailActivity, TODO_TEXT_FILE)
         val itemToEdit = if (number == INDEX_WHEN_TO_MAKE_NEW_ITEM) {
             // アイテムの新規作成
-            val newItem = ToDoItem(title = "", tagString = tagSting, startLine = getToday())
+            val newItem = ToDoItem(title = "", tagString = tagSting, startLine = getToday(), upDatetime = getCurrentTime())
             itemList.add(newItem)
             itemList[itemList.lastIndex]
         } else {    //　アイテムの更新
@@ -93,6 +93,7 @@ class DetailActivity : AppCompatActivity() {
                 deadDatePicker.show()
             }
         }
+
     }
     private fun startMainActivity(_tagString: String) {
         val intent = Intent(this@DetailActivity.applicationContext, MainActivity::class.java)

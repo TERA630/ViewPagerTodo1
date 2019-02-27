@@ -16,17 +16,17 @@ class MainViewModel : ViewModel() {
     fun initItems(_context: Context) {
         loadItem(_context)
         if (rawItemList.size == 0) rawItemList = makeDefaultList(_context)
-        pickItemsToShow(rawItemList)
         notifyRawItemListUpdated()
     }
-    private fun notifyRawItemListUpdated() {
+
+    fun notifyRawItemListUpdated() {
         itemList.value = pickItemsToShow(rawItemList)
         tagList = getTagListFromItemList(getItemList())
     }
 
     fun deleteItem(index: Int) {
         rawItemList[index].isDeleted = true
-        itemList.value = pickItemsToShow(rawItemList)
+        notifyRawItemListUpdated()
     }
     fun loadCurrentReward(_context: Context): Int {
         return loadIntFromPreference(REWARD, _context)
@@ -68,8 +68,7 @@ class MainViewModel : ViewModel() {
         pickedDir?.let {
             try {
                 rawItemList = loadListFromTextFileAtSdcard(_context, pickedDir)
-                itemList.value = pickItemsToShow(rawItemList)
-                tagList = getTagListFromItemList(getItemList())
+                notifyRawItemListUpdated()
             } catch (e: Exception) {
                 Log.e("test", "${e.message} was occur at MainViewModel#loadItemFromSdcard")
             }
