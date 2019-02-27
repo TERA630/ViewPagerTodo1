@@ -45,7 +45,7 @@ class MainFragment : Fragment() {
         diff.dispatchUpdatesTo(mAdapter)
         runAnimation(recycler_view)
 
-        mAdapter.setOnItemClickListener(object : MainRecyclerAdaptor.OnItemClickListener {
+        mAdapter.setOnItemClickHandler(object : MainRecyclerAdaptor.OnItemClickHandler {
             override fun onClick(view: View, _numberToDeal: Int) {
                 val window = SubContextWindow(view)
                 val popUp = window.create(this@MainFragment.context!!)

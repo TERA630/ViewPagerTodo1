@@ -75,6 +75,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
+
     private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
         val listNotDeleted = rawList.filterNot { it.isDeleted }
         return MutableList(listNotDeleted.size) { index -> FilteredToDoItem(index, listNotDeleted[index].copy()) }

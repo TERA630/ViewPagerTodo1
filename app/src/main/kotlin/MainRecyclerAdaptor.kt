@@ -33,7 +33,7 @@ class DiffCallback(private val oldList: List<FilteredToDoItem>,
 class MainRecyclerAdaptor(
         var mList: MutableList<FilteredToDoItem>,
         private val model: MainViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private lateinit var listener: OnItemClickListener
+    private lateinit var handler: OnItemClickHandler
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         // 各々のセルの表示、イベントの設定
@@ -50,7 +50,7 @@ class MainRecyclerAdaptor(
             notifyItemChanged(position)
         }
         ivh.itemView.recyclerViewMenu.setOnClickListener { v:View->
-            listener.onClick(v, mList[position].unFilter)
+            handler.onClick(v, mList[position].unFilter)
             notifyItemChanged(position)
         }
     }
@@ -61,14 +61,16 @@ class MainRecyclerAdaptor(
         var mPosition: Int = 0
         val mBinding: RowItemBinding = RowItemBinding.bind(itemView)
     }
-    interface OnItemClickListener {
-        fun onClick(view: View, numberToDeal: Int)
+
+    interface OnItemClickHandler {
+        fun onClick(view: View, _numberToDeal: Int)
     }
     fun setListOfAdapter(list : MutableList<FilteredToDoItem>){
         this.mList = list
     }
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
+
+    fun setOnItemClickHandler(listener: MainRecyclerAdaptor.OnItemClickHandler) {
+        this.handler = handler
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
