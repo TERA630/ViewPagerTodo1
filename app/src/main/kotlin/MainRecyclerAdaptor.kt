@@ -50,7 +50,7 @@ class MainRecyclerAdaptor(
             notifyItemChanged(position)
         }
         ivh.itemView.recyclerViewMenu.setOnClickListener { v:View->
-            handler.onClick(v, mList[position].unFilter)
+            handler.onMenuClicked(v, mList[position].unFilter)
             notifyItemChanged(position)
         }
     }
@@ -63,7 +63,7 @@ class MainRecyclerAdaptor(
     }
 
     interface OnItemClickHandler {
-        fun onClick(view: View, _numberToDeal: Int)
+        fun onMenuClicked(view: View, _numberToDeal: Int)
     }
     fun setListOfAdapter(list : MutableList<FilteredToDoItem>){
         this.mList = list

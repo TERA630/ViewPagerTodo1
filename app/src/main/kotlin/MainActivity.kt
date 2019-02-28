@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         model.initItems(this)
         setUpAppBarWithDrawer(this.baseContext)
         setupFabAndViewPager(main_viewpager)
-        // set event handlers
-
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
     }
 
@@ -51,26 +49,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_CANCELED) return
-        if (data == null) {
+        if (data == null || data.data == null) {
             Log.w("test", "data of intent was null at onActivityResult..")
             return
-        }
-        when (requestCode) {
-            REQUEST_CODE_SD_READ -> {
-                data.data?.let {
-                model.loadItemsFromSdCard(this@MainActivity.baseContext, it)}
-                return
-            }
-            REQUEST_CODE_SD_WRITE -> {
-                data.data?.let{
-                model.saveItemsToSdCard(this, it)}
-                return
-            }
-            else->
-                return
-
+        } else {
+            when (requestCode) {
+                REQUEST_CODE_SD_READ -> {
+                    model.loadItemsFromSdCard(this@MainActivity.baseContext, data.data)
+                    return
                 }
+                REQUEST_CODE_SD_WRITE -> {
+                    model.saveItemsToSdCard(this, data.data)
+                    return
+                }
+                else ->
+                    return
+            }
         }
+    }
+
     override fun onBackPressed() {
         model.saveRawItemList(this.applicationContext)
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
