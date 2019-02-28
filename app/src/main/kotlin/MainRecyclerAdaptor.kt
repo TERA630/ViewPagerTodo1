@@ -69,8 +69,8 @@ class MainRecyclerAdaptor(
         this.mList = list
     }
 
-    fun setOnItemClickHandler(listener: MainRecyclerAdaptor.OnItemClickHandler) {
-        this.handler = handler
+    fun setOnItemClickHandler(_handler: MainRecyclerAdaptor.OnItemClickHandler) {
+        this.handler = _handler
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val rowView = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
