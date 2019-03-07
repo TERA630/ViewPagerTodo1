@@ -9,6 +9,8 @@ const val TODO_TEXT_FILE = "toDoItems.txt"
 data class ToDoItem constructor(
         var title: String = "thing to do",
         var tagString: String = "home",
+        var itemID: Int = 0,
+        var upDatetime: Long = 0,
         var reward: Int = 1,
         var isDone: Boolean = false,
         var isDeleted: Boolean = false,
@@ -16,8 +18,7 @@ data class ToDoItem constructor(
         var startLine: String = "----/--/--",
         var hasDeadLine: Boolean = false,
         var deadLine: String = "----/--/--",
-        var memo: String = EMPTY_ITEM,
-        var upDatetime: Long = 19700101125930L
+        var memo: String = EMPTY_ITEM
         )
 
 class FilteredToDoItem constructor(

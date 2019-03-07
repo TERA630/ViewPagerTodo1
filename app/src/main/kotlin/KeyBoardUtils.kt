@@ -16,7 +16,7 @@ class KeyboardUtils {
     }
     fun hide(_activity: Activity) {
         val focus = _activity.currentFocus
-        if (focus != null) {
+        focus?.let {
             this.hide(_activity, focus)
         }
     }

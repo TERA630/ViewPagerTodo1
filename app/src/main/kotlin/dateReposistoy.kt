@@ -67,25 +67,13 @@ fun getToday(): String {
     return "${cal.get(Calendar.YEAR)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.DAY_OF_MONTH)}"
 }
 
-fun getCurrentTime(): Long {
+fun makeIDFromDate(): Int {
     val cal = Calendar.getInstance(Locale.JAPAN)
-    val year = cal.get(Calendar.YEAR)
     val month = cal.get(Calendar.MONTH + 1)
     val day = cal.get(Calendar.DAY_OF_MONTH)
     val hour = cal.get(Calendar.HOUR)
     val minute = cal.get(Calendar.MINUTE)
     val second = cal.get(Calendar.SECOND)
-    return year * 10000000000 + month * 100000000 + day * 1000000 + hour * 10000 + minute * 100 + second
-}
-
-fun makeIDFromDate(): Int {
-    val cal = Calendar.getInstance(Locale.JAPAN)
-    val year = cal.get(Calendar.YEAR)
-    val month = cal.get(Calendar.MONTH + 1)
-    val day = cal.get(Calendar.DAY_OF_MONTH)
-    val hour = cal.get(Calendar.HOUR)
-    val minute = cal.get(Calendar.MINUTE)
-
-    return (year - 2000) * 1000000 + month * 10000 + day * 100 + hour + minute
+    return month * 100000000 + day * 1000000 + hour * 10000 + minute * 100
 }
 

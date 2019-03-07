@@ -53,13 +53,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Log.w("test", "data of intent was null at onActivityResult..")
             return
         } else {
+            val uri = data.data!!
             when (requestCode) {
                 REQUEST_CODE_SD_READ -> {
-                    model.loadItemsFromSdCard(this@MainActivity.baseContext, data.data)
+                    model.loadItemsFromSdCard(this@MainActivity.baseContext, uri)
                     return
                 }
                 REQUEST_CODE_SD_WRITE -> {
-                    model.saveItemsToSdCard(this, data.data)
+                    model.saveItemsToSdCard(this, uri)
                     return
                 }
                 else ->
@@ -139,6 +140,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     private fun setUpAppBarWithDrawer(_context: Context) {
         setSupportActionBar(toolbar)
+        toolbar.setTitleTextAppearance(this@MainActivity, R.style.Base_TextAppearance_AppCompat_Title)
         appBarUpdate(_context)
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)

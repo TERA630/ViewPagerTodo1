@@ -24,7 +24,7 @@ class DetailActivity : AppCompatActivity() {
         itemList = loadListFromTextFile(this@DetailActivity, TODO_TEXT_FILE)
         val itemToEdit = if (number == INDEX_WHEN_TO_MAKE_NEW_ITEM) {
             // アイテムの新規作成
-            val newItem = ToDoItem(title = "", tagString = tagSting, startLine = getToday(), upDatetime = getCurrentTime())
+            val newItem = ToDoItem(title = "", tagString = tagSting, startLine = getToday(), upDatetime = System.currentTimeMillis())
             itemList.add(newItem)
             itemList[itemList.lastIndex]
         } else {    //　アイテムの更新
