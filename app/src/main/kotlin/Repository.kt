@@ -65,7 +65,7 @@ fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
     val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
     val defaultItemTag = res.getStringArray(R.array.default_todoItem_tag)
     val toDoList = List(defaultItemTitle.size - 1) { index ->
-        ToDoItem(title = defaultItemTitle[index], tagString = defaultItemTag[index], hasStartLine = true, startLine = getToday(), upDatetime = getCurrentTime())
+        ToDoItem(title = defaultItemTitle[index], tagString = defaultItemTag[index], hasStartLine = true, startLine = getToday(), upDatetime = System.currentTimeMillis())
     }
     return toDoList.toMutableList()
 }
