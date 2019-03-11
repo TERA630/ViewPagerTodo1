@@ -7,7 +7,6 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class TestCase : Throwable() {
-
     private val titleList = listOf("クランチ"
             , "フロントプランク", "バイシクルクランチ", "ニートゥチェスト", "リバースクランチ"
             , "ドラゴンフラッグ", "プッシュアップ", "ヒップスラスト", "ピークタッチ", "スクワット", "ゴーバック"
@@ -39,13 +38,6 @@ class TestCase : Throwable() {
 
 
     }
-
-    @Test
-    fun tryingToMakeId() {
-        val id = makeIDFromDate()
-        assertThat(id).isGreaterThan(180206)
-    }
-
     private fun getRandomTitle(): String {
         val index = (Math.random() * titleList.size).toInt()
         return titleList[index]
@@ -63,10 +55,7 @@ class TestCase : Throwable() {
         return year * 10000000000 + month * 100000000 + day * 1000000 + hour * 10000 + minute * 100 + second
 
     }
-
     private fun getRandomInt(limit: Int): Int {
         return (Math.random() * limit).toInt() + 1
     }
-
-
 }

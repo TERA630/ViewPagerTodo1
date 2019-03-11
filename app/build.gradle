@@ -59,16 +59,16 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation "androidx.legacy:legacy-support-v4:$androidx_version"
 
-    implementation "com.google.android.material:material:1.1.0-alpha03"
+    implementation 'com.google.android.material:material:1.1.0-alpha04'
 
     implementation 'com.dropbox.core:dropbox-core-sdk:3.0.11'
     compileOnly 'com.squareup.okhttp3:okhttp:3.13.1'
     compileOnly 'com.squareup.okhttp:okhttp:2.7.5'
 
     testImplementation 'junit:junit:4.13-beta-2'
-    testImplementation 'org.assertj:assertj-core:3.11.1'
+    testImplementation 'org.assertj:assertj-core:3.12.1'
 
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
-    testImplementation 'org.robolectric:robolectric:4.2-beta-1'
+    testImplementation 'org.robolectric:robolectric:4.2'
 }

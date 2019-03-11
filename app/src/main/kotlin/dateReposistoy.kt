@@ -74,6 +74,6 @@ fun makeIDFromDate(): Int {
     val hour = cal.get(Calendar.HOUR)
     val minute = cal.get(Calendar.MINUTE)
     val second = cal.get(Calendar.SECOND)
-    return month * 100000000 + day * 1000000 + hour * 10000 + minute * 100
+    return month * 100000000 + day * 1000000 + hour * 10000 + minute * 100 + second
 }
 

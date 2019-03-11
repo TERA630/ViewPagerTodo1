@@ -72,6 +72,7 @@ fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
 fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     val sb = StringBuilder(toDoItem.title)
             .append(",", toDoItem.tagString, ",")
+            .append(",", toDoItem.itemID, ",")
             .append(",", toDoItem.upDatetime, ",")
 
     val periodText = buildPeriodText(toDoItem)
