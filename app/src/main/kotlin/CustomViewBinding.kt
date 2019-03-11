@@ -28,7 +28,6 @@ fun CheckBox.setSpannableText(doneChecked: Boolean, _text: String) {
         this.isChecked = false
     }
 }
-
 fun onEditorDone(txtView: TextView, actionId: Int, event: KeyEvent): Boolean {
     if (actionId != EditorInfo.IME_ACTION_DONE) return false
     Log.i("test", "onEditor done was called by  $event of $txtView ")

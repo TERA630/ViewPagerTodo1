@@ -13,7 +13,6 @@ import com.example.yoshi.viewpagertodo1.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var itemList: MutableList<ToDoItem>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
@@ -48,13 +47,11 @@ class DetailActivity : AppCompatActivity() {
         }
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top)
     }
-
     class DataSetListener(private val _textView: TextView) : DatePickerDialog.OnDateSetListener {
         override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
             _textView.text = _textView.context.getString(R.string.date_format, year, month + 1, dayOfMonth)
         }
     }
-
     private fun bindTagList(binding: ActivityDetailBinding, tagListCSV: String) {
         val tagList = tagListCSV.split(",")
         binding.tagTxt.setAdapter(ArrayAdapter<String>(this, R.layout.autocompletet_tag, tagList))
@@ -93,12 +90,10 @@ class DetailActivity : AppCompatActivity() {
                 deadDatePicker.show()
             }
         }
-
     }
     private fun startMainActivity(_tagString: String) {
         val intent = Intent(this@DetailActivity.applicationContext, MainActivity::class.java)
         intent.putExtra(KEY_TAG_STR, _tagString) // TODO new Item , exiting Item
         startActivity(intent, null)
     }
-
 }

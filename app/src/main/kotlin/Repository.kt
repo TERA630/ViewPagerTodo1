@@ -9,7 +9,7 @@ const val TODO_TEXT_FILE = "toDoItems.txt"
 data class ToDoItem constructor(
         var title: String = "thing to do",
         var tagString: String = "home",
-        var itemID: Int = 0,
+        var itemID: Long = 0,
         var upDatetime: Long = 0,
         var reward: Int = 1,
         var isDone: Boolean = false,

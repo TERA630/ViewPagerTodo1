@@ -15,12 +15,13 @@ class GetIdTest : Throwable() {
        }*/
     @Test
     fun getIdTest() {
-        for (i in 0..10) {
+        for (i in 0..100) {
             val newItemID = makeIDFromDate()
             if ((itemList.firstOrNull { it.itemID == newItemID }) == null) {
                 val newItem = ToDoItem(itemID = newItemID)
                 itemList.add(newItem)
             }
+            System.out.println(newItemID)
         }
         assertThat(itemList).doesNotHaveDuplicates()
     }
