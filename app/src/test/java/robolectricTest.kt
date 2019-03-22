@@ -11,7 +11,7 @@ class GetIdTest : Throwable() {
             , "フロントプランク", "バイシクルクランチ", "ニートゥチェスト", "リバースクランチ"
             , "ドラゴンフラッグ", "プッシュアップ", "ヒップスラスト", "ピークタッチ", "スクワット", "ゴーバック"
             , "ニーレイズ", "レッグレイズ", "グッドモーニング", "ランジ", "サイドプランク")
-    private val testText1 = "売却積み込み,整理,15533434343,155334343459,memo:便座、ストライダー、Fitbit、靴乾燥機、体重計、"
+    private val testText1 = "売却積み込み,整理,15533434343,155334343459,memo:便座、ストライダー、フィットビット、靴乾燥機、体重計"
 
     var itemList: MutableList<ToDoItem> = emptyList<ToDoItem>().toMutableList()
 
@@ -31,5 +31,10 @@ class GetIdTest : Throwable() {
 
         }
         assertThat(itemList).doesNotHaveDuplicates()
+    }
+
+    @Test
+    fun textItemConvertTest() {
+        
     }
 }
