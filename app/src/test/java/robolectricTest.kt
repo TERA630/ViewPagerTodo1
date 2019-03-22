@@ -11,7 +11,8 @@ class GetIdTest : Throwable() {
             , "フロントプランク", "バイシクルクランチ", "ニートゥチェスト", "リバースクランチ"
             , "ドラゴンフラッグ", "プッシュアップ", "ヒップスラスト", "ピークタッチ", "スクワット", "ゴーバック"
             , "ニーレイズ", "レッグレイズ", "グッドモーニング", "ランジ", "サイドプランク")
-    private val testText1 = "売却積み込み,整理,15533434343,155334343459,memo:便座、ストライダー、フィットビット、靴乾燥機、体重計"
+    private val testText1 = mutableListOf<String>("売却積み込み,整理,15533434343,155334343459,memo:便座、ストライダー、フィットビット、靴乾燥機、体重計",
+        "銀行ログ確認,財務,155533434344,1533334345")
 
     var itemList: MutableList<ToDoItem> = emptyList<ToDoItem>().toMutableList()
 
@@ -35,6 +36,14 @@ class GetIdTest : Throwable() {
 
     @Test
     fun textItemConvertTest() {
-        
+
+        val newItem = ToDoItem("売却積み込み","整理",1553434343,1553434343,memo = ":便座、ストライダー、フィットビット、靴乾燥機、体重計")
+        val decordedItem = convertTextListToItems(testText1)
+
+        assertThat(decordedItem[0]).isEqualTo(newItem)
+
+        val item =  makeItemToOneLineText(newItem)
+        assertThat(newItem).isEqualTo(item)
     }
+
 }
