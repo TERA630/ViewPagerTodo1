@@ -31,7 +31,6 @@ fun isAfterByDate(targetDateStr: String, baseDateStr: String): Boolean {
     }
     return false
 }
-
 fun isAfterByClock(targetTime: String, baseTime: String): Boolean {
 
     val timeRegEx = Regex("""([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])""")
@@ -61,21 +60,9 @@ fun isAfterByClock(targetTime: String, baseTime: String): Boolean {
     }
     return false
 }
-
 fun getToday(): String {
     val cal = Calendar.getInstance(Locale.JAPAN)
     return "${cal.get(Calendar.YEAR)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.DAY_OF_MONTH)}"
 }
-
-fun makeIDFromDate(): Long {
-    val cal = Calendar.getInstance(Locale.JAPAN)
-    val month = cal.get(Calendar.MONTH + 1)
-    val day = cal.get(Calendar.DAY_OF_MONTH)
-    val hour = cal.get(Calendar.HOUR)
-    val minute = cal.get(Calendar.MINUTE)
-    val second = cal.get(Calendar.SECOND)
-    val id = System.currentTimeMillis()
-
-    return id
 }
 

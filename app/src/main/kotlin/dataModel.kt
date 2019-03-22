@@ -34,13 +34,14 @@ fun buildPeriodText(item: ToDoItem): String {
     return stringBuilder.toString()
 }
 fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
-    val titleAndTagMatcher = "^(.+?),(.+?)(,.*)".toRegex()
+    val titleAndTagMatcher = "^(.+?),(.+?),([0-9]+?),([0-9]+?),(,.*)".toRegex()
     val result = mutableListOf<ToDoItem>()
     for (i in _lines.indices) {
         titleAndTagMatcher.matchEntire(_lines[i])
                 ?.destructured
-                ?.let { (titleStr, tag, subProperty) ->
-                    result.add(setPropertyFromString(ToDoItem(title = titleStr, tagString = tag), subProperty))
+                ?.let { (titleStr, tag, itemId, upDateTime, subProperty) ->
+                    result.add(setPropertyFromString(
+                            ToDoItem(title = titleStr, tagString = tag, itemID = itemId.toLong(), upDatetime = upDateTime.toLong()), subProperty))
                 }
     }
     return result

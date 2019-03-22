@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
-    var rawItemList = MutableList(1) { ToDoItem() }
+    var rawItemList = emptyList<ToDoItem>().toMutableList()
     val itemList = MutableLiveData<MutableList<FilteredToDoItem>>()
     lateinit var tagList: MutableList<String>
 

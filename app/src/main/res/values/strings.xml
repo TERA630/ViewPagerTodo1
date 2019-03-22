@@ -50,12 +50,12 @@
 
     <string-array name="default_todoItem_title">
         <item>個人番号カード市役所に提出</item>
-        <item>子供部屋のコンテナ注文</item>
+        <item></item>
         <item>HDD処理</item>
         <item>第108回消化器内視鏡学会関東支部例会ハンズオン</item>
         <item>第6回大腸ESD ハンズオンセミナー in 北陸</item>
-        <item>ロジェフレア関連入出金</item>
-        <item>年賀状整理</item>
+        <item>内視鏡学会書類作成</item>
+        <item>都島コスト</item>
         <item>サドルバック</item>
         <item>幅13cmのちりとり</item>
     </string-array>
