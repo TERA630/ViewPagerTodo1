@@ -12,6 +12,7 @@ class GetIdTest : Throwable() {
             , "ドラゴンフラッグ", "プッシュアップ", "ヒップスラスト", "ピークタッチ", "スクワット", "ゴーバック"
             , "ニーレイズ", "レッグレイズ", "グッドモーニング", "ランジ", "サイドプランク")
     private val testText1 = "売却積み込み,整理,15533434343,155334343459,memo:便座、ストライダー、フィットビット、靴乾燥機、体重計"
+    private val testText2 = "内視鏡指導医申請,学会,12345678,12345678"
 
     var itemList: MutableList<ToDoItem> = emptyList<ToDoItem>().toMutableList()
 
@@ -27,14 +28,17 @@ class GetIdTest : Throwable() {
                 val newItem = ToDoItem(title = titleList[i], tagString = "運動", itemID = currentTime, upDatetime = currentTime)
                 itemList.add(newItem)
             }
-            System.out.println(currentTime)
-
         }
         assertThat(itemList).doesNotHaveDuplicates()
     }
 
     @Test
     fun textItemConvertTest() {
-        
+        val testrawItem = ToDoItem("売却積み込み", "整理", 15533434343, 15533434343, memo = "便座、ストライダー、フィットビット、靴乾燥機、体重計")
+        val testDecodedItem = makeItemToOneLineText(testrawItem)
+        val testDecodedItem2 = convertTextListToItems(mutableListOf(testText1, testText2))
+        assertThat(testDecodedItem).isEqualTo(testText1)
+        assertThat(testDecodedItem2[0]).isEqualTo(testrawItem)
+
     }
 }

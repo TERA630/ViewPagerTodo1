@@ -34,7 +34,7 @@ fun buildPeriodText(item: ToDoItem): String {
     return stringBuilder.toString()
 }
 fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
-    val titleAndTagMatcher = "^(.+?),(.+?),([0-9]+?),([0-9]+?),(,.*)".toRegex()
+    val titleAndTagMatcher = "^(.+?),(.+?),([0-9]+?),([0-9]+?)(,.*)".toRegex()
     val result = mutableListOf<ToDoItem>()
     for (i in _lines.indices) {
         titleAndTagMatcher.matchEntire(_lines[i])
@@ -73,8 +73,8 @@ fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
 fun makeItemToOneLineText(toDoItem: ToDoItem): String {
     val sb = StringBuilder(toDoItem.title)
             .append(",", toDoItem.tagString, ",")
-            .append(",", toDoItem.itemID, ",")
-            .append(",", toDoItem.upDatetime, ",")
+            .append(toDoItem.itemID, ",")
+            .append(toDoItem.upDatetime, ",")
 
     val periodText = buildPeriodText(toDoItem)
     sb.append(periodText)
