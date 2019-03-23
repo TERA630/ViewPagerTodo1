@@ -25,7 +25,6 @@ class FilteredToDoItem constructor(
         var unFilter: Int = 0,
         var item: ToDoItem = ToDoItem()
 )
-
 fun buildPeriodText(item: ToDoItem): String {
     val stringBuilder =
             if (item.hasStartLine) StringBuilder(item.startLine + "～")
@@ -34,7 +33,7 @@ fun buildPeriodText(item: ToDoItem): String {
     return stringBuilder.toString()
 }
 fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
-    val titleAndTagMatcher = "^(.+?),(.+?),([0-9]+?),([0-9]+?)(,.*)".toRegex()
+    val titleAndTagMatcher = "^(.+?),(.+?),([0-9]+?),([0-9]+?)(.*)".toRegex()
     val result = mutableListOf<ToDoItem>()
     for (i in _lines.indices) {
         titleAndTagMatcher.matchEntire(_lines[i])
