@@ -14,10 +14,10 @@ data class ToDoItem constructor(
         var reward: Int = 1,
         var isDone: Boolean = false,
         var isDeleted: Boolean = false,
-        var hasStartLine: Boolean = true,
-        var startLine: String = "----/--/--",
+        var hasStartLine: Boolean = false,
+        var startLine: String = "",
         var hasDeadLine: Boolean = false,
-        var deadLine: String = "----/--/--",
+        var deadLine: String = "",
         var memo: String = EMPTY_ITEM
         )
 
@@ -33,7 +33,7 @@ fun buildPeriodText(item: ToDoItem): String {
     return stringBuilder.toString()
 }
 fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
-    val titleAndTagMatcher = "^(.+?),(.+?),([0-9]+?),([0-9]+?)(.*)".toRegex()
+    val titleAndTagMatcher = "^(.+?),(.+?),([0-9]+?),([0-9]+),(.*)".toRegex()
     val result = mutableListOf<ToDoItem>()
     for (i in _lines.indices) {
         titleAndTagMatcher.matchEntire(_lines[i])
@@ -129,7 +129,7 @@ fun saveStringToPreference(_key: String, _string: String, _context: Context) {
 }
 
 fun setPropertyFromString(_toDoItem: ToDoItem, _text: String): ToDoItem {
-    val memoMatch = Regex("(,memo:)(.+?)").find(_text)
+    val memoMatch = Regex("(,memo:)(.+)").find(_text)
     memoMatch?.destructured?.let { (_, data) -> _toDoItem.memo = data }
 
     val isDoneMatch = Regex(",isDone,").find(_text)
