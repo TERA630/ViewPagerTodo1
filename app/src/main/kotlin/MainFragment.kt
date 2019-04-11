@@ -76,7 +76,7 @@ class MainFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         // itemList 更新時の実行スペニットを設定します。
-        model.itemList.observe(this, Observer {
+        model.rawItemList.observe(this, Observer {
             val list = model.getItemListByPosition(mPosition)
             val diff = DiffUtil.calculateDiff((DiffCallback(mAdapter.mList, list)), false)
             mAdapter.setListOfAdapter(list)

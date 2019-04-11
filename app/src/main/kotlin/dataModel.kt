@@ -21,10 +21,6 @@ data class ToDoItem constructor(
         var memo: String = EMPTY_ITEM
         )
 
-class FilteredToDoItem constructor(
-        var unFilter: Int = 0,
-        var item: ToDoItem = ToDoItem()
-)
 fun buildPeriodText(item: ToDoItem): String {
     val stringBuilder =
             if (item.hasStartLine) StringBuilder(item.startLine + "～")
@@ -46,8 +42,8 @@ fun convertTextListToItems(_lines: List<String>): MutableList<ToDoItem> {
     return result
 }
     // manage ItemList
-fun getTagListFromItemList(_list: MutableList<FilteredToDoItem>): MutableList<String> {
-    val rawTagList: List<String> = List(_list.size) { index -> _list[index].item.tagString }
+    fun getTagListFromItemList(_list: MutableList<ToDoItem>): MutableList<String> {
+        val rawTagList: List<String> = List(_list.size) { index -> _list[index].tagString }
     val result = rawTagList.distinct()
     return result.toMutableList()
 }
@@ -65,11 +61,12 @@ fun makeDefaultList(_context: Context): MutableList<ToDoItem> {
     val defaultItemTitle = res.getStringArray(R.array.default_todoItem_title)
     val defaultItemTag = res.getStringArray(R.array.default_todoItem_tag)
     val toDoList = List(defaultItemTitle.size - 1) { index ->
-        ToDoItem(title = defaultItemTitle[index], tagString = defaultItemTag[index], hasStartLine = true, startLine = getToday(), upDatetime = System.currentTimeMillis())
+        ToDoItem(title = defaultItemTitle[index], tagString = defaultItemTag[index], hasStartLine = true, startLine = getToday(), itemID = System.currentTimeMillis(), upDatetime = System.currentTimeMillis())
     }
     return toDoList.toMutableList()
 }
-fun makeItemToOneLineText(toDoItem: ToDoItem): String {
+
+fun makeItemToOneLineText(toDoItem: ToDoItem): String? {
     val sb = StringBuilder(toDoItem.title)
             .append(",", toDoItem.tagString, ",")
             .append(toDoItem.itemID, ",")
@@ -112,7 +109,6 @@ fun mergeItem(oneItems: MutableList<ToDoItem>, otherItems: MutableList<ToDoItem>
     }
     return resultItem
 }
-
 fun getNewestItem(_list: MutableList<ToDoItem>): ToDoItem {
     _list.sortBy { it.upDatetime }
     return _list[_list.lastIndex]
@@ -122,7 +118,6 @@ fun saveIntToPreference(_key: String, _int: Int, _context: Context) {
     preferenceEditor.putInt(_key, _int)
     preferenceEditor.apply()
 }
-
 fun saveStringToPreference(_key: String, _string: String, _context: Context) {
     val preferenceEditor = _context.getSharedPreferences(_key, Context.MODE_PRIVATE).edit()
     preferenceEditor.putString(_key, _string).apply()
@@ -143,7 +138,6 @@ fun setPropertyFromString(_toDoItem: ToDoItem, _text: String): ToDoItem {
         _toDoItem.upDatetime = Regex("[0-9]+").find(upDateTimeMatch.value)?.value?.toLong()
                 ?: 197001011259L
     }
-
     val startDateMatch = Regex(",[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}～").find(_text)
     if (startDateMatch != null) {
         _toDoItem.hasStartLine = true

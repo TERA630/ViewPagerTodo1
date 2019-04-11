@@ -110,7 +110,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.action_loadItem -> {
                 model.loadItem(this@MainActivity.applicationContext)
-                model.notifyRawItemListUpdated()
                 return true
             }
             R.id.action_loadItem_FromSdCard -> {
@@ -128,7 +127,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.action_start_DropBox -> {
                 val intent = Intent(this@MainActivity.applicationContext, LoginActivity::class.java)
                 startActivityForResult(intent, REQUEST_DROPBOX_UPLOAD)
-                model.notifyRawItemListUpdated()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

@@ -9,41 +9,36 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
-    var rawItemList = emptyList<ToDoItem>().toMutableList()
-    val itemList = MutableLiveData<MutableList<FilteredToDoItem>>()
+    lateinit var rawItemList: MutableLiveData<MutableList<ToDoItem>>
     lateinit var tagList: MutableList<String>
 
     fun initItems(_context: Context) {
         loadItem(_context)
-        if (rawItemList.size == 0) rawItemList = makeDefaultList(_context)
-        notifyRawItemListUpdated()
+        if (getAllItemNonNull().size == 0) rawItemList.value = makeDefaultList(_context)
     }
-
-    fun notifyRawItemListUpdated() {
-        itemList.value = pickItemsToShow(rawItemList)
-        tagList = getTagListFromItemList(getItemList())
-    }
-
     fun deleteItem(index: Int) {
-        rawItemList[index].isDeleted = true
-        notifyRawItemListUpdated()
+        getAllItemNonNull()[index].isDeleted = true
     }
+
+    fun getAllItemNonNull(): MutableList<ToDoItem> {
+        val itemList = rawItemList.value?.filterNot { it.isDeleted }
+                ?: listOf(ToDoItem("null item", "test", System.currentTimeMillis()))
+        return itemList.toMutableList()
+    }
+
+    fun getItemListByPosition(_position: Int): MutableList<ToDoItem> {
+        val filterStr = tagList[_position]
+        val filteredList = getAllItemNonNull().filter { it.tagString.contains(filterStr) }
+        val filteredNotDeleted = filteredList.filterNot { it.isDeleted }
+        return filteredNotDeleted.toMutableList()
+    }
+
     fun loadCurrentReward(_context: Context): Int {
         return loadIntFromPreference(REWARD, _context)
     }
-
-    private fun getItemList(): MutableList<FilteredToDoItem> = itemList.value
-            ?: throw IllegalArgumentException("itemList was null.")
-
-    fun getItemListByPosition(_position: Int): MutableList<FilteredToDoItem> {
-        val filterStr = tagList[_position]
-        val filteredList = getItemList().filter { it.item.tagString.contains(filterStr) }
-        return filteredList.toMutableList()
-    }
-
     fun calculateReward(_context: Context) {
 
-        val achievedList = rawItemList.filter { it.isDone }
+        val achievedList = getAllItemNonNull().filter { it.isDone && !(it.isDeleted) }
         var reward = loadCurrentReward(_context)
         // 完了したアイテムのRewardを加算し、isDeletedをチェックする。
         for (i in achievedList.indices) {
@@ -52,46 +47,35 @@ class MainViewModel : ViewModel() {
         }
         saveIntToPreference(REWARD, reward, _context = _context)
 
-        val notYetList = rawItemList.filterNot { it.isDone }
-        rawItemList = notYetList.toMutableList()
+        val notYetList = getAllItemNonNull().filterNot { it.isDone }
+        rawItemList.value = notYetList.toMutableList()
         saveRawItemList(_context)
-        this.tagList = getTagListFromItemList(getItemList())
-        this.itemList.value = pickItemsToShow(this.rawItemList)
+        this.tagList = getTagListFromItemList(getAllItemNonNull())
     }
     fun loadItem(_context: Context) {
         val listContainingDeleted = loadListFromTextFile(_context, TODO_TEXT_FILE)
-        rawItemList = listContainingDeleted.filterNot { it.isDeleted }.toMutableList()
+        rawItemList.value = listContainingDeleted.filterNot { it.isDeleted }.toMutableList()
     }
     fun loadItemsFromSdCard(_context: Context, uri: Uri) {
         _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
         val pickedDir = DocumentFile.fromTreeUri(_context, uri)
         pickedDir?.let {
             try {
-                rawItemList = loadListFromTextFileAtSdcard(_context, pickedDir)
-                notifyRawItemListUpdated()
+                rawItemList.value = loadListFromTextFileAtSdcard(_context, pickedDir)
             } catch (e: Exception) {
                 Log.e("test", "${e.message} was occur at MainViewModel#loadItemFromSdcard")
             }
         }
     }
 
-
-    private fun pickItemsToShow(rawList: List<ToDoItem>): MutableList<FilteredToDoItem> {
-        val listNotDeleted = rawList.filterNot { it.isDeleted }
-        return MutableList(listNotDeleted.size) { index -> FilteredToDoItem(index, listNotDeleted[index].copy()) }
-    }
-
     fun saveRawItemList(_context: Context) {
-        saveListToTextFile(_context, rawItemList)
+        saveListToTextFile(_context, getAllItemNonNull())
     }
-
     fun saveItemsToSdCard(_context: Context, uri: Uri) {
         _context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         val pickedDir = DocumentFile.fromTreeUri(_context, uri)
         pickedDir?.let {
-            saveListToTextFileAtSdcard(_context, pickedDir, rawItemList)
-            itemList.value = pickItemsToShow(rawItemList)
+            saveListToTextFileAtSdcard(_context, pickedDir, getAllItemNonNull())
         }
     }
-
 }

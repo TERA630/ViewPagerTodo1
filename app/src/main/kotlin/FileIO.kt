@@ -58,8 +58,12 @@ fun saveListToTextFile(context: Context, _list: MutableList<ToDoItem>) {
         val osw = OutputStreamWriter(fileOut, "UTF-8")
         val bw = BufferedWriter(osw)
         for (index in _list.indices) {
-            bw.write(makeItemToOneLineText(_list[index]))
-            bw.newLine()
+            val lineOrNull = makeItemToOneLineText(_list[index])
+            lineOrNull?.let {
+                //　アイテムの内容に異常があればテキストは追加されない。
+                bw.write(it)
+                bw.newLine()
+            }
         }
         bw.close()
     } catch (e: Exception) {
