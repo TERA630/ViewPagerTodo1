@@ -26,6 +26,14 @@ class MainViewModel : ViewModel() {
         return itemList.toMutableList()
     }
 
+    fun getIndexOfItemFromId(id: Long): Int {
+        val indexFirst = getAllItemNonNull().indexOfFirst { it.itemID == id }
+        val indexLast = getAllItemNonNull().indexOfLast { it.itemID == id }
+        if (indexFirst != indexLast) {
+            Log.w("test", "id was not unifyed..{$indexFirst} and {$indexLast}")
+        }
+        return indexFirst
+    }
     fun getItemListByPosition(_position: Int): MutableList<ToDoItem> {
         val filterStr = tagList[_position]
         val filteredList = getAllItemNonNull().filter { it.tagString.contains(filterStr) }

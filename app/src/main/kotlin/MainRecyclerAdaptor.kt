@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yoshi.viewpagertodo1.databinding.RowItemBinding
 import kotlinx.android.synthetic.main.row_item.view.*
-
 class DiffCallback(private val oldList: List<ToDoItem>,
                    private val newList: List<ToDoItem>) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -41,12 +40,12 @@ class MainRecyclerAdaptor(
         ivh.mBinding.periodViewer.text = buildPeriodText(mList[position])
         ivh.mBinding.itemTitle.setOnCheckedChangeListener { _, boolean ->
             mList[position].isDone = boolean
-            val indexOfRawList = model.getAllItemNonNull().indexOfFirst { it.itemID == mList[position].itemID }
+            val indexOfRawList = model.getIndexOfItemFromId(mList[position].itemID)
             model.getAllItemNonNull()[indexOfRawList].isDone = boolean
             notifyItemChanged(position)
         }
         ivh.itemView.recyclerViewMenu.setOnClickListener { v:View->
-            val indexOfRawList = model.getAllItemNonNull().indexOfFirst { it.itemID == mList[position].itemID }
+            val indexOfRawList = model.getIndexOfItemFromId(mList[position].itemID)
             handler.onMenuClicked(v, indexOfRawList)
             notifyItemChanged(position)
         }
